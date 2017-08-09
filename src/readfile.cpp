@@ -4,7 +4,7 @@
  *  Created on: 3 juni 2017
  *      Author: Otur1337
  */
-/***
+
 #include "readfile.h"
 #include "stock.h"
 #include <list>
@@ -13,12 +13,13 @@
 #include <string>
 using namespace std;
 
+
 ReadFile::ReadFile(void)
 {
     cout << "Initiating readfile" << '\n';
 }
 
-void ReadFile::Read(string fname,Stock stock)
+void ReadFile::Read(string fname,Stock& stock)
 {
 	string line;
 	ifstream myfile (fname.c_str());
@@ -26,14 +27,14 @@ void ReadFile::Read(string fname,Stock stock)
 	{
 		while ( getline (myfile,line) )
 		{
-			ExtractDayData(line);
+			ExtractDayData(line,stock);
 	    }
 	    myfile.close();
 	 }
 	 else cout << "Unable to open file";
 }
 
-void ReadFile::ExtractDayData(string line)
+void ReadFile::ExtractDayData(string line,Stock& stock)
 {
 	int startvalue = 0;
 	int endvalue= 0;
@@ -49,20 +50,23 @@ void ReadFile::ExtractDayData(string line)
 			for (int k=startvalue; k<endvalue;k++){
 				dayData += line[k];
 			}
-			ExtractStockData(dayData);
+			ExtractStockData(dayData,stock);
 			dayData = "";
 
 		}
 	}
 }
 
-void ReadFile::ExtractStockData(string line)
+void ReadFile::ExtractStockData(string line, Stock& stock)
 {
-	Stock stock;
 	int startvalue = 0;
 	int endvalue = 0;
 	string curr("");
 	string currlatest("");
+	string date="";
+	string close="";
+	string low="";
+	string volume="";
 
     bool first = true;
     bool last = false;
@@ -82,11 +86,11 @@ void ReadFile::ExtractStockData(string line)
 				curr += line[k];
 			};
 
-			if (currlatest == "Volume") {stock.stock.volume=curr;}
+			if (currlatest == "Volume") {volume=curr;}
 			if (currlatest == "Symbol") {stock.name = curr;}
-			if (currlatest == "Low") {stock.stock.low = curr;}
-			if (currlatest == "Date") {stock.stock.date = curr;}
-			if (currlatest == "Close") {stock.stock.close = curr;}
+			if (currlatest == "Low") {low = curr;}
+			if (currlatest == "Date") {date = curr;}
+			if (currlatest == "Close") {close = curr;}
 
 			currlatest=curr;
 			curr = "";
@@ -100,17 +104,10 @@ void ReadFile::ExtractStockData(string line)
 		}
 
 	}
-	stock.stocklist.push_back(stock.stock);
-	cout << "name: " << stock.name << endl;
-	cout << "date: "<< stock.stock.date << endl;
-	cout << "low: " << stock.stock.low << endl;
-	cout << "volume: " << stock.stock.volume << endl;
-	cout << "close: " << stock.stock.close << endl;
-
+	stock.add_node(date,close,low,volume);
 }
 
 ReadFile::~ReadFile()
 {
 }
 
-*///

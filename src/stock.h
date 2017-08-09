@@ -1,3 +1,6 @@
+#ifndef STOCK_H
+#define STOCK_H
+
 #include <list>
 #include <string>
 #include <iostream>
@@ -53,3 +56,4 @@ class Stock{
 		}
 };
 
+#endif /* STOCK_H */
