@@ -3,61 +3,10 @@
 #include <list>
 #include <string>
 #include <iostream>
-
+#include "stock.h"
 
 using namespace std;
 
-
-class Stock{
-	public:
-	  string name;
-	  struct node{
-		  string date;
-		  string volume;
-		  string low;
-		  string close;
-		  node *next;
-		  node *previous;
-
-	  };
-		node *head,*tail;
-		Stock()
-			{
-				head = NULL;
-				tail = NULL;
-			}
-		void add_node(string date,string close,string low,string volume)
-			{
-				node *tmp = new node;
-				tmp->date = date;
-				tmp->close = close;
-				tmp->low = low;
-				tmp->volume=volume;
-				tmp->next = NULL;
-
-				if(head == NULL)
-				{
-					head = tmp;
-					tail = tmp;
-				}
-				else
-				{
-					tail->next = tmp;
-					tail = tail->next;
-				}
-			}
-		void Print()
-		{
-            while(head!= NULL){
-            cout<< "date: " << head->date;
-            cout<< ", close: " <<  head->close;
-            cout<< ", low: " <<  head->low;
-            cout<< ", volume: " <<  head->volume<<endl;
-            head=head->next;
-           }
-
-		}
-};
 
 class ReadFile
 {
@@ -71,7 +20,6 @@ public:
 
 
 //#include "readfile.h"
-//#include "stock.h"
 //#include <list>
 //#include <iostream>
 #include <fstream>
@@ -181,10 +129,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 int main() {
 
 	Stock omx30;
-	omx30.add_node("hej","da","hej","da");
-	omx30.add_node("bajs","bajs","bajs","bajs");
     string fname="data/stockdata_OMX30_1986-09-30_2017-03-24.dat";
-	omx30.Print();
 
     ReadFile a;
     a.Read(fname,omx30);
