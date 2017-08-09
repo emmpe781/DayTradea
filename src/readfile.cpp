@@ -39,7 +39,9 @@ void ReadFile::ExtractDayData(string line,Stock& stock)
 	int startvalue = 0;
 	int endvalue= 0;
 	string dayData("");
-	for ( int i=0; i<10000; i++ ) {
+	//int length = line.size(); remove later
+	int length = 50000;
+	for ( int i=0; i<length; i++ ) {
 		if (line[i]=='{')
 		{
 			startvalue = i+1;
@@ -64,15 +66,14 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 	string curr("");
 	string currlatest("");
 	string date="";
-	string close="";
-	string low="";
-	string volume="";
+	double close=0;
+	int volume=0;
 
     bool first = true;
     bool last = false;
 
-	for ( int i=0; i<10000; i++ ) {
-
+    int length = line.size();
+	for ( int i=0; i<length; i++ ) {
 		if (line[i]=='"' && first)
 		{
 			startvalue = ++i;
@@ -86,11 +87,10 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 				curr += line[k];
 			};
 
-			if (currlatest == "Volume") {volume=curr;}
+			if (currlatest == "Volume") {volume=stoi(curr);}
 			if (currlatest == "Symbol") {stock.name = curr;}
-			if (currlatest == "Low") {low = curr;}
 			if (currlatest == "Date") {date = curr;}
-			if (currlatest == "Close") {close = curr;}
+			if (currlatest == "Close") {close = stod(curr);}
 
 			currlatest=curr;
 			curr = "";
@@ -104,7 +104,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 		}
 
 	}
-	stock.add_node(date,close,low,volume);
+	stock.add_node(date,close,volume);
 }
 
 ReadFile::~ReadFile()

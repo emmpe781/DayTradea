@@ -4,6 +4,10 @@
 #include <list>
 #include <string>
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
+
+
 using namespace std;
 
 class Stock{
@@ -11,49 +15,18 @@ class Stock{
 	  string name;
 	  struct node{
 		  string date;
-		  string volume;
-		  string low;
-		  string close;
+		  int volume;
+		  double close;
 		  node *next;
 		  //node *previous;
 	  };
 		node *head,*tail;
-		Stock()
-			{
-				head = NULL;
-				tail = NULL;
-			}
-		void add_node(string date,string close,string low,string volume)
-			{
-				node *tmp = new node;
-				tmp->date = date;
-				tmp->close = close;
-				tmp->low = low;
-				tmp->volume=volume;
-				tmp->next = NULL;
+		Stock();
+		void add_node(string,double,int);
+		void Print();
+		void buyStock(int,string);
+		void sellStock(int,string);
 
-				if(head == NULL)
-				{
-					head = tmp;
-					tail = tmp;
-				}
-				else
-				{
-					tail->next = tmp;
-					tail = tail->next;
-				}
-			}
-		void Print()
-		{
-            while(head!= NULL){
-            cout<< "date: " << head->date;
-            cout<< ", close: " <<  head->close;
-            cout<< ", low: " <<  head->low;
-            cout<< ", volume: " <<  head->volume<<endl;
-            head=head->next;
-           }
-
-		}
 };
 
 #endif /* STOCK_H */

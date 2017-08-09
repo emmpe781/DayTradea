@@ -9,6 +9,7 @@
 #define READFILE_H
 #include <string>
 #include "stock.h"
+
 using namespace std;
 
 class ReadFile
