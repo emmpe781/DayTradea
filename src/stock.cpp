@@ -8,12 +8,11 @@ Stock::Stock(void)
 	tail = NULL;
 }
 
-void Stock::add_node(string date,double close,int volume)
+void Stock::add_node(string date,double close)
 {
 	node *tmp = new node;
 	tmp->date = date;
 	tmp->close = close;
-	tmp->volume=volume;
 	tmp->next = NULL;
 
 	if(head == NULL)
@@ -26,36 +25,15 @@ void Stock::add_node(string date,double close,int volume)
 		tail->next = tmp;
 		tail = tail->next;
 	}
-	}
+}
 
 void Stock::Print()
 {
 	node *temp = head;
     while(temp!= NULL){
-    cout<< "date: " << temp->date;
-    cout<< ", close: " <<  temp->close;
-    cout<< ", volume: " <<  temp->volume<<endl;
+    cout<< "date: " << temp->date<< endl;
+    cout<< ", close: " <<  temp->close << endl;
     temp=temp->next;
     }
 }
 
-void Stock::buyStock(int volume,string date)
-{
-	cout << "buying new stock: "<< endl;
-    node *temp = head;
-    while(temp!= NULL && (temp->date > date)){
-    	temp->volume = temp->volume+volume;
-		temp=temp->next;
-	}
-}
-
-void Stock::sellStock(int volume,string date)
-{
-	cout << "buying new stock: "<< endl;
-    node *temp = head;
-
-    while(temp!= NULL && (temp->date > date)){
-	    temp->volume = temp->volume-volume;
-	    temp=temp->next;
-	 }
-}

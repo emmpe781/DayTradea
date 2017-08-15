@@ -67,7 +67,6 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 	string currlatest("");
 	string date="";
 	double close=0;
-	int volume=0;
 
     bool first = true;
     bool last = false;
@@ -87,7 +86,6 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 				curr += line[k];
 			};
 
-			if (currlatest == "Volume") {volume=stoi(curr);}
 			if (currlatest == "Symbol") {stock.name = curr;}
 			if (currlatest == "Date") {date = curr;}
 			if (currlatest == "Close") {close = stod(curr);}
@@ -104,7 +102,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 		}
 
 	}
-	stock.add_node(date,close,volume);
+	stock.add_node(date,close);
 }
 
 ReadFile::~ReadFile()

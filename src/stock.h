@@ -15,18 +15,13 @@ class Stock{
 	  string name;
 	  struct node{
 		  string date;
-		  int volume;
 		  double close;
 		  node *next;
-		  //node *previous;
 	  };
 		node *head,*tail;
 		Stock();
-		void add_node(string,double,int);
+		void add_node(string,double);
 		void Print();
-		void buyStock(int,string);
-		void sellStock(int,string);
-
 };
 
 #endif /* STOCK_H */
