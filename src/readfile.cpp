@@ -39,8 +39,7 @@ void ReadFile::ExtractDayData(string line,Stock& stock)
 	int startvalue = 0;
 	int endvalue= 0;
 	string dayData("");
-	//int length = line.size(); remove later
-	int length = 50000;
+	int length = line.size();
 	for ( int i=0; i<length; i++ ) {
 		if (line[i]=='{')
 		{

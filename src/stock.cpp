@@ -31,7 +31,7 @@ void Stock::Print()
 {
 	node *temp = head;
     while(temp!= NULL){
-    cout<< "date: " << temp->date<< endl;
+    cout<< "date: " << temp->date;
     cout<< ", close: " <<  temp->close << endl;
     temp=temp->next;
     }
