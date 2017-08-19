@@ -7,61 +7,30 @@
 
 #include "Portfolio.h"
 
-Portfolio::Portfolio() {
+Portfolio::Portfolio(Stock stock,string date) {
 	cout << "initiating Portfolio... " << endl;
-	head = NULL;
-	tail = NULL;
-}
+	Stock::node *stocktmp = stock.head;
 
-void Portfolio::buyStock(Stock stock,int volume,string date)
-{
-	cout << "buying stock... "<< endl;
-
-	Stock::node *stocktemp = stock.head;
-
-	while(stocktemp!= NULL  && (stocktemp->date > date)){
-		//ADD IF DATE ALREADY EXIST
-		add_date(stocktemp->date,stock.name,volume);
-		stocktemp=stocktemp->next;
-	}
-
-	stocktemp->next = NULL;
-
-	if(stock.head == NULL)
-	{
-		stock.head = stocktemp;
-		stock.tail = stocktemp;
-	}
-	else
-	{
-		stock.tail->next = stocktemp;
-		stock.tail = stock.tail->next;
+	while(stocktmp!= NULL){
+		if (stocktmp->date > date){
+			add_date(stocktmp->date,stock.name);
+		}
+		stocktmp=stocktmp->next;
 	}
 }
 
-void Portfolio::add_date(string date,string name,int volume)
+void Portfolio::add_date(string date,string name)
 {
 	portfolionode *tmp = new portfolionode;
-	portfolionode::stockinfo *infotemp = new portfolionode::stockinfo;
-
 	tmp->date = date;
 
-	infotemp->name = name;
-	infotemp->volume = volume;
+	portfolionode::stockinfo *tmpnode = new portfolionode::stockinfo;
 
-	infotemp->next = NULL;
+	tmpnode->name = name;
+	tmpnode->volume = 0;
+    tmpnode->next=tmp->head;
 
-	if(tmp->head == NULL)
-	{
-		tmp->head = infotemp;
-		tmp->tail = infotemp;
-	}
-	else
-	{
-		tmp->tail->next = infotemp;
-		tmp->tail = tmp->tail->next;
-	}
-
+    tmp->head=tmpnode;
 	tmp->next = NULL;
 
 	if(head == NULL)
@@ -74,58 +43,88 @@ void Portfolio::add_date(string date,string name,int volume)
 		tail->next = tmp;
 		tail = tail->next;
 	}
+}
 
+void Portfolio::buy(Stock stock,int volume,string date)
+{
+
+	portfolionode *tmp = head;
+	portfolionode::stockinfo *tmpnode = tmp->head;
+
+	while(tmp!= NULL){
+		if (tmp->date >= date){
+			tmpnode=tmp->head;
+			cout << tmp->date <<endl;
+			int stockexist = 0;
+			//Check if the stock exist. If it exist it will be updated. If it does not exist it will be added.
+
+			while (tmpnode != NULL){
+				if (tmpnode->name==stock.name){
+					tmpnode->volume = tmpnode->volume+volume;
+					cout << tmpnode->volume <<endl;
+					stockexist=1;
+					break;
+				}
+
+				tmpnode=tmpnode->next;
+
+				if ((tmpnode == NULL) && (stockexist==0)){
+				   //The stock does not exist. creating new node"
+				   tmpnode = new portfolionode::stockinfo;
+
+				   tmpnode->name = stock.name;
+				   tmpnode->volume = volume;
+    			   tmpnode->next=tmp->head;
+				   tmp->head=tmpnode;
+				   tmpnode=NULL;
+				 }
+			}
+		}
+		tmp=tmp->next;
+	}
 }
 
 
-void Portfolio::calculateValue(Stock stock)
-{}
+void Portfolio::calculateValue()
+{
+	//  portfolionode *tmp = head;
+	//	portfolionode::stockinfo *tmpnode = tmp->head;
+	//	Stock::node *stocktmp = stock.head;
+
+		/*while((tmp!= NULL) && (stocktmp != NULL)){
+			if (tmp->date > date){
+				while (tmp->date > stocktmp->date){
+					stocktmp=stocktmp->next;
+				}
+
+				if (stocktmp->date == tmp->date){
+
+				}
+			}
+			tmp=tmp->next;
+			tmpnode=tmp->head;
+		}
+*/
+}
 
 void Portfolio::Print()
 {
 	cout << "PRINT: " << endl;
-	portfolionode *temp = head;
-	portfolionode::stockinfo *infotemp = temp->head;
+	portfolionode *tmp = head;
+	portfolionode::stockinfo *infotmp = tmp->head;
 
-    while(temp!= NULL){
-		infotemp=temp->head;
-		cout<< "date: " << temp->date << endl;
-		while(infotemp!=NULL){
-			cout<< "name: " << infotemp->name << endl;
-			cout<< "volume: " << infotemp->volume << endl;
-			infotemp=infotemp->next;
+    while(tmp!= NULL){
+    	cout << "date in portfolio: " << tmp->date << endl;
+		while(infotmp!=NULL){
+			cout<< "name: " << infotmp->name;
+			cout<< ", volume: " << infotmp->volume << endl;
+			infotmp=infotmp->next;
 		}
-		temp=temp->next;
-    }
+    	infotmp=tmp->head;
+		tmp=tmp->next;
+   }
 }
-
-
-/*
-void Stock::buyStock(int volume,string date)
-{
-	cout << "buying stock: "<< endl;
-    node *temp = head;
-    while(temp!= NULL && (temp->date > date)){
-    	temp->volume = temp->volume+volume;
-    	temp->value=temp->volume*temp->close;
-		temp=temp->next;
-	}
-}
-
-void Stock::sellStock(int volume,string date)
-{
-	cout << "selling stock: "<< endl;
-    node *temp = head;
-
-    while(temp!= NULL && (temp->date > date)){
-	    temp->volume = temp->volume-volume;
-    	temp->value=temp->volume*temp->close;
-	    temp=temp->next;
-	 }
-}
-*/
 
 Portfolio::~Portfolio() {
-	// TODO Auto-generated destructor stub
 }
 

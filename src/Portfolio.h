@@ -21,20 +21,18 @@ public:
 			 int volume;
 			 stockinfo *next;
 		 };
- 		 stockinfo *head,*tail;
+         stockinfo *head = NULL;
+         stockinfo *tail = NULL;
 		 portfolionode *next;
-	   };
-	portfolionode *head,*tail;
+	  };
+	portfolionode *head = NULL;
+	portfolionode *tail = NULL;
 
-	Portfolio();
+	Portfolio(Stock,string);
 	void Print();
-	void add_date(string,string,int);
-
-	void calculateValue(Stock);
-	void buyStock(Stock,int,string);
-	//void sellStock(Stock,int,string);
-
-
+	void add_date(string,string);
+	void buy(Stock,int,string);
+	void calculateValue();
 	virtual ~Portfolio();
 };
 
