@@ -18,7 +18,7 @@ public:
 		 string date;
 		 struct stockinfo{
 			 string name;
-			 int volume;
+			 float volume;
 			 stockinfo *next;
 		 };
          stockinfo *head = NULL;
@@ -31,7 +31,10 @@ public:
 	Portfolio(Stock,string);
 	void Print();
 	void add_date(string,string);
-	void buy(Stock,int,string);
+	void add_to_bank(float,string);
+	void remove_from_bank(float,string);
+
+	void buy(Stock,float,string);
 	void calculateValue();
 	virtual ~Portfolio();
 };

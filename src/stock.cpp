@@ -8,7 +8,7 @@ Stock::Stock(void)
 	tail = NULL;
 }
 
-void Stock::add_node(string date,double close)
+void Stock::add_node(string date,float close)
 {
 	node *tmp = new node;
 	tmp->date = date;

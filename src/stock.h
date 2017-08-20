@@ -15,12 +15,12 @@ class Stock{
 	  string name;
 	  struct node{
 		  string date;
-		  double close;
+		  float close;
 		  node *next;
 	  };
 		node *head,*tail;
 		Stock();
-		void add_node(string,double);
+		void add_node(string,float);
 		void Print();
 };
 
