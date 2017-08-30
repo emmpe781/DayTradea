@@ -8,32 +8,32 @@ Stock::Stock(void)
 	tail = NULL;
 }
 
-void Stock::add_node(string date,float close)
+void Stock::add_node_to_end(string date,float close)
 {
-	node *tmp = new node;
-	tmp->date = date;
-	tmp->close = close;
-	tmp->next = NULL;
+	node *date_node = new node;
+	date_node->date = date;
+	date_node->close = close;
+	date_node->next = NULL;
 
 	if(head == NULL)
 	{
-		head = tmp;
-		tail = tmp;
+		head = date_node;
+		tail = date_node;
 	}
 	else
 	{
-		tail->next = tmp;
+		tail->next = date_node;
 		tail = tail->next;
 	}
 }
 
 void Stock::Print()
 {
-	node *temp = head;
-    while(temp!= NULL){
-		cout<< "date: " << temp->date;
-		cout<< ", close: " <<  temp->close << endl;
-		temp=temp->next;
+	node *date_node = head;
+    while(date_node!= NULL){
+		cout<< "date: " << date_node->date;
+		cout<< ", close: " <<  date_node->close << endl;
+		date_node=date_node->next;
     }
 }
 

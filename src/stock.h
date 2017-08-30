@@ -20,7 +20,8 @@ class Stock{
 	  };
 		node *head,*tail;
 		Stock();
-		void add_node(string,float);
+		void add_node_to_end(string,float);
+
 		void Print();
 };
 

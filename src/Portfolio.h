@@ -28,11 +28,13 @@ public:
 	portfolionode *head = NULL;
 	portfolionode *tail = NULL;
 
-	Portfolio(Stock,string);
+	Portfolio(ReadFile,string);
 	void Print();
 	void add_date(string,string);
 	void add_to_bank(float,string);
 	void remove_from_bank(float,string);
+	void insert_end(string);
+	void insert_start(string);
 
 	void buy(Stock,float,string);
 	void calculateValue();

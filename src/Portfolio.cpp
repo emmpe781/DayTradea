@@ -4,21 +4,52 @@
  *  Created on: 15 aug. 2017
  *      Author: Otur1337
  */
-
 #include "Portfolio.h"
 
-Portfolio::Portfolio(Stock stock,string date) {
+Portfolio::Portfolio(ReadFile rf,string date) {
 	cout << "initiating Portfolio... " << endl;
-	Stock::node *stocktmp = stock.head;
+	Stock portf_time;
+	string fname_time="../data/stockdata_Portfolio_fill.dat";
+	rf.Read(fname_time,portf_time);
+
+	Stock::node *stocktmp = portf_time.head;
 
 	while(stocktmp!= NULL){
 		if (stocktmp->date > date){
-			add_date(stocktmp->date,stock.name);
+			add_date(stocktmp->date,"bank");
 		}
 		stocktmp=stocktmp->next;
 	}
 }
 
+
+
+/*void Portfolio::insert_end(string date)
+  {
+	portfolionode *temp=new portfolionode;
+    temp->date=date;
+    temp->next=NULL;
+    if(head==NULL)
+    {
+      head=temp;
+      tail=temp;
+      temp=NULL;
+    }
+    else
+    {
+      tail->next=temp;
+      tail=temp;
+    }
+  }
+
+void Portfolio::insert_start(string date)
+{
+	portfolionode *temp=new portfolionode;
+    temp->date=date;
+	temp->next=head;
+	head=temp;
+}
+*/
 void Portfolio::add_date(string date,string name)
 {
 	portfolionode *tmp = new portfolionode;
@@ -63,6 +94,7 @@ void Portfolio::add_to_bank(float volume,string date)
 			tmpnode=tmp->head;
 			while (tmpnode != NULL){
 				portfolionode::stockinfo *portfolio = tmpnode;
+
 				while (portfolio->name!="portfolio value"){
 					portfolio=portfolio->next;
 				}
@@ -73,8 +105,8 @@ void Portfolio::add_to_bank(float volume,string date)
 				tmpnode=tmpnode->next;
 				}
 			}
-		tmp=tmp->next;
 		tmpnode=tmp->head;
+		tmp=tmp->next;
 	}
 }
 
@@ -100,8 +132,8 @@ void Portfolio::remove_from_bank(float volume,string date)
 				tmpnode=tmpnode->next;
 				}
 			}
-		tmp=tmp->next;
 		tmpnode=tmp->head;
+		tmp=tmp->next;
 	}
 }
 
@@ -172,9 +204,8 @@ void Portfolio::buy(Stock stock,float volume,string date)
 				}
 			}
 		}
-		tmp=tmp->next;
 		tmpnode=tmp->head;
-
+		tmp=tmp->next;
 	}
 }
 

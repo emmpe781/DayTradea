@@ -22,6 +22,7 @@ ReadFile::ReadFile(void)
 void ReadFile::Read(string fname,Stock& stock)
 {
 	string line;
+
 	ifstream myfile (fname.c_str());
 	if (myfile.is_open())
 	{
@@ -31,7 +32,7 @@ void ReadFile::Read(string fname,Stock& stock)
 	    }
 	    myfile.close();
 	 }
-	 else cout << "Unable to open file";
+	else cout << "Unable to open file"<<endl;
 }
 
 void ReadFile::ExtractDayData(string line,Stock& stock)
@@ -87,7 +88,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 
 			if (currlatest == "Symbol") {stock.name = curr;}
 			if (currlatest == "Date") {date = curr;}
-			if (currlatest == "Close") {close = stod(curr);}
+			//if (currlatest == "Close") {close = stof(curr);}
 
 			currlatest=curr;
 			curr = "";
@@ -101,7 +102,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 		}
 
 	}
-	stock.add_node(date,close);
+	stock.add_node_to_end(date,close);
 }
 
 ReadFile::~ReadFile()
