@@ -8,16 +8,15 @@
 #include <iostream>
 #include <stdint.h> // <cstdint> requires c++11 support
 
-
 #if __cplusplus > 199711L || _MSC_VER > 1800
 #include <functional>
 #endif
 
-#include <C:/Users/Otur1337/Anaconda3/include/Python.h>
+#include <Python.h>
 
 #ifndef WITHOUT_NUMPY
   #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-  #include <C:/Users/Otur1337/Anaconda3/pkgs/Lib/site-packages/numpy/core/include/numpy/arrayobject.h>
+  #include <numpy/arrayobject.h>
 #endif // WITHOUT_NUMPY
 
 #if PY_MAJOR_VERSION >= 3
@@ -75,9 +74,9 @@ namespace matplotlibcpp {
 				Py_SetProgramName(name);
 				Py_Initialize();
 
-//#ifndef WITHOUT_NUMPY
-//				import_array(); // initialize numpy C-API
-//#endif
+#ifndef WITHOUT_NUMPY
+				import_array(); // initialize numpy C-API
+#endif
 
 				PyObject* matplotlibname = PyString_FromString("matplotlib");
 				PyObject* pyplotname = PyString_FromString("matplotlib.pyplot");
@@ -255,7 +254,6 @@ namespace matplotlibcpp {
 
 	template<typename Numeric>
 	bool plot(const std::vector<Numeric> &x, const std::vector<Numeric> &y, const std::map<std::string, std::string>& keywords)
-
 	{
 		assert(x.size() == y.size());
 

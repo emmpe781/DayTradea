@@ -1,16 +1,17 @@
-//#include "matplotlib-cpp-master/matplotlibcpp.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <list>
 #include <string>
 #include <iostream>
 #include "Portfolio.h"
 #include <fstream>
-
+#include "matplotlibcpp.h"
 
 using namespace std;
-//namespace plt = matplotlibcpp;
-
+namespace plt = matplotlibcpp;
 
 int main() {
+
 	ReadFile rf;
 	Portfolio ImbaPortfolio(rf,"2004-12-11");
 
@@ -31,11 +32,8 @@ int main() {
 	ImbaPortfolio.Print();
 
 
-	// plot(y) - the x-coordinates are implicitly set to [0,1,...,n)
-	//plt::plot({1,2,3,4}); 
-	
 	// Prepare data for parametric plot.
-	/*int n = 5000; // number of data points
+	int n = 5000; // number of data points
 	vector<double> x(n),y(n); 
 	for(int i=0; i<n; ++i) {
 		double t = 2*M_PI*i/n;
@@ -50,7 +48,7 @@ int main() {
 
 
 	// show plots
-	plt::show();*/
+	plt::show();
 
 	return 0;
 
