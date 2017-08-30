@@ -255,10 +255,11 @@ void Portfolio::Plot()
 		tmp=tmp->next;
    }
 
-	plt::plot(x,y, "k-",x,z,"r-");
-	plt::show();	
-	plt::title("Porfolio");
+	plt::plot(x,y, "k-");
+	
+	plt::title("Portfolio");
 	plt::save("./portfolio.png");
+	plt::show();
 }
 
 Portfolio::~Portfolio() {
