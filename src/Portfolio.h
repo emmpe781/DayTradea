@@ -14,6 +14,7 @@
 class Portfolio {
 public:
 	  string portfolioname;
+	  int portfoliolength;
 	  struct portfolionode{
 		 string date;
 		 struct stockinfo{
@@ -30,6 +31,8 @@ public:
 
 	Portfolio(ReadFile,string);
 	void Print();
+	void Plot();
+
 	void add_date(string,string);
 	void add_to_bank(float,string);
 	void remove_from_bank(float,string);

@@ -4,7 +4,13 @@
  *  Created on: 15 aug. 2017
  *      Author: Otur1337
  */
+#define _USE_MATH_DEFINES
 #include "Portfolio.h"
+#include "matplotlibcpp.h"
+#include <cmath>
+
+namespace plt = matplotlibcpp;
+
 
 Portfolio::Portfolio(ReadFile rf,string date) {
 	cout << "initiating Portfolio... " << endl;
@@ -17,6 +23,7 @@ Portfolio::Portfolio(ReadFile rf,string date) {
 	while(stocktmp!= NULL){
 		if (stocktmp->date > date){
 			add_date(stocktmp->date,"bank");
+			
 		}
 		stocktmp=stocktmp->next;
 	}
@@ -154,7 +161,6 @@ void Portfolio::buy(Stock stock,float volume,string date)
 			}
 
 			if (stocktmp->date == tmp->date){
-
 				tmpnode=tmp->head;
 				portfolionode::stockinfo *portfolio = tmpnode;
 				portfolionode::stockinfo *bank = tmpnode;
@@ -174,7 +180,6 @@ void Portfolio::buy(Stock stock,float volume,string date)
 						tmpnode->volume = tmpnode->volume+volume;
 						if (bankupdated == 0){
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
-							cout << (stocktmp->close) << endl;
 							bankupdated=1;
 							cout << "REMOVED FROM BANK" << endl;
 						}
@@ -188,10 +193,9 @@ void Portfolio::buy(Stock stock,float volume,string date)
 					if ((tmpnode == NULL) && (stockexist==0)){
 					   //The stock does not exist. creating new node"
 					   tmpnode = new portfolionode::stockinfo;
-						cout << (stocktmp->close) << endl;
-
 					   tmpnode->name = stock.name;
 					   tmpnode->volume = volume;
+
 						if (bankupdated == 0){
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
@@ -199,7 +203,8 @@ void Portfolio::buy(Stock stock,float volume,string date)
 					   portfolio->volume = portfolio->volume + (stocktmp->close)*volume;
          			   tmpnode->next=tmp->head;
 					   tmp->head=tmpnode;
-					   tmpnode=NULL;
+   					   tmpnode=NULL;
+
 					 }
 				}
 			}
@@ -214,6 +219,7 @@ void Portfolio::Print()
 	cout << "PRINT: " << endl;
 	portfolionode *tmp = head;
 	portfolionode::stockinfo *infotmp = tmp->head;
+   	 
 
     while(tmp!= NULL){
     	cout << "--- date: " << tmp->date << endl;
@@ -225,6 +231,34 @@ void Portfolio::Print()
     	infotmp=tmp->head;
 		tmp=tmp->next;
    }
+}
+
+void Portfolio::Plot()
+{
+	cout << "PRINT: " << endl;
+	portfolionode *tmp = head;
+	portfolionode::stockinfo *infotmp = tmp->head;
+   	 
+	int n=2130;
+	vector<float> x(n),y(n); 
+	float i = 0;
+    while(tmp!= NULL){
+		x.at(i) = i;//tmp->date;
+		while(infotmp!=NULL){
+			if (infotmp->name=="portfolio value"){
+				y.at(i) = infotmp->volume;
+				}
+			infotmp=infotmp->next;
+		}
+		i=i+1;
+    	infotmp=tmp->head;
+		tmp=tmp->next;
+   }
+
+	plt::plot(x,y, "k-",x,z,"r-");
+	plt::show();	
+	plt::title("Porfolio");
+	plt::save("./portfolio.png");
 }
 
 Portfolio::~Portfolio() {

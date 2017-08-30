@@ -88,7 +88,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 
 			if (currlatest == "Symbol") {stock.name = curr;}
 			if (currlatest == "Date") {date = curr;}
-			//if (currlatest == "Close") {close = stof(curr);}
+			if (currlatest == "Close") {close = stof(curr);}
 
 			currlatest=curr;
 			curr = "";

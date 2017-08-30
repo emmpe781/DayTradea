@@ -42,13 +42,14 @@ main: main.o portfolio.o stock.o readfile.o
 # To create the object file counter.o, we need the source files
 # counter.c and counter.h:
 #
-main.o:  main.cpp portfolio.h readfile.h stock.h matplotlibcpp.h
+main.o:  main.cpp portfolio.h readfile.h stock.h 
 	$(CC) $(CFLAGS) -c main.cpp -DWITHOUT_NUMPY -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
 
 
 
-portfolio.o:  portfolio.cpp portfolio.h readfile.h stock.h
-	$(CC) $(CFLAGS) -c portfolio.cpp
+portfolio.o:  portfolio.cpp portfolio.h readfile.h stock.h matplotlibcpp.h
+	$(CC) $(CFLAGS) -c portfolio.cpp -DWITHOUT_NUMPY -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+
 
 readfile.o:  readfile.cpp portfolio.h readfile.h stock.h 
 	$(CC) $(CFLAGS) -c readfile.cpp
