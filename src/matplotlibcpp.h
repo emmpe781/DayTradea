@@ -49,6 +49,7 @@ namespace matplotlibcpp {
 			PyObject *s_python_function_errorbar;
 			PyObject *s_python_function_annotate;
 			PyObject *s_python_function_tight_layout;
+			PyObject *s_python_function_xticks;
 			PyObject *s_python_empty_tuple;
 
 			/* For now, _interpreter is implemented as a singleton since its currently not possible to have
@@ -81,7 +82,8 @@ namespace matplotlibcpp {
 				PyObject* matplotlibname = PyString_FromString("matplotlib");
 				PyObject* pyplotname = PyString_FromString("matplotlib.pyplot");
 				PyObject* pylabname  = PyString_FromString("pylab");
-				if (!pyplotname || !pylabname || !matplotlibname) {
+				//PyObject* datetimename  = PyString_FromString("datetime")
+				if (!pyplotname || !pylabname || !matplotlibname ){ // || !datetimename) {
 					throw std::runtime_error("couldnt create string");
 				}
 
@@ -123,6 +125,8 @@ namespace matplotlibcpp {
 				s_python_function_clf = PyObject_GetAttrString(pymod, "clf");
 				s_python_function_errorbar = PyObject_GetAttrString(pymod, "errorbar");
 				s_python_function_tight_layout = PyObject_GetAttrString(pymod, "tight_layout");
+				s_python_function_xticks = PyObject_GetAttrString(pymod, "xticks");
+
 
 				if(        !s_python_function_show
 					|| !s_python_function_figure
@@ -143,6 +147,8 @@ namespace matplotlibcpp {
 					|| !s_python_function_errorbar
 					|| !s_python_function_errorbar
 					|| !s_python_function_tight_layout
+					|| !s_python_function_xticks
+
 				) { throw std::runtime_error("Couldn't find required function!"); }
 
 				if (       !PyFunction_Check(s_python_function_show)
@@ -163,6 +169,8 @@ namespace matplotlibcpp {
 					|| !PyFunction_Check(s_python_function_clf)
 					|| !PyFunction_Check(s_python_function_tight_layout)
 					|| !PyFunction_Check(s_python_function_errorbar)
+					|| !PyFunction_Check(s_python_function_xticks)
+
 				) { throw std::runtime_error("Python object is unexpectedly not a PyFunction."); }
 
 				s_python_empty_tuple = PyTuple_New(0);
@@ -236,7 +244,26 @@ namespace matplotlibcpp {
 		npy_intp vsize = v.size();
 		PyObject* varray = PyArray_SimpleNewFromData(1, &vsize, type, (void*)(v.data()));
 		return varray;
-	}
+	};
+
+	template<typename String>
+	PyObject* get_string_array(const std::vector<String>& v)
+	{
+		detail::_interpreter::get();	//interpreter needs to be initialized for the numpy commands to work
+		NPY_TYPES type = select_npy_type<std::string>::type;
+		if (type == NPY_NOTYPE)
+		{
+			std::vector<std::string> vd(v.size());
+			npy_intp vsize = v.size();
+			std::copy(v.begin(),v.end(),vd.begin());
+			PyObject* varray = PyArray_SimpleNewFromData(1, &vsize, NPY_DOUBLE, (void*)(vd.data()));
+			return varray;
+		}
+
+		npy_intp vsize = v.size();
+		PyObject* varray = PyArray_SimpleNewFromData(1, &vsize, type, (void*)(v.data()));
+		return varray;
+	};
 
 #else // fallback if we don't have numpy: copy every element of the given vector
 
@@ -249,7 +276,15 @@ namespace matplotlibcpp {
 		}
 		return list;
 	}
-
+	template<typename String>
+	PyObject* get_string_array(const std::vector<String>& v)
+	{
+		PyObject* list = PyList_New(v.size());
+		for(size_t i = 0; i < v.size(); ++i) {
+			PyList_SetItem(list, i, v.at(i));
+		}
+		return list;
+	}
 #endif // WITHOUT_NUMPY
 
 	template<typename Numeric>
@@ -388,6 +423,39 @@ namespace matplotlibcpp {
 
 		return res;
 	}
+	
+	//EMMMAMASSSS
+	/*template<typename string, typename NumericY>
+	bool plot(const std::vector<std::string> &x, const std::vector<NumericY> &y, const std::map<std::string, std::string>& keywords)
+	{
+		cout << "USING: bool plot(const std::vector<std::string> &x, const std::vector<Numeric> &y, const std::map<std::string, std::string>& keywords)" << endl;
+		assert(x.size() == y.size());
+
+		// using numpy arrays
+		PyObject* xarray = get_array(x);
+		PyObject* yarray = get_array(y);
+
+		// construct positional args
+		PyObject* args = PyTuple_New(2);
+		PyTuple_SetItem(args, 0, xarray);
+		PyTuple_SetItem(args, 1, yarray);
+
+		// construct keyword args
+		PyObject* kwargs = PyDict_New();
+		for(std::map<std::string, std::string>::const_iterator it = keywords.begin(); it != keywords.end(); ++it)
+		{
+			PyDict_SetItemString(kwargs, it->first.c_str(), PyString_FromString(it->second.c_str()));
+		}
+
+		PyObject* res = PyObject_Call(detail::_interpreter::get().s_python_function_plot, args, kwargs);
+
+		Py_DECREF(args);
+		Py_DECREF(kwargs);
+		if(res) Py_DECREF(res);
+
+		return res;
+	}*/
+
 
 	template<typename NumericX, typename NumericY>
 	bool errorbar(const std::vector<NumericX> &x, const std::vector<NumericY> &y, const std::vector<NumericX> &yerr, const std::string &s = "")
@@ -640,6 +708,23 @@ namespace matplotlibcpp {
 		// if PyDeCRFF, the function doesn't work on Mac OS
 	}
 
+	inline void xticks(const std::vector<int>& x,const std::vector<std::string>& y)
+	{
+		assert(x.size() == y.size());
+
+		PyObject* xarray = get_array(x);
+		PyObject* yarray = get_array(x);
+
+		PyObject* tick_args = PyTuple_New(2);
+		PyTuple_SetItem(tick_args, 0, xarray);
+		PyTuple_SetItem(tick_args, 1, yarray);
+
+		PyObject* res = PyObject_CallObject(detail::_interpreter::get().s_python_function_xticks, tick_args);
+
+		Py_DECREF(tick_args);
+		if(res) Py_DECREF(res);
+	}
+
 	inline void show()
 	{
 		PyObject* res = PyObject_CallObject(
@@ -792,11 +877,12 @@ namespace matplotlibcpp {
 
 	// recursion stop for the above
 	template<typename... Args>
-	bool plot() { return true; }
+	bool plot() { 
+		return true; }
 
 	template<typename A, typename B, typename... Args>
 	bool plot(const A& a, const B& b, const std::string& format, Args... args)
-	{
+	{	
 		return detail::plot_impl<typename detail::is_callable<B>::type>()(a,b,format) && plot(args...);
 	}
 
@@ -807,6 +893,11 @@ namespace matplotlibcpp {
 	bool plot(const std::vector<double>& x, const std::vector<double>& y, const std::string& format = "") {
 		return plot<double,double>(x,y,format);
 	}
+	
+	//bool plot(const std::vector<std::string>& x, const std::vector<double>& y, const std::string& format = "") {
+	//	cout << "plot<std::string,double>(x,y,format)"<<endl;
+	//	return plot<std::string,double>(x,y,format);
+	//}
 
 	bool plot(const std::vector<double>& y, const std::string& format = "") {
 		return plot<double>(y,format);

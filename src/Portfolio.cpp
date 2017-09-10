@@ -6,10 +6,9 @@
  */
 #define _USE_MATH_DEFINES
 #include "Portfolio.h"
-#include "matplotlibcpp.h"
 #include <cmath>
 
-namespace plt = matplotlibcpp;
+using namespace std;
 
 
 Portfolio::Portfolio(ReadFile rf,string date) {
@@ -233,17 +232,21 @@ void Portfolio::Print()
    }
 }
 
-void Portfolio::Plot()
+/*void Portfolio::Plot()
 {
 	cout << "PRINT: " << endl;
 	portfolionode *tmp = head;
 	portfolionode::stockinfo *infotmp = tmp->head;
    	 
+
 	int n=2130;
-	vector<float> x(n),y(n); 
+	vector<int> x(n);
+	vector<double> y(n);
+	vector<string> t(n);
 	float i = 0;
     while(tmp!= NULL){
-		x.at(i) = i;//tmp->date;
+		x.at(i) = i;
+		t.at(i) = tmp->date;
 		while(infotmp!=NULL){
 			if (infotmp->name=="portfolio value"){
 				y.at(i) = infotmp->volume;
@@ -255,12 +258,19 @@ void Portfolio::Plot()
 		tmp=tmp->next;
    }
 
+
+
+	//	plt::xticks()
+	//plt::xticks(x,t);
 	plt::plot(x,y, "k-");
-	
+
+    //plt::plot({"1","2","3","4"},{1,3,2,4},"k");
+	//plt::grid(true);
 	plt::title("Portfolio");
+	//plt::tight_layout();
 	plt::save("./portfolio.png");
 	plt::show();
-}
+}*/
 
 Portfolio::~Portfolio() {
 }

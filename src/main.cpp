@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Portfolio.h"
 #include <fstream>
+#include "plot.h"
 
 using namespace std;
 
@@ -27,7 +28,12 @@ int main() {
 
 	ImbaPortfolio.Print();
 
-	ImbaPortfolio.Plot();
+	Plot1 plt1;
+	plt1.plotta(ImbaPortfolio,omx30);
+
+	//omx30.Plot();
+
+	//ImbaPortfolio.Plot();
 
 
 	return 0;
