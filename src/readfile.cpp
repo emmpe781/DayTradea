@@ -105,6 +105,52 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 	stock.add_node_to_end(date,close);
 }
 
+void ReadFile::ExpectedValue(string date,Stock& stock,float percentage)
+{
+	float expectedincrease;
+	float expectedvalue;
+	expectedincrease = (percentage/100)/365+1;
+	cout << expectedincrease << endl;
+	bool first = true;
+	Stock::node *tmp = stock.head;
+    while(tmp!= NULL){
+    	if (tmp->date >= date){
+    		if (first){
+    			expectedvalue = tmp->close;
+    			first = false;
+    		}
+    		else {
+    			expectedvalue= expectedvalue*expectedincrease;
+    			tmp->close = expectedvalue;
+			};
+    	}
+		tmp=tmp->next;
+    }
+}
+
+void ReadFile::Mean(string date,Stock& stock,Stock stockCpy,int days)
+{
+	float total=0;
+	int i = 0;
+	Stock::node *stockHead = stock.head;
+	Stock::node *tmpTail = stockCpy.head;
+	Stock::node *tmpHead = stockCpy.head;
+
+	while(stockHead!= NULL){
+			if (i < days){
+				total = total + (tmpHead->close);
+				i++;
+			}
+			else {
+				stockHead->close=total/days;
+				tmpTail=tmpTail->next;
+				total=total+(tmpHead->close)-(tmpTail->close);
+			};
+		tmpHead=tmpHead->next;
+		stockHead=stockHead->next;
+    }
+}
+
 ReadFile::~ReadFile()
 {
 }

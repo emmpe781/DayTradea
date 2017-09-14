@@ -31,7 +31,6 @@ public:
 
 	Portfolio(ReadFile,string);
 	void Print();
-	void Plot();
 
 	void add_date(string,string);
 	void add_to_bank(float,string);

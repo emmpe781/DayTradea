@@ -20,7 +20,6 @@ class Stock{
 	  };
 		node *head,*tail;
 		Stock();
-		void Plot();
 		void add_node_to_end(string,float);
 
 		void Print();

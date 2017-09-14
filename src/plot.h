@@ -10,15 +10,18 @@
 #include <string>
 #include "stock.h"
 #include "Portfolio.h"
+#include<stdarg.h>
 
 using namespace std;
 
-class Plot1
+class Plot
 {
 public:
-	Plot1();
-	void plotta(Portfolio,Stock);
-	virtual ~Plot1();
+	Plot();
+	void Plot_port(Portfolio,Stock);
+	void Plot_stocks(Stock,Stock);
+
+	virtual ~Plot();
 };
 
 #endif /* PLOT_H */
