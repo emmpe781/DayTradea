@@ -19,7 +19,7 @@ ReadFile::ReadFile(void)
     cout << "Initiating readfile" << '\n';
 }
 
-void ReadFile::Read(string fname,Stock& stock)
+void ReadFile::Read(string fname,Stock *stock_p)
 {
 	string line;
 
@@ -28,14 +28,14 @@ void ReadFile::Read(string fname,Stock& stock)
 	{
 		while ( getline (myfile,line) )
 		{
-			ExtractDayData(line,stock);
+			ExtractDayData(line,stock_p);
 	    }
 	    myfile.close();
 	 }
 	else cout << "Unable to open file"<<endl;
 }
 
-void ReadFile::ExtractDayData(string line,Stock& stock)
+void ReadFile::ExtractDayData(string line,Stock *stock_p)
 {
 	int startvalue = 0;
 	int endvalue= 0;
@@ -52,14 +52,14 @@ void ReadFile::ExtractDayData(string line,Stock& stock)
 			for (int k=startvalue; k<endvalue;k++){
 				dayData += line[k];
 			}
-			ExtractStockData(dayData,stock);
+			ExtractStockData(dayData,stock_p);
 			dayData = "";
 
 		}
 	}
 }
 
-void ReadFile::ExtractStockData(string line, Stock& stock)
+void ReadFile::ExtractStockData(string line, Stock *stock)
 {
 	int startvalue = 0;
 	int endvalue = 0;
@@ -86,7 +86,7 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 				curr += line[k];
 			};
 
-			if (currlatest == "Symbol") {stock.name = curr;}
+			if (currlatest == "Symbol") {stock->name = curr;}
 			if (currlatest == "Date") {date = curr;}
 			if (currlatest == "Close") {close = stof(curr);}
 
@@ -102,18 +102,18 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 		}
 
 	}
-	stock.add_node_to_end(date,close);
+	stock->add_node_to_end(date,close);
 }
 
 
 //Approved by Sven
-void ReadFile::ExpectedValue(string date,Stock& stock,float percentage)
+void ReadFile::ExpectedValue(string date,Stock* stock,float percentage)
 {
 	float expectedIncrease;
 	float expectedValue;
 	expectedIncrease = (percentage/100)/365+1;
 	bool first=true;
-	Stock::node *tmp = stock.head;
+	Stock::node *tmp = stock->head;
     while(tmp!= NULL){
     	if (tmp->date >= date){
     		if (first){
@@ -132,12 +132,12 @@ void ReadFile::ExpectedValue(string date,Stock& stock,float percentage)
 }
 
 //Approved by Sven
-void ReadFile::Mean(string date,Stock& stock,Stock stockCpy,int days)
+void ReadFile::Mean(string date,Stock *stock,Stock stockCpy,int days)
 {
 	float sumStockClose=0;
 	float mean;
 	int i = 0;
-	Stock::node *stockMeanHead = stock.head;
+	Stock::node *stockMeanHead = stock->head;
 	Stock::node *tmpTail = stockCpy.head;
 	Stock::node *tmpHead = stockCpy.head;
 

@@ -17,7 +17,7 @@ Portfolio::Portfolio(string date) {
 	Stock portf_time;
 	string fname_time="../data/stockdata_Portfolio_fill.dat";
 	ReadFile rf;
-	rf.Read(fname_time,portf_time);
+	rf.Read(fname_time,&portf_time);
 
 	Stock::node *stocktmp = portf_time.head;
 

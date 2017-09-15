@@ -16,11 +16,11 @@ class ReadFile
 {
 public:
 	ReadFile();
-	void Read(string,Stock&);
-	void ExtractDayData(string,Stock&);
-	void ExtractStockData(string,Stock&);
-	void ExpectedValue(string,Stock&,float);
-	void Mean(string,Stock&,Stock,int);
+	void Read(string,Stock *);
+	void ExtractDayData(string,Stock*);
+	void ExtractStockData(string,Stock*);
+	void ExpectedValue(string,Stock*,float);
+	void Mean(string,Stock*,Stock,int);
 	virtual ~ReadFile();
 };
 
