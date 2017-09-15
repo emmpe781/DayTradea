@@ -29,7 +29,7 @@ public:
 	portfolionode *head = NULL;
 	portfolionode *tail = NULL;
 
-	Portfolio(ReadFile,string);
+	Portfolio(string);
 	void Print();
 
 	void add_date(string,string);

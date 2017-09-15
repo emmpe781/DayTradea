@@ -6,15 +6,17 @@
  */
 #define _USE_MATH_DEFINES
 #include "Portfolio.h"
+#include "Readfile.h"
+#include "Stock.h"
 #include <cmath>
 
 using namespace std;
 
-
-Portfolio::Portfolio(ReadFile rf,string date) {
+Portfolio::Portfolio(string date) {
 	cout << "initiating Portfolio... " << endl;
 	Stock portf_time;
 	string fname_time="../data/stockdata_Portfolio_fill.dat";
+	ReadFile rf;
 	rf.Read(fname_time,portf_time);
 
 	Stock::node *stocktmp = portf_time.head;
@@ -22,7 +24,6 @@ Portfolio::Portfolio(ReadFile rf,string date) {
 	while(stocktmp!= NULL){
 		if (stocktmp->date > date){
 			add_date(stocktmp->date,"bank");
-			
 		}
 		stocktmp=stocktmp->next;
 	}

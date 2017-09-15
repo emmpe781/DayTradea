@@ -8,10 +8,9 @@
 using namespace std;
 
 int main() {
+	Portfolio ImbaPortfolio("2011-03-13");
+
 	ReadFile rf;
-
-
-	Portfolio ImbaPortfolio(rf,"2011-03-13");
 
 	Stock omx30;
 	Stock omx30expected;

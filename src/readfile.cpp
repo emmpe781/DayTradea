@@ -13,6 +13,7 @@
 #include <string>
 using namespace std;
 
+
 ReadFile::ReadFile(void)
 {
     cout << "Initiating readfile" << '\n';
@@ -111,14 +112,15 @@ void ReadFile::ExpectedValue(string date,Stock& stock,float percentage)
 	float expectedIncrease;
 	float expectedValue;
 	expectedIncrease = (percentage/100)/365+1;
-
+	bool first=true;
 	Stock::node *tmp = stock.head;
     while(tmp!= NULL){
     	if (tmp->date >= date){
-    		if (tmp->date == date){
+    		if (first){
     			//Set expectedValue to the value of our start date.
     			//Only done once.
     			expectedValue = tmp->close;
+    			first=false;
     		}
     		else {
     			expectedValue= expectedValue*expectedIncrease;
