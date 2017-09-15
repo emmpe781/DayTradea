@@ -4,14 +4,14 @@
 #include "Portfolio.h"
 #include <fstream>
 #include "plot.h"
-
+#include "ReadFile.h"
 using namespace std;
 
 int main() {
-
 	ReadFile rf;
-	Portfolio ImbaPortfolio(rf,"2011-03-13");
 
+
+	Portfolio ImbaPortfolio(rf,"2011-03-13");
 
 	Stock omx30;
 	Stock omx30expected;

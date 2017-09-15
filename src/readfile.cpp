@@ -13,7 +13,6 @@
 #include <string>
 using namespace std;
 
-
 ReadFile::ReadFile(void)
 {
     cout << "Initiating readfile" << '\n';
@@ -105,53 +104,58 @@ void ReadFile::ExtractStockData(string line, Stock& stock)
 	stock.add_node_to_end(date,close);
 }
 
+
+//Approved by Sven
 void ReadFile::ExpectedValue(string date,Stock& stock,float percentage)
 {
-	float expectedincrease;
-	float expectedvalue;
-	expectedincrease = (percentage/100)/365+1;
-	cout << expectedincrease << endl;
-	bool first = true;
+	float expectedIncrease;
+	float expectedValue;
+	expectedIncrease = (percentage/100)/365+1;
+
 	Stock::node *tmp = stock.head;
     while(tmp!= NULL){
     	if (tmp->date >= date){
-    		if (first){
-    			expectedvalue = tmp->close;
-    			first = false;
+    		if (tmp->date == date){
+    			//Set expectedValue to the value of our start date.
+    			//Only done once.
+    			expectedValue = tmp->close;
     		}
     		else {
-    			expectedvalue= expectedvalue*expectedincrease;
-    			tmp->close = expectedvalue;
-			};
+    			expectedValue= expectedValue*expectedIncrease;
+    			tmp->close = expectedValue;
+			}
     	}
 		tmp=tmp->next;
     }
 }
 
+//Approved by Sven
 void ReadFile::Mean(string date,Stock& stock,Stock stockCpy,int days)
 {
-	float total=0;
+	float sumStockClose=0;
+	float mean;
 	int i = 0;
-	Stock::node *stockHead = stock.head;
+	Stock::node *stockMeanHead = stock.head;
 	Stock::node *tmpTail = stockCpy.head;
 	Stock::node *tmpHead = stockCpy.head;
 
-	while(stockHead!= NULL){
+	while(stockMeanHead!= NULL){
 			if (i < days){
-				total = total + (tmpHead->close);
+				sumStockClose = sumStockClose + (tmpHead->close);
 				i++;
 			}
 			else {
-				stockHead->close=total/days;
+				mean=sumStockClose/days;
+				stockMeanHead->close=mean;
 				tmpTail=tmpTail->next;
-				total=total+(tmpHead->close)-(tmpTail->close);
+				sumStockClose=sumStockClose+(tmpHead->close)-(tmpTail->close);
 			};
 		tmpHead=tmpHead->next;
-		stockHead=stockHead->next;
+		stockMeanHead=stockMeanHead->next;
     }
 }
 
+//Approved by Sven
 ReadFile::~ReadFile()
-{
-}
+{}
 
