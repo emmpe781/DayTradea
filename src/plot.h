@@ -20,7 +20,9 @@ public:
 	Plot();
 	void Plot_port(Portfolio,Stock);
 	void Plot_stocks(Stock,Stock);
-
+	void PlotNodes(Stock);
+	//stock, string som förklarar vad, default är bara close
+	//stock, ..., string
 	virtual ~Plot();
 };
 

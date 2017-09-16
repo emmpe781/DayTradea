@@ -20,7 +20,10 @@ public:
 	void ExtractDayData(string,Stock*);
 	void ExtractStockData(string,Stock*);
 	void ExpectedValue(string,Stock*,float);
+	void BearBull();
+	void ExpectedValue2(string,Stock*,float);
 	void Mean(string,Stock*,Stock,int);
+	void nyfunction(){}
 	virtual ~ReadFile();
 };
 

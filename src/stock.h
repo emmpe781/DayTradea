@@ -16,6 +16,7 @@ class Stock{
 	  struct node{
 		  string date;
 		  float close;
+		  float est;
 		  node *next;
 	  };
 		node *head,*tail;

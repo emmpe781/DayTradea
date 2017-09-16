@@ -129,6 +129,37 @@ void Plot::Plot_stocks(Stock stock1,Stock stock2)
 
 }
 
+void Plot::PlotNodes(Stock stock)
+{
+
+	Stock::node *stocktmp = stock.head;
+
+	cout << "PRINT: " << endl;
+
+	int n=5100;
+
+	vector<int> x(n,5000);
+	vector<double> y(n,160);
+	vector<double> z(n,160);
+	vector<string> t(n);
+	int i = 0;
+    while(stocktmp != NULL){
+		x.at(i) = i;
+		t.at(i) = stocktmp->date;
+		y.at(i) = stocktmp->close;
+		z.at(i) = stocktmp->est;
+		i=i+1;
+		stocktmp=stocktmp->next;
+    }
+	plt::plot(x,y, "r-");
+	plt::plot(x,z, "k-");
+
+    plt::title("Stocks");
+	//plt::tight_layout();
+	plt::save("./portfolio.png");
+	plt::show();
+
+}
 
 
 Plot::~Plot()

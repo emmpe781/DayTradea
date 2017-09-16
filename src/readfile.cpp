@@ -21,42 +21,46 @@ ReadFile::ReadFile(void)
 
 void ReadFile::Read(string fname,Stock *stock_p)
 {
-	string line;
-
+	string rawData;
 	ifstream myfile (fname.c_str());
 	if (myfile.is_open())
 	{
-		while ( getline (myfile,line) )
-		{
-			ExtractDayData(line,stock_p);
-	    }
+		getline (myfile,rawData);
 	    myfile.close();
+		ExtractDayData(rawData,stock_p);
 	 }
-	else cout << "Unable to open file"<<endl;
+	else {
+		cout << "Unable to open file"<<endl;
+	}
 }
 
-void ReadFile::ExtractDayData(string line,Stock *stock_p)
+void ReadFile::ExtractDayData(string rawData,Stock *stock_p)
 {
-	int startvalue = 0;
-	int endvalue= 0;
+	int startValue = 0;
+	int endValue= 0;
 	string dayData("");
-	int length = line.size();
-	for ( int i=0; i<length; i++ ) {
-		if (line[i]=='{')
+	int length = rawData.size();
+	for (int i=0; i<length; i++) {
+		if (rawData[i]=='{')
 		{
-			startvalue = i+1;
+			startValue = i+1;
 		}
-		if (line[i]=='}')
+		if (rawData[i]=='}')
 		{
-			endvalue = i;
-			for (int k=startvalue; k<endvalue;k++){
-				dayData += line[k];
+			endValue = i;
+
+			nyfunction(); //CLEAN UP
+			for (int k=startValue; k<endValue;k++){
+				dayData += rawData[k];
 			}
 			ExtractStockData(dayData,stock_p);
 			dayData = "";
 
 		}
 	}
+}
+
+void nyfunction(){
 }
 
 void ReadFile::ExtractStockData(string line, Stock *stock)
@@ -124,12 +128,49 @@ void ReadFile::ExpectedValue(string date,Stock* stock,float percentage)
     		}
     		else {
     			expectedValue= expectedValue*expectedIncrease;
+    			tmp->est = expectedValue;
+			}
+    	}
+		tmp=tmp->next;
+    }
+}
+
+void ReadFile::BearBull()
+{
+	//Index eller Aktiekurs för varje datum
+	//Läsa ut Ma200
+	//Vill ha skillnaden på estimerade värdet och sanna värdet?
+
+
+}
+
+void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
+{
+	float expectedIncrease;
+	float expectedValue;
+	expectedIncrease = (percentage/100)/365+1;
+	bool first=true;
+	Stock::node *tmp = stock->head;
+    while(tmp!= NULL){
+    	if (tmp->date >= date){
+    		if (first){
+    			//Set expectedValue to the value of our start date.
+    			//Only done once.
+    			expectedValue = tmp->close;
+    			first=false;
+    		}
+    		else {
+    			//Återkoppla skillnaden mellan omxs30 och vårt estimerade värde
+    			//kalibrera om estimerade värdet ifall bear till bull,
+
+    			expectedValue= expectedValue*expectedIncrease;
     			tmp->close = expectedValue;
 			}
     	}
 		tmp=tmp->next;
     }
 }
+
 
 //Approved by Sven
 void ReadFile::Mean(string date,Stock *stock,Stock stockCpy,int days)
