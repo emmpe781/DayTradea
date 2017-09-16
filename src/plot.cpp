@@ -129,7 +129,7 @@ void Plot::Plot_stocks(Stock stock1,Stock stock2)
 
 }
 
-void Plot::PlotNodes(Stock stock)
+void Plot::PlotNodes(Stock stock,string nodetype)
 {
 
 	Stock::node *stocktmp = stock.head;
@@ -141,6 +141,7 @@ void Plot::PlotNodes(Stock stock)
 	vector<int> x(n,5000);
 	vector<double> y(n,160);
 	vector<double> z(n,160);
+	vector<double> w(n,160);
 	vector<string> t(n);
 	int i = 0;
     while(stocktmp != NULL){
@@ -148,14 +149,18 @@ void Plot::PlotNodes(Stock stock)
 		t.at(i) = stocktmp->date;
 		y.at(i) = stocktmp->close;
 		z.at(i) = stocktmp->est;
+		w.at(i) = stocktmp->ma200;
 		i=i+1;
 		stocktmp=stocktmp->next;
     }
-	plt::plot(x,y, "r-");
-	plt::plot(x,z, "k-");
 
-    plt::title("Stocks");
-	//plt::tight_layout();
+	plt::plot(x,y, "r-");
+	if (nodetype=="est"){plt::plot(x,z, "k-");}
+	if (nodetype=="ma200"){plt::plot(x,w, "k-");}
+
+	plt::title("Stocks");
+	plt::tight_layout();
+    plt::grid(true);
 	plt::save("./portfolio.png");
 	plt::show();
 

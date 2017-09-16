@@ -22,7 +22,7 @@ public:
 	void ExpectedValue(string,Stock*,float);
 	void BearBull();
 	void ExpectedValue2(string,Stock*,float);
-	void Mean(string,Stock*,Stock,int);
+	void Mean(string,Stock*,int);
 	void nyfunction(){}
 	virtual ~ReadFile();
 };

@@ -17,6 +17,9 @@ class Stock{
 		  string date;
 		  float close;
 		  float est;
+		  //0=unknown, 1 = bull, 2 = bear
+		  int bearBull;
+		  float ma200;
 		  node *next;
 	  };
 		node *head,*tail;

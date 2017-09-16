@@ -173,28 +173,27 @@ void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
 
 
 //Approved by Sven
-void ReadFile::Mean(string date,Stock *stock,Stock stockCpy,int days)
+void ReadFile::Mean(string date,Stock *stock,int days)
 {
 	float sumStockClose=0;
 	float mean;
 	int i = 0;
-	Stock::node *stockMeanHead = stock->head;
-	Stock::node *tmpTail = stockCpy.head;
-	Stock::node *tmpHead = stockCpy.head;
+	Stock::node *stockTail = stock->head;
+	Stock::node *stockHead = stock->head;
 
-	while(stockMeanHead!= NULL){
+	while(stockHead!= NULL){
 			if (i < days){
-				sumStockClose = sumStockClose + (tmpHead->close);
+				sumStockClose = sumStockClose + (stockHead->close);
+				stockHead->ma200=stockHead->close;
 				i++;
 			}
 			else {
 				mean=sumStockClose/days;
-				stockMeanHead->close=mean;
-				tmpTail=tmpTail->next;
-				sumStockClose=sumStockClose+(tmpHead->close)-(tmpTail->close);
+				stockHead->ma200=mean;
+				stockTail=stockTail->next;
+				sumStockClose=sumStockClose+(stockHead->close)-(stockTail->close);
 			};
-		tmpHead=tmpHead->next;
-		stockMeanHead=stockMeanHead->next;
+		stockHead=stockHead->next;
     }
 }
 
