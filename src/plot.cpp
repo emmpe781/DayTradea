@@ -142,6 +142,8 @@ void Plot::PlotNodes(Stock stock,string nodetype)
 	vector<double> y(n,160);
 	vector<double> z(n,160);
 	vector<double> w(n,160);
+	vector<double> q(n,160);
+
 	vector<string> t(n);
 	int i = 0;
     while(stocktmp != NULL){
@@ -150,13 +152,18 @@ void Plot::PlotNodes(Stock stock,string nodetype)
 		y.at(i) = stocktmp->close;
 		z.at(i) = stocktmp->est;
 		w.at(i) = stocktmp->ma200;
+		q.at(i) = stocktmp->bearBull;
+
 		i=i+1;
 		stocktmp=stocktmp->next;
     }
 
 	plt::plot(x,y, "r-");
+    plt::plot(x,w, "g-");
+
 	if (nodetype=="est"){plt::plot(x,z, "k-");}
 	if (nodetype=="ma200"){plt::plot(x,w, "k-");}
+	if (nodetype=="bearbull"){plt::plot(x,q, "k-");}
 
 	plt::title("Stocks");
 	plt::tight_layout();

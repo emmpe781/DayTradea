@@ -17,6 +17,8 @@ void Stock::add_node_to_end(string date,float close)
 	date_node->est = 0;
 	date_node->bearBull = 0;
 	date_node->ma200 = 0;
+	date_node->ma100 = 0;
+	date_node->ma50 = 0;
 	date_node->next = NULL;
 
 	if(head == NULL)

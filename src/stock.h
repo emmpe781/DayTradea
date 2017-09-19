@@ -12,6 +12,9 @@ using namespace std;
 
 class Stock{
 	public:
+		#define BEAR 10;
+		#define BULL 200;
+
 	  string name;
 	  struct node{
 		  string date;
@@ -20,6 +23,8 @@ class Stock{
 		  //0=unknown, 1 = bull, 2 = bear
 		  int bearBull;
 		  float ma200;
+		  float ma100;
+		  float ma50;
 		  node *next;
 	  };
 		node *head,*tail;

@@ -34,6 +34,14 @@ void ReadFile::Read(string fname,Stock *stock_p)
 	}
 }
 
+void ReadFile::PopulateStock(Stock *stock_p)
+{
+
+	ExpectedValue("2002-03-06", stock_p, 7.5);
+	Mean("2002-03-06", stock_p, 200);
+	BearBull(stock_p);
+}
+
 void ReadFile::ExtractDayData(string rawData,Stock *stock_p)
 {
 	int startValue = 0;
@@ -135,16 +143,53 @@ void ReadFile::ExpectedValue(string date,Stock* stock,float percentage)
     }
 }
 
-void ReadFile::BearBull()
+
+
+void ReadFile::BearBull(Stock* stock)
 {
-	//Index eller Aktiekurs för varje datum
-	//Läsa ut Ma200
-	//Vill ha skillnaden på estimerade värdet och sanna värdet?
+	Stock::node *stockHead = stock->head;
+	float lastMa200 = 0;
+	float const diffValue = 0.05f;
+	static int lastBearBull = 0;
 
+	while(stockHead != NULL){
 
+		stockHead->bearBull = lastBearBull;
+		if (stockHead->ma200 != 0)
+		{
+
+			//bull->bear
+			if ((stockHead->ma200 < lastMa200) &&
+				((stockHead->ma200 - lastMa200) < -diffValue) &&
+				(stockHead->bearBull == 200)) //BULL macrot!
+
+				{
+					cout << "BEAR" << endl;
+					stockHead->bearBull = BEAR;
+				}
+
+			//Bull->bear
+			if ((stockHead->ma200 > lastMa200) &&
+				((stockHead->ma200 - lastMa200) > diffValue) &&
+				(stockHead->bearBull == 10)) //Använd BEAR macrot
+			{
+				cout << "BULL" << endl;
+				stockHead->bearBull = BULL;
+			}
+
+			if (stockHead->bearBull == 0 && stockHead->ma200 >= lastMa200) // Före BEAR/BULL
+			{
+				stockHead->bearBull = BULL;
+			}
+
+		}
+		lastBearBull = stockHead->bearBull;
+		lastMa200 = stockHead->ma200;
+		stockHead=stockHead->next;
+	}
 }
 
-void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
+/*void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
 {
 	float expectedIncrease;
 	float expectedValue;
@@ -169,7 +214,7 @@ void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
     	}
 		tmp=tmp->next;
     }
-}
+}*/
 
 
 //Approved by Sven
@@ -182,17 +227,20 @@ void ReadFile::Mean(string date,Stock *stock,int days)
 	Stock::node *stockHead = stock->head;
 
 	while(stockHead!= NULL){
-			if (i < days){
-				sumStockClose = sumStockClose + (stockHead->close);
-				stockHead->ma200=stockHead->close;
-				i++;
-			}
-			else {
-				mean=sumStockClose/days;
-				stockHead->ma200=mean;
-				stockTail=stockTail->next;
-				sumStockClose=sumStockClose+(stockHead->close)-(stockTail->close);
-			};
+
+		//fyll på ma 50/100/200
+		if (i < 200){
+			sumStockClose = sumStockClose + (stockHead->close);
+			//stockHead->ma200=stockHead->close;
+			stockHead->ma200 = 0;
+			i++;
+		}
+		else {
+			mean=sumStockClose/days;
+			stockHead->ma200=mean;
+			stockTail=stockTail->next;
+			sumStockClose=sumStockClose+(stockHead->close)-(stockTail->close);
+		};
 		stockHead=stockHead->next;
     }
 }

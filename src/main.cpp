@@ -14,16 +14,19 @@ int main() {
 
 	Stock omx30;
 	string fname_omx30="../data/stockdata_OMX30_1991-05-31_2017-07-03fill.dat";
+
+
 	rf.Read(fname_omx30,&omx30);
+	rf.PopulateStock(&omx30);
 
-
-	rf.ExpectedValue("2002-03-06",&omx30,7.5);
-	rf.Mean("2002-03-06",&omx30,200);
+	//rf.ExpectedValue("2002-03-06",&omx30,7.5);
+	//rf.Mean("2002-03-06",&omx30,200);
+	//rf.BearBull(&omx30);
 
 	//rf.BearBull(omx30mean200);
 
 	Plot plt1;
-	plt1.PlotNodes(omx30,"ma200");
+	plt1.PlotNodes(omx30,"bearbull");
 
 
     /*Stock volvo;
