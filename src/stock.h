@@ -13,7 +13,7 @@ using namespace std;
 class Stock{
 	public:
 		#define BEAR 10;
-		#define BULL 200;
+		#define BULL 1800;
 
 	  string name;
 	  struct node{

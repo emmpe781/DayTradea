@@ -13,7 +13,7 @@ int main() {
 	ReadFile rf; //TODO: create namespace instead of object
 
 	Stock omx30;
-	string fname_omx30="../data/stockdata_OMX30_1991-05-31_2017-07-03fill.dat";
+	string fname_omx30="../data/stockdata_OMX30_1986-09-30_2017-03-24.dat";
 
 
 	rf.Read(fname_omx30,&omx30);

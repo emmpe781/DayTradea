@@ -85,7 +85,7 @@ void Plot::Plot_stocks(Stock stock1,Stock stock2)
 
 	cout << "PRINT: " << endl;
 
-	int n=5100;
+	int n=20000;
 
 	vector<int> x(n,5000);
 	vector<double> y(n,160);
@@ -136,9 +136,9 @@ void Plot::PlotNodes(Stock stock,string nodetype)
 
 	cout << "PRINT: " << endl;
 
-	int n=5100;
+	int n=100000;
 
-	vector<int> x(n,5000);
+	vector<int> x(n,13000);
 	vector<double> y(n,160);
 	vector<double> z(n,160);
 	vector<double> w(n,160);

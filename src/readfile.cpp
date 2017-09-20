@@ -149,7 +149,7 @@ void ReadFile::BearBull(Stock* stock)
 {
 	Stock::node *stockHead = stock->head;
 	float lastMa200 = 0;
-	float const diffValue = 0.05f;
+	float const diffValue = 0.00085f;
 	static int lastBearBull = 0;
 
 	while(stockHead != NULL){
@@ -160,8 +160,8 @@ void ReadFile::BearBull(Stock* stock)
 
 			//bull->bear
 			if ((stockHead->ma200 < lastMa200) &&
-				((stockHead->ma200 - lastMa200) < -diffValue) &&
-				(stockHead->bearBull == 200)) //BULL macrot!
+				((stockHead->ma200 - lastMa200) < -diffValue*lastMa200) &&
+				(stockHead->bearBull == 1800)) //BULL macrot!
 
 				{
 					cout << "BEAR" << endl;
@@ -170,7 +170,7 @@ void ReadFile::BearBull(Stock* stock)
 
 			//Bull->bear
 			if ((stockHead->ma200 > lastMa200) &&
-				((stockHead->ma200 - lastMa200) > diffValue) &&
+				((stockHead->ma200 - lastMa200) > lastMa200*diffValue) &&
 				(stockHead->bearBull == 10)) //Använd BEAR macrot
 			{
 				cout << "BULL" << endl;
@@ -229,7 +229,7 @@ void ReadFile::Mean(string date,Stock *stock,int days)
 	while(stockHead!= NULL){
 
 		//fyll på ma 50/100/200
-		if (i < 200){
+		if (i < days){
 			sumStockClose = sumStockClose + (stockHead->close);
 			//stockHead->ma200=stockHead->close;
 			stockHead->ma200 = 0;
