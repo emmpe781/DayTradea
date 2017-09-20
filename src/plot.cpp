@@ -21,59 +21,116 @@ Plot::Plot(void)
 {
     cout << "Plotting " << '\n';
 }
-void Plot::Plot_port(Portfolio port,Stock stock)
+//void Plot::Plot_port(Portfolio port,Stock stock)
+//{
+//
+//	cout << "PRINT: " << endl;
+//	Portfolio::portfolionode *tmp = port.head;
+//	Portfolio::portfolionode::stockinfo *infotmp = tmp->head;
+//
+//
+//	//int n=2130;
+//	int n=8000;
+//	vector<int> x(n);
+//	vector<double> y(n);
+//	vector<string> t(n);
+//	int i = 0;
+//    while(tmp!= NULL){
+//		x.at(i) = i;
+//		t.at(i) = tmp->date;
+//		while(infotmp!=NULL){
+//			if (infotmp->name=="portfolio value"){
+//				y.at(i) = infotmp->volume;
+//				}
+//			infotmp=infotmp->next;
+//		}
+//		i=i+1;
+//    	infotmp=tmp->head;
+//		tmp=tmp->next;
+//   }
+//
+//	Stock::node *stocktmp = stock.head;
+//	cout << "PRINT: " << endl;
+//
+//	vector<int> a(n);
+//	vector<double> b(n);
+//	vector<string> c(n);
+//	int j = 0;
+//    while(stocktmp!= NULL){
+//		a.at(j) = j;
+//		c.at(j) = stocktmp->date;
+//		b.at(j) = stocktmp->close;
+//		j=j+1;
+//		stocktmp=stocktmp->next;
+//   }
+//
+//
+//	//	plt::xticks()
+//	//plt::xticks(x,t);
+//	plt::plot(x,y, "k-");
+//	plt::plot(a,b, "r-");
+//
+//    //plt::plot({"1","2","3","4"},{1,3,2,4},"k");
+//	//plt::grid(true);
+//	plt::title("Portfolio");
+//	//plt::tight_layout();
+//	plt::save("./portfolio.png");
+//	plt::show();
+//
+//}
+
+void Plot::Plot_port(Portfolio port1,Portfolio port2)
 {
 
-	cout << "PRINT: " << endl;
-	Portfolio::portfolionode *tmp = port.head;
-	Portfolio::portfolionode::stockinfo *infotmp = tmp->head;
+	Portfolio::portfolionode *tmp1 = port1.head;
+	Portfolio::portfolionode::stockinfo *infotmp1 = tmp1->head;
 
-
-	//int n=2130;
-	int n=8000;
-	vector<int> x(n);
-	vector<double> y(n);
+	int n=11000;
+	vector<int> x(n,11000);
+	vector<double> y(n,3000);
 	vector<string> t(n);
 	int i = 0;
-    while(tmp!= NULL){
+    while(tmp1!= NULL){
 		x.at(i) = i;
-		t.at(i) = tmp->date;
-		while(infotmp!=NULL){
-			if (infotmp->name=="portfolio value"){
-				y.at(i) = infotmp->volume;
+		t.at(i) = tmp1->date;
+		while(infotmp1!=NULL){
+			if (infotmp1->name=="portfolio value"){
+				y.at(i) = infotmp1->volume;
 				}
-			infotmp=infotmp->next;
+			infotmp1=infotmp1->next;
 		}
 		i=i+1;
-    	infotmp=tmp->head;
-		tmp=tmp->next;
+    	infotmp1=tmp1->head;
+		tmp1=tmp1->next;
    }
 
-	Stock::node *stocktmp = stock.head;
-	cout << "PRINT: " << endl;
+	Portfolio::portfolionode *tmp2 = port2.head;
+	Portfolio::portfolionode::stockinfo *infotmp2 = tmp2->head;
 
-	vector<int> a(n);
-	vector<double> b(n);
+	i = 0;
+
+	vector<int> a(n,11000);
+	vector<double> b(n,3000);
 	vector<string> c(n);
-	int j = 0;
-    while(stocktmp!= NULL){
-		a.at(j) = j;
-		c.at(j) = stocktmp->date;
-		b.at(j) = stocktmp->close;
-		j=j+1;
-		stocktmp=stocktmp->next;
+    while(tmp2!= NULL){
+		a.at(i) = i;
+		c.at(i) = tmp2->date;
+		while(infotmp2!=NULL){
+			if (infotmp2->name=="portfolio value"){
+				b.at(i) = infotmp2->volume;
+				}
+			infotmp2=infotmp2->next;
+		}
+		i=i+1;
+    	infotmp2=tmp2->head;
+		tmp2=tmp2->next;
    }
 
-
-	//	plt::xticks()
-	//plt::xticks(x,t);
 	plt::plot(x,y, "k-");
 	plt::plot(a,b, "r-");
 
-    //plt::plot({"1","2","3","4"},{1,3,2,4},"k");
-	//plt::grid(true);
 	plt::title("Portfolio");
-	//plt::tight_layout();
+	plt::tight_layout();
 	plt::save("./portfolio.png");
 	plt::show();
 

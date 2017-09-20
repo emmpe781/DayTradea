@@ -15,7 +15,7 @@ using namespace std;
 Portfolio::Portfolio(string date) {
 	cout << "initiating Portfolio... " << endl;
 	Stock portf_time;
-	string fname_time="../data/stockdata_Portfolio_fill.dat";
+	string fname_time="../data/stockdata_Portfolio_use.dat";
 	ReadFile rf;
 	rf.Read(fname_time,&portf_time);
 
@@ -135,6 +135,7 @@ void Portfolio::remove_from_bank(float volume,string date)
 				if (tmpnode->name=="bank"){
 					tmpnode->volume = tmpnode->volume-volume;
 					portfolio->volume= portfolio->volume - volume;
+					cout << portfolio->volume << endl;
 				}
 				tmpnode=tmpnode->next;
 				}
@@ -199,8 +200,78 @@ void Portfolio::buy(Stock stock,float volume,string date)
 						if (bankupdated == 0){
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
+							cout << "REMOVED FROM BANK" << endl;
 						}
 					   portfolio->volume = portfolio->volume + (stocktmp->close)*volume;
+         			   tmpnode->next=tmp->head;
+					   tmp->head=tmpnode;
+   					   tmpnode=NULL;
+
+					 }
+				}
+			}
+		}
+		tmpnode=tmp->head;
+		tmp=tmp->next;
+	}
+}
+
+void Portfolio::sell(Stock stock,float volume,string date)
+{
+
+	portfolionode *tmp = head;
+	portfolionode::stockinfo *tmpnode = tmp->head;
+	Stock::node *stocktmp = stock.head;
+	int bankupdated = 0;
+
+	while((tmp!= NULL) && (stocktmp != NULL)){
+		if (tmp->date >= date){
+			while (tmp->date > stocktmp->date){
+				stocktmp=stocktmp->next;
+			}
+
+			if (stocktmp->date == tmp->date){
+				tmpnode=tmp->head;
+				portfolionode::stockinfo *portfolio = tmpnode;
+				portfolionode::stockinfo *bank = tmpnode;
+
+				int stockexist = 0;
+				while (tmpnode != NULL){
+					if (tmpnode->name == "portfolio value"){portfolio=tmpnode;}
+					if (tmpnode->name == "bank"){bank=tmpnode;}
+					tmpnode=tmpnode->next;
+				}
+				tmpnode=tmp->head;
+
+				//Check if the stock exist. If it exist it will be updated. If it does not exist it will be added.
+				while (tmpnode != NULL){
+					if (tmpnode->name==stock.name){
+						//The stock exist. updating node"
+						tmpnode->volume = tmpnode->volume+volume;
+						if (bankupdated == 0){
+							add_to_bank((stocktmp->close)*volume,tmp->date);
+							bankupdated=1;
+							cout << "REMOVED FROM BANK" << endl;
+						}
+						portfolio->volume= portfolio->volume - (stocktmp->close)*volume;
+						stockexist=1;
+						break;
+					}
+
+					tmpnode=tmpnode->next;
+
+					if ((tmpnode == NULL) && (stockexist==0)){
+					   //The stock does not exist. creating new node"
+					   tmpnode = new portfolionode::stockinfo;
+					   tmpnode->name = stock.name;
+					   tmpnode->volume = volume;
+
+						if (bankupdated == 0){
+							add_to_bank((stocktmp->close)*volume,tmp->date);
+							bankupdated=1;
+							cout << "REMOVED FROM BANK" << endl;
+						}
+					   portfolio->volume = portfolio->volume - (stocktmp->close)*volume;
          			   tmpnode->next=tmp->head;
 					   tmp->head=tmpnode;
    					   tmpnode=NULL;

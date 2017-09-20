@@ -164,7 +164,6 @@ void ReadFile::BearBull(Stock* stock)
 				(stockHead->bearBull == 1800)) //BULL macrot!
 
 				{
-					cout << "BEAR" << endl;
 					stockHead->bearBull = BEAR;
 				}
 
@@ -173,7 +172,6 @@ void ReadFile::BearBull(Stock* stock)
 				((stockHead->ma200 - lastMa200) > lastMa200*diffValue) &&
 				(stockHead->bearBull == 10)) //Använd BEAR macrot
 			{
-				cout << "BULL" << endl;
 				stockHead->bearBull = BULL;
 			}
 

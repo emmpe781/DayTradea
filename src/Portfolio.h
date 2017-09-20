@@ -39,6 +39,8 @@ public:
 	void insert_start(string);
 
 	void buy(Stock,float,string);
+	void sell(Stock,float,string);
+
 	void calculateValue();
 	virtual ~Portfolio();
 };
