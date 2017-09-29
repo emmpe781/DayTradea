@@ -9,27 +9,28 @@
 using namespace std;
 
 int main() {
-	Portfolio Reference("1987-03-05");
-	Reference.add_to_bank(12979,"1987-03-15");
+	string startdate = "2010-03-05";
+	Portfolio Reference(startdate);
+	Reference.add_to_bank(100,startdate);
 
-	Portfolio ImbaPortfolio("1987-03-05");
-	ImbaPortfolio.add_to_bank(12979,"1987-03-15");
+	Portfolio ImbaPortfolio(startdate);
+	ImbaPortfolio.add_to_bank(100,startdate);
 
 	Algorithms Algo;
 	ReadFile rf; //TODO: create namespace instead of object
 
 	Stock omx30;
 	string fname_omx30="../data/stockdata_OMX30_1986-09-30_2017-03-24.dat";
-	rf.Read(fname_omx30,&omx30);
+	rf.Read(fname_omx30,&omx30,startdate);
 	rf.PopulateStock(&omx30);
 
-	Reference.buy(omx30,100,"1987-03-17");
-	ImbaPortfolio.buy(omx30,100,"1987-03-17");
+	Reference.buy(omx30,1,startdate);
+	ImbaPortfolio.buy(omx30,1,startdate);
 
 	Algo.Buy_BearBull(&ImbaPortfolio,&omx30);
 	Plot plt1;
+	plt1.Plot_port(ImbaPortfolio,Reference,omx30);
 	//plt1.PlotNodes(omx30,"bearbull");
-	plt1.Plot_port(ImbaPortfolio,Reference);
 
 
 	return 0;

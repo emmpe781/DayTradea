@@ -19,7 +19,7 @@ ReadFile::ReadFile(void)
     cout << "Initiating readfile" << '\n';
 }
 
-void ReadFile::Read(string fname,Stock *stock_p)
+void ReadFile::Read(string fname,Stock *stock_p,string startdate)
 {
 	string rawData;
 	ifstream myfile (fname.c_str());
@@ -27,7 +27,7 @@ void ReadFile::Read(string fname,Stock *stock_p)
 	{
 		getline (myfile,rawData);
 	    myfile.close();
-		ExtractDayData(rawData,stock_p);
+		ExtractDayData(rawData,stock_p,startdate);
 	 }
 	else {
 		cout << "Unable to open file"<<endl;
@@ -37,12 +37,12 @@ void ReadFile::Read(string fname,Stock *stock_p)
 void ReadFile::PopulateStock(Stock *stock_p)
 {
 
-	ExpectedValue("2002-03-06", stock_p, 7.5);
-	Mean("2002-03-06", stock_p, 200);
+	ExpectedValue(stock_p, 7.5);
+	Mean(stock_p, 200);
 	BearBull(stock_p);
 }
 
-void ReadFile::ExtractDayData(string rawData,Stock *stock_p)
+void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 {
 	int startValue = 0;
 	int endValue= 0;
@@ -61,7 +61,7 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p)
 			for (int k=startValue; k<endValue;k++){
 				dayData += rawData[k];
 			}
-			ExtractStockData(dayData,stock_p);
+			ExtractStockData(dayData,stock_p,startdate);
 			dayData = "";
 
 		}
@@ -71,7 +71,7 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p)
 void nyfunction(){
 }
 
-void ReadFile::ExtractStockData(string line, Stock *stock)
+void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 {
 	int startvalue = 0;
 	int endvalue = 0;
@@ -112,14 +112,15 @@ void ReadFile::ExtractStockData(string line, Stock *stock)
 		{
 		last = true;
 		}
-
 	}
-	stock->add_node_to_end(date,close);
+	if (date >= startdate){
+		stock->add_node_to_end(date,close);
+	}
 }
 
 
 //Approved by Sven
-void ReadFile::ExpectedValue(string date,Stock* stock,float percentage)
+void ReadFile::ExpectedValue(Stock* stock,float percentage)
 {
 	float expectedIncrease;
 	float expectedValue;
@@ -127,7 +128,6 @@ void ReadFile::ExpectedValue(string date,Stock* stock,float percentage)
 	bool first=true;
 	Stock::node *tmp = stock->head;
     while(tmp!= NULL){
-    	if (tmp->date >= date){
     		if (first){
     			//Set expectedValue to the value of our start date.
     			//Only done once.
@@ -138,8 +138,7 @@ void ReadFile::ExpectedValue(string date,Stock* stock,float percentage)
     			expectedValue= expectedValue*expectedIncrease;
     			tmp->est = expectedValue;
 			}
-    	}
-		tmp=tmp->next;
+    		tmp=tmp->next;
     }
 }
 
@@ -216,7 +215,7 @@ void ReadFile::BearBull(Stock* stock)
 
 
 //Approved by Sven
-void ReadFile::Mean(string date,Stock *stock,int days)
+void ReadFile::Mean(Stock *stock,int days)
 {
 	float sumStockClose=0;
 	float mean;

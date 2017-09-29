@@ -17,14 +17,15 @@ Portfolio::Portfolio(string date) {
 	Stock portf_time;
 	string fname_time="../data/stockdata_Portfolio_use.dat";
 	ReadFile rf;
-	rf.Read(fname_time,&portf_time);
-
+	rf.Read(fname_time,&portf_time,date);
+	Portfolio::portfoliolength = 0;
 	Stock::node *stocktmp = portf_time.head;
 
 	while(stocktmp!= NULL){
-		if (stocktmp->date > date){
+		//if (stocktmp->date >= date){
 			add_date(stocktmp->date,"bank");
-		}
+			Portfolio::portfoliolength++;
+		//}
 		stocktmp=stocktmp->next;
 	}
 }
@@ -247,11 +248,11 @@ void Portfolio::sell(Stock stock,float volume,string date)
 				while (tmpnode != NULL){
 					if (tmpnode->name==stock.name){
 						//The stock exist. updating node"
-						tmpnode->volume = tmpnode->volume+volume;
+						tmpnode->volume = tmpnode->volume-volume;
 						if (bankupdated == 0){
 							add_to_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
-							cout << "REMOVED FROM BANK" << endl;
+							cout << "ADDED TO BANK" << endl;
 						}
 						portfolio->volume= portfolio->volume - (stocktmp->close)*volume;
 						stockexist=1;
@@ -261,21 +262,7 @@ void Portfolio::sell(Stock stock,float volume,string date)
 					tmpnode=tmpnode->next;
 
 					if ((tmpnode == NULL) && (stockexist==0)){
-					   //The stock does not exist. creating new node"
-					   tmpnode = new portfolionode::stockinfo;
-					   tmpnode->name = stock.name;
-					   tmpnode->volume = volume;
-
-						if (bankupdated == 0){
-							add_to_bank((stocktmp->close)*volume,tmp->date);
-							bankupdated=1;
-							cout << "REMOVED FROM BANK" << endl;
-						}
-					   portfolio->volume = portfolio->volume - (stocktmp->close)*volume;
-         			   tmpnode->next=tmp->head;
-					   tmp->head=tmpnode;
-   					   tmpnode=NULL;
-
+						cout << "The stock does not exist" <<endl;
 					 }
 				}
 			}

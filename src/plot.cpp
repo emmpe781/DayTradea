@@ -79,23 +79,24 @@ Plot::Plot(void)
 //
 //}
 
-void Plot::Plot_port(Portfolio port1,Portfolio port2)
+void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
 {
 
 	Portfolio::portfolionode *tmp1 = port1.head;
 	Portfolio::portfolionode::stockinfo *infotmp1 = tmp1->head;
 
-	int n=11000;
-	vector<int> x(n,11000);
-	vector<double> y(n,3000);
+	int n=port1.portfoliolength+20;
+
+	vector<int> dateindex_1(n,n);
+	vector<double> portfolio_value_1(n,2000);
 	vector<string> t(n);
 	int i = 0;
     while(tmp1!= NULL){
-		x.at(i) = i;
+    	dateindex_1.at(i) = i;
 		t.at(i) = tmp1->date;
 		while(infotmp1!=NULL){
 			if (infotmp1->name=="portfolio value"){
-				y.at(i) = infotmp1->volume;
+				portfolio_value_1.at(i) = infotmp1->volume;
 				}
 			infotmp1=infotmp1->next;
 		}
@@ -109,15 +110,15 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2)
 
 	i = 0;
 
-	vector<int> a(n,11000);
-	vector<double> b(n,3000);
+	vector<int> dateindex_2(n,n);
+	vector<double> portfolio_value_2(n,160);
 	vector<string> c(n);
     while(tmp2!= NULL){
-		a.at(i) = i;
+    	dateindex_2.at(i) = i;
 		c.at(i) = tmp2->date;
 		while(infotmp2!=NULL){
 			if (infotmp2->name=="portfolio value"){
-				b.at(i) = infotmp2->volume;
+				portfolio_value_2.at(i) = infotmp2->volume;
 				}
 			infotmp2=infotmp2->next;
 		}
@@ -126,8 +127,37 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2)
 		tmp2=tmp2->next;
    }
 
-	plt::plot(x,y, "k-");
-	plt::plot(a,b, "r-");
+
+    Stock::node *stocktmp = stock.head;
+
+    	cout << "PRINT: " << endl;
+
+    	vector<int> dateindex_3(n,n);
+    	vector<double> close_value_stock(n,stock.tail->close);
+    	vector<double> ma200_stock(n,stock.tail->ma200);
+    	vector<double> bearbull(n,stock.tail->bearBull);
+
+    	//vector<string> t(n);
+    	i = 0;
+        while(stocktmp != NULL){
+        	dateindex_3.at(i) = i;
+    		//t.at(i) = stocktmp->date;
+        	close_value_stock.at(i) = stocktmp->close;
+    		//z.at(i) = stocktmp->est;
+        	ma200_stock.at(i) = stocktmp->ma200;
+        	bearbull.at(i) = stocktmp->bearBull;
+
+    		i=i+1;
+    		stocktmp=stocktmp->next;
+        }
+
+    plt::plot(dateindex_3,ma200_stock, "b-");
+    plt::plot(dateindex_3,bearbull, "k-");
+    plt::plot(dateindex_3,close_value_stock, "y-");
+
+
+	plt::plot(dateindex_1,portfolio_value_1, "k-");
+	plt::plot(dateindex_2,portfolio_value_2, "r-");
 
 	plt::title("Portfolio");
 	plt::tight_layout();

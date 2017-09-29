@@ -18,7 +18,7 @@ class Plot
 {
 public:
 	Plot();
-	void Plot_port(Portfolio,Portfolio);
+	void Plot_port(Portfolio,Portfolio,Stock);
 	void Plot_stocks(Stock,Stock);
 	void PlotNodes(Stock,string);
 	//stock, string som förklarar vad, default är bara close

@@ -16,14 +16,14 @@ class ReadFile
 {
 public:
 	ReadFile();
-	void Read(string,Stock *);
+	void Read(string,Stock *,string);
 	void PopulateStock(Stock *);
-	void ExtractDayData(string,Stock*);
-	void ExtractStockData(string,Stock*);
-	void ExpectedValue(string,Stock*,float);
+	void ExtractDayData(string,Stock*,string);
+	void ExtractStockData(string,Stock*,string);
+	void ExpectedValue(Stock*,float);
 	void BearBull(Stock*);
-	void ExpectedValue2(string,Stock*,float);
-	void Mean(string,Stock*,int);
+	void ExpectedValue2(Stock*,float);
+	void Mean(Stock*,int);
 	void nyfunction(){}
 	virtual ~ReadFile();
 
