@@ -132,7 +132,7 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
 
     	cout << "PRINT: " << endl;
 
-    	vector<int> dateindex_3(n,n);
+    	vector<double> dateindex_3(n,n);
     	vector<double> close_value_stock(n,stock.tail->close);
     	vector<double> ma200_stock(n,stock.tail->ma200);
     	vector<double> bearbull(n,stock.tail->bearBull);
@@ -151,24 +151,26 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
     		stocktmp=stocktmp->next;
         }
 
-    plt::plot(dateindex_3,ma200_stock, "b-");
-    plt::plot(dateindex_3,bearbull, "k-");
-    plt::plot(dateindex_3,close_value_stock, "y-");
+	plt::runPython(dateindex_3,close_value_stock);
+
+    //plt::plot(dateindex_3,ma200_stock, "b-");
+    //plt::plot(dateindex_3,bearbull, "k-");
+    //plt::plot(dateindex_3,close_value_stock, "y-");
 
 
-	plt::plot(dateindex_1,portfolio_value_1, "k-");
-	plt::plot(dateindex_2,portfolio_value_2, "r-");
+	//plt::plot(dateindex_1,portfolio_value_1, "k-");
+	//plt::plot(dateindex_2,portfolio_value_2, "r-");
 
-	plt::title("Portfolio");
-	plt::tight_layout();
-	plt::save("./portfolio.png");
-	plt::show();
+	//plt::title("Portfolio");
+	//plt::tight_layout();
+	//plt::save("./portfolio.png");
+	//plt::show();
 
 }
 
 void Plot::Plot_stocks(Stock stock1,Stock stock2)
 {
-	Stock::node *stocktmp1 = stock1.head;
+	/*Stock::node *stocktmp1 = stock1.head;
 
 	cout << "PRINT: " << endl;
 
@@ -212,13 +214,13 @@ void Plot::Plot_stocks(Stock stock1,Stock stock2)
 	plt::title("Stocks");
 	//plt::tight_layout();
 	plt::save("./portfolio.png");
-	plt::show();
+	plt::show();*/
 
 }
 
 void Plot::PlotNodes(Stock stock,string nodetype)
 {
-
+/*
 	Stock::node *stocktmp = stock.head;
 
 	cout << "PRINT: " << endl;
@@ -256,7 +258,7 @@ void Plot::PlotNodes(Stock stock,string nodetype)
 	plt::tight_layout();
     plt::grid(true);
 	plt::save("./portfolio.png");
-	plt::show();
+	plt::show();*/
 
 }
 

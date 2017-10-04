@@ -9,7 +9,7 @@
 using namespace std;
 
 int main() {
-	string startdate = "2010-03-05";
+	string startdate = "2004-03-05";
 	Portfolio Reference(startdate);
 	Reference.add_to_bank(100,startdate);
 
