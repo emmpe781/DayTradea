@@ -151,21 +151,7 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
     		stocktmp=stocktmp->next;
         }
 
-	plt::runPython(t,close_value_stock);
-
-    //plt::plot(dateindex_3,ma200_stock, "b-");
-    //plt::plot(dateindex_3,bearbull, "k-");
-    //plt::plot(dateindex_3,close_value_stock, "y-");
-
-
-	//plt::plot(dateindex_1,portfolio_value_1, "k-");
-	//plt::plot(dateindex_2,portfolio_value_2, "r-");
-
-	//plt::title("Portfolio");
-	//plt::tight_layout();
-	//plt::save("./portfolio.png");
-	//plt::show();
-
+	plt::runPython(t,close_value_stock,ma200_stock);
 }
 
 void Plot::Plot_stocks(Stock stock1,Stock stock2)

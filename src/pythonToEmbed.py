@@ -1,5 +1,5 @@
 
-def plotStdVectors(x,y):
+def plotStdVectors(*arg):
     import plotly
     import plotly.plotly as py
     import plotly.graph_objs as go 
@@ -7,21 +7,32 @@ def plotStdVectors(x,y):
     import numpy as np
     from datetime import datetime
     attrList=[]
-        
-    #random_x = np.fromiter(x, dtype = np.string)
-    random_y = np.fromiter(y, dtype = np.float)
     
-    for i in range(0,len(x)):
-        date = datetime.strptime(x[i],'%Y-%m-%d')
+    time=arg[0][0]
+    stock_close=arg[0][1]
+    stock_mean=arg[1][1]
+ 
+    close = np.fromiter(stock_close, dtype = np.float)
+    mean = np.fromiter(stock_mean, dtype = np.float)
+
+    
+    for i in range(0,len(time)):
+        date = datetime.strptime(time[i],'%Y-%m-%d')
         attrList.append(date)
-
+    
     # Create a trace
-    trace = go.Scatter(
+    trace1 = go.Scatter(
         x = attrList,
-        y = random_y
+        y = stock_close,
+        name="close"   
     )
-
-    plotdata = [trace]
+    trace2 = go.Scatter(
+        x = attrList,
+        y = stock_mean,
+        name="mean"
+    )
+    
+    plotdata = [trace1,trace2]
     layout = go.Layout(
             xaxis=dict(
                 rangeselector=dict(
@@ -45,8 +56,8 @@ def plotStdVectors(x,y):
                     dict(step='all')
                 ])
             ),
-            rangeslider=dict(),
-            type='date'
+            #rangeslider=dict(),
+            #type='date'
             ),
             yaxis=dict(
                 type='log',
