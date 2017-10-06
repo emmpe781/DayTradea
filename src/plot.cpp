@@ -85,15 +85,15 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
 	Portfolio::portfolionode *tmp1 = port1.head;
 	Portfolio::portfolionode::stockinfo *infotmp1 = tmp1->head;
 
-	int n=port1.portfoliolength+20;
+	int n=port1.portfoliolength;
 
 	vector<int> dateindex_1(n,n);
 	vector<double> portfolio_value_1(n,2000);
-	vector<string> t(n);
+	//vector<string> t(n);
 	int i = 0;
     while(tmp1!= NULL){
     	dateindex_1.at(i) = i;
-		t.at(i) = tmp1->date;
+		//t.at(i) = tmp1->date;
 		while(infotmp1!=NULL){
 			if (infotmp1->name=="portfolio value"){
 				portfolio_value_1.at(i) = infotmp1->volume;
@@ -112,10 +112,10 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
 
 	vector<int> dateindex_2(n,n);
 	vector<double> portfolio_value_2(n,160);
-	vector<string> c(n);
+	//vector<string> c(n);
     while(tmp2!= NULL){
     	dateindex_2.at(i) = i;
-		c.at(i) = tmp2->date;
+		//c.at(i) = tmp2->date;
 		while(infotmp2!=NULL){
 			if (infotmp2->name=="portfolio value"){
 				portfolio_value_2.at(i) = infotmp2->volume;
@@ -137,11 +137,11 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
     	vector<double> ma200_stock(n,stock.tail->ma200);
     	vector<double> bearbull(n,stock.tail->bearBull);
 
-    	//vector<string> t(n);
+    	vector<string> t(n);
     	i = 0;
         while(stocktmp != NULL){
         	dateindex_3.at(i) = i;
-    		//t.at(i) = stocktmp->date;
+    		t.at(i) = stocktmp->date;
         	close_value_stock.at(i) = stocktmp->close;
     		//z.at(i) = stocktmp->est;
         	ma200_stock.at(i) = stocktmp->ma200;
@@ -151,7 +151,7 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
     		stocktmp=stocktmp->next;
         }
 
-	plt::runPython(dateindex_3,close_value_stock);
+	plt::runPython(t,close_value_stock);
 
     //plt::plot(dateindex_3,ma200_stock, "b-");
     //plt::plot(dateindex_3,bearbull, "k-");

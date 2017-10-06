@@ -22,9 +22,7 @@
 namespace matplotlibcpp {
 
 
-int runPython(std::vector<double> xvec,std::vector<double> yvec) {
-	cout << "Hello from runPython()" << endl;
-
+int runPython(std::vector<string> xvec,std::vector<double> yvec) {
 	PyObject *pName, *pModule, *pFunc;
 	PyObject *pArgTuple, *pValue, *pXVec, *pYVec;
 
@@ -43,23 +41,15 @@ int runPython(std::vector<double> xvec,std::vector<double> yvec) {
 		pFunc = PyObject_GetAttrString(pModule, "plotStdVectors");   //Get the function by its name
 		/* pFunc is a new reference */
 		
-
 		if (pFunc && PyCallable_Check(pFunc)) {
-
 			//Set up a tuple that will contain the function arguments. In this case, the
 			//function requires two tuples, so we set up a tuple of size 2.
 			pArgTuple = PyTuple_New(2);
 
-			//Make some vectors containing the data
-		    //    static const double xarr[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
-			//std::vector<double> xvec (xarr, xarr + sizeof(xarr) / sizeof(xarr[0]) );
-		    //    static const double yarr[] = {0,0,1,1,0,0,2,2,0,0,1,1,0,0};
-			//std::vector<double> yvec (yarr, yarr + sizeof(yarr) / sizeof(yarr[0]) );
-
 			//Transfer the C++ vector to a python tuple
 			pXVec = PyTuple_New(xvec.size());	
 			for (i = 0; i < xvec.size(); ++i) {
-				pValue = PyFloat_FromDouble(xvec[i]);
+				pValue = PyString_FromString(xvec[i].c_str());
 				if (!pValue) {
 					Py_DECREF(pXVec);
 					Py_DECREF(pModule);
@@ -93,7 +83,7 @@ int runPython(std::vector<double> xvec,std::vector<double> yvec) {
 			Py_DECREF(pXVec);
 			Py_DECREF(pYVec);
 
-			if (pValue != NULL) {
+			 if (pValue != NULL) {
 				Py_DECREF(pValue);
 			}
 
@@ -101,6 +91,7 @@ int runPython(std::vector<double> xvec,std::vector<double> yvec) {
 			else {
 				Py_DECREF(pFunc);
 				Py_DECREF(pModule);
+
 				PyErr_Print();
 				fprintf(stderr,"Call failed\n");
 				return 1;

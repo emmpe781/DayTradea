@@ -5,12 +5,19 @@ def plotStdVectors(x,y):
     import plotly.graph_objs as go 
     plotly.offline.init_notebook_mode()
     import numpy as np
-
-    random_x = np.fromiter(x, dtype = np.float)
+    from datetime import datetime
+    attrList=[]
+        
+    #random_x = np.fromiter(x, dtype = np.string)
     random_y = np.fromiter(y, dtype = np.float)
+    
+    for i in range(0,len(x)):
+        date = datetime.strptime(x[i],'%Y-%m-%d')
+        attrList.append(date)
+
     # Create a trace
     trace = go.Scatter(
-        x = random_x,
+        x = attrList,
         y = random_y
     )
 
@@ -38,8 +45,8 @@ def plotStdVectors(x,y):
                     dict(step='all')
                 ])
             ),
-            #rangeslider=dict(),
-            #type='date'
+            rangeslider=dict(),
+            type='date'
             ),
             yaxis=dict(
                 type='log',
@@ -53,4 +60,3 @@ def plotStdVectors(x,y):
     fig = dict(data=plotdata, layout=layout)
     plotly.offline.plot(fig)
 
-#plotStdVectors()
