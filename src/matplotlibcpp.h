@@ -101,7 +101,8 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 
 			//Call the python function
 			
-			pValue1 = PyObject_CallObject(pFunc1,pArgTuple3);
+			pValue1 = PyObject_CallObject(pFunc1,pArgTuple1);
+			pValue1 = PyObject_CallObject(pFunc1,pArgTuple2);
 
 			pValue = PyObject_CallObject(pFunc, pArgTuple3);
 			
