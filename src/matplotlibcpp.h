@@ -23,8 +23,8 @@ namespace matplotlibcpp {
 
 
 int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<double> yvec2) {
-	PyObject *pName, *pModule, *pFunc;
-	PyObject *pArgTuple1, *pArgTuple2,*pArgTuple3, *pValue, *pXVec, *pYVec1, *pYVec2;
+	PyObject *pName, *pModule, *pFunc,*pFunc1;
+	PyObject *pArgTuple1, *pArgTuple2,*pArgTuple3, *pValue, *pValue1, *pXVec, *pYVec1, *pYVec2;
 
 	int i;
 
@@ -34,11 +34,14 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 	PyList_Append(path, PyString_FromString("."));
 	
 	pName = PyString_FromString("pythonToEmbed");   //Get the name of the module
+
 	pModule = PyImport_Import(pName);     //Get the module
 	Py_DECREF(pName);
 	
 	if (pModule != NULL) {
 		pFunc = PyObject_GetAttrString(pModule, "plotStdVectors");   //Get the function by its name
+		pFunc1 = PyObject_GetAttrString(pModule,"appendList");
+
 		/* pFunc is a new reference */
 		
 		if (pFunc && PyCallable_Check(pFunc)) {
@@ -97,6 +100,9 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 			PyTuple_SetItem(pArgTuple3,1,pArgTuple2);
 
 			//Call the python function
+			
+			pValue1 = PyObject_CallObject(pFunc1,pArgTuple3);
+
 			pValue = PyObject_CallObject(pFunc, pArgTuple3);
 			
 			Py_DECREF(pArgTuple1);
@@ -111,9 +117,14 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 				Py_DECREF(pValue);
 			}
 
+			 if (pValue1 != NULL) {
+				Py_DECREF(pValue1);
+			}
 			//Some error catching
 			else {
 				Py_DECREF(pFunc);
+				Py_DECREF(pFunc1);
+
 				Py_DECREF(pModule);
 
 				PyErr_Print();
@@ -127,6 +138,7 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 			fprintf(stderr, "Cannot find function" );
 		}
 		Py_XDECREF(pFunc);
+		Py_XDECREF(pFunc1);
 		Py_DECREF(pModule);
 	}
 	else {

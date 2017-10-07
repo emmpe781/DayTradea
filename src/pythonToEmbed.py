@@ -1,13 +1,13 @@
+import plotly
+import plotly.plotly as py
+import plotly.graph_objs as go 
+plotly.offline.init_notebook_mode()
+import numpy as np
+from datetime import datetime
+attrList=[]
+plotdata = []
 
-def plotStdVectors(*arg):
-    import plotly
-    import plotly.plotly as py
-    import plotly.graph_objs as go 
-    plotly.offline.init_notebook_mode()
-    import numpy as np
-    from datetime import datetime
-    attrList=[]
-    
+def appendList(*arg):
     time=arg[0][0]
     stock_close=arg[0][1]
     stock_mean=arg[1][1]
@@ -31,8 +31,10 @@ def plotStdVectors(*arg):
         y = stock_mean,
         name="mean"
     )
-    
-    plotdata = [trace1,trace2]
+    plotdata.append(trace1)
+    plotdata.append(trace2)
+
+def plotStdVectors(*arg):
     layout = go.Layout(
             xaxis=dict(
                 rangeselector=dict(
@@ -56,8 +58,8 @@ def plotStdVectors(*arg):
                     dict(step='all')
                 ])
             ),
-            #rangeslider=dict(),
-            #type='date'
+            rangeslider=dict(),
+            type='date'
             ),
             yaxis=dict(
                 type='log',

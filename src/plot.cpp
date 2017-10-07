@@ -112,10 +112,10 @@ void Plot::Plot_port(Portfolio port1,Portfolio port2,Stock stock)
 
 	vector<int> dateindex_2(n,n);
 	vector<double> portfolio_value_2(n,160);
-	//vector<string> c(n);
+	vector<string> c(n);
     while(tmp2!= NULL){
     	dateindex_2.at(i) = i;
-		//c.at(i) = tmp2->date;
+		c.at(i) = tmp2->date;
 		while(infotmp2!=NULL){
 			if (infotmp2->name=="portfolio value"){
 				portfolio_value_2.at(i) = infotmp2->volume;
