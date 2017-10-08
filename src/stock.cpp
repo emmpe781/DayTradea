@@ -7,10 +7,12 @@ Stock::Stock(void)
 {
 	head = NULL;
 	tail = NULL;
+	Stock::stocklength = 0;
 }
 
 void Stock::add_node_to_end(string date,float close)
 {
+	Stock::stocklength++;
 	node *date_node = new node;
 	date_node->date = date;
 	date_node->close = close;

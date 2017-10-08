@@ -23,32 +23,29 @@ namespace matplotlibcpp {
 
 
 int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<double> yvec2) {
-	PyObject *pName, *pModule, *pFunc,*pFunc1;
+	PyObject *pFunc,*pFunc1;//*pName,*pModule
 	PyObject *pArgTuple1, *pArgTuple2,*pArgTuple3, *pValue, *pValue1, *pXVec, *pYVec1, *pYVec2;
+	cout << "hej" << endl;
+//	int i;
 
-	int i;
-
-  	Py_Initialize();
-	PyObject *sys = PyImport_ImportModule("sys");
-	PyObject *path = PyObject_GetAttrString(sys, "path");
-	PyList_Append(path, PyString_FromString("."));
+//	PyObject *sys = PyImport_ImportModule("sys");
+//	PyObject *path = PyObject_GetAttrString(sys, "path");
+//	PyList_Append(path, PyString_FromString("."));
 	
-	pName = PyString_FromString("pythonToEmbed");   //Get the name of the module
+//	pName = PyString_FromString("pythonToEmbed");   //Get the name of the module
 
-	pModule = PyImport_Import(pName);     //Get the module
-	Py_DECREF(pName);
+//	pModule = PyImport_Import(pName);     //Get the module
+//	Py_DECREF(pName);
 	
-	if (pModule != NULL) {
-		pFunc = PyObject_GetAttrString(pModule, "plotStdVectors");   //Get the function by its name
-		pFunc1 = PyObject_GetAttrString(pModule,"appendList");
-
-		/* pFunc is a new reference */
+	//if (pModule != NULL) {
+	//	pFunc = PyObject_GetAttrString(pModule, "plotStdVectors");   //Get the function by its name
+	//	pFunc1 = PyObject_GetAttrString(pModule,"appendList");
 		
-		if (pFunc && PyCallable_Check(pFunc)) {
-			//Set up a tuple that will contain the function arguments. In this case, the
-			//function requires two tuples, so we set up a tuple of size 2.
-			pArgTuple1 = PyTuple_New(2);
-			pArgTuple2 = PyTuple_New(2);
+	//	if (pFunc && pFunc1 && PyCallable_Check(pFunc)) {
+			
+
+			/*pArgTuple1 = PyTuple_New(3);
+			pArgTuple2 = PyTuple_New(3);
 			pArgTuple3 = PyTuple_New(2);
 
 			//Transfer the C++ vector to a python tuple
@@ -88,13 +85,16 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 					return 1;
 				}
 				PyTuple_SetItem(pYVec2, i, pValue); //
-			}
+			}*/
 
 			//Set the argument tuple to contain the two input tuples
-			PyTuple_SetItem(pArgTuple1, 0, pXVec);
-			PyTuple_SetItem(pArgTuple1, 1, pYVec1);
-			PyTuple_SetItem(pArgTuple2, 0, pXVec);
-			PyTuple_SetItem(pArgTuple2, 1, pYVec2);
+
+			/*PyTuple_SetItem(pArgTuple1, 0, PyString_FromString("close"));
+			PyTuple_SetItem(pArgTuple1, 1, pXVec);
+			PyTuple_SetItem(pArgTuple1, 2, pYVec1);
+			PyTuple_SetItem(pArgTuple2, 0, PyString_FromString("mean"));
+			PyTuple_SetItem(pArgTuple2, 1, pXVec);
+			PyTuple_SetItem(pArgTuple2, 2, pYVec2);
 
 			PyTuple_SetItem(pArgTuple3,0,pArgTuple1);
 			PyTuple_SetItem(pArgTuple3,1,pArgTuple2);
@@ -104,17 +104,17 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 			pValue1 = PyObject_CallObject(pFunc1,pArgTuple1);
 			pValue1 = PyObject_CallObject(pFunc1,pArgTuple2);
 
-			pValue = PyObject_CallObject(pFunc, pArgTuple3);
+			pValue = PyObject_CallObject(pFunc, pArgTuple3);*/
 			
-			Py_DECREF(pArgTuple1);
+			/*Py_DECREF(pArgTuple1);
 			Py_DECREF(pArgTuple2);
 			Py_DECREF(pArgTuple3);
 
 			Py_DECREF(pXVec);
 			Py_DECREF(pYVec1);
-			Py_DECREF(pYVec2);
+			Py_DECREF(pYVec2);*/
 
-			 if (pValue != NULL) {
+	/*		 if (pValue != NULL) {
 				Py_DECREF(pValue);
 			}
 
@@ -141,14 +141,13 @@ int runPython(std::vector<string> xvec,std::vector<double> yvec1,std::vector<dou
 		Py_XDECREF(pFunc);
 		Py_XDECREF(pFunc1);
 		Py_DECREF(pModule);
-	}
-	else {
-		PyErr_Print();
-		fprintf(stderr, "Failed to load ");
-		return 1;
-	}
+	}*/
+	//else {
+	//	PyErr_Print();
+	//	fprintf(stderr, "Failed to load ");
+	//	return 1;
+	//}
 
-  	Py_Finalize();
-  	return 0;
+  	//return 0;
 	}
 }

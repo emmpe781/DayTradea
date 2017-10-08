@@ -4,35 +4,26 @@ import plotly.graph_objs as go
 plotly.offline.init_notebook_mode()
 import numpy as np
 from datetime import datetime
-attrList=[]
+dateList=[]
 plotdata = []
 
 def appendList(*arg):
-    time=arg[0]
-    stock_close=arg[1]
-    #stock_mean=arg[1][1]
+    name=arg[0]
+    time=arg[1]
+    value=arg[2]
  
-    close = np.fromiter(stock_close, dtype = np.float)
-    #mean = np.fromiter(stock_mean, dtype = np.float)
-
+    data = np.fromiter(value, dtype = np.float)
     
     for i in range(0,len(time)):
         date = datetime.strptime(time[i],'%Y-%m-%d')
-        attrList.append(date)
+        dateList.append(date)
     
-    # Create a trace
-    trace1 = go.Scatter(
-        x = attrList,
-        y = stock_close,
-       # name="close"   
+    trace = go.Scatter(
+        x = dateList,
+        y = data,
+        name=name  
     )
-    #trace2 = go.Scatter(
-    #    x = attrList,
-    #    y = stock_mean,
-    #    name="mean"
-    #)
-    plotdata.append(trace1)
-    #plotdata.append(trace2)
+    plotdata.append(trace)
 
 def plotStdVectors(*arg):
     layout = go.Layout(

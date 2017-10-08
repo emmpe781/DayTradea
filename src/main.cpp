@@ -9,7 +9,7 @@
 using namespace std;
 
 int main() {
-	string startdate = "2004-03-05";
+	string startdate = "1987-03-05";
 	Portfolio Reference(startdate);
 	Reference.add_to_bank(100,startdate);
 
@@ -29,13 +29,10 @@ int main() {
 
 	Algo.Buy_BearBull(&ImbaPortfolio,&omx30);
 	Plot plt1;
-	plt1.Plot_port(ImbaPortfolio,Reference,omx30);
-	//plt1.PlotNodes(omx30,"bearbull");
+	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
 
 
 	return 0;
-
-
 }
 
 

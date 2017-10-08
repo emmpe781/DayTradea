@@ -15,7 +15,9 @@ class Stock{
 		#define BEAR 10;
 		#define BULL 1800;
 
+
 	  string name;
+	  int stocklength;	  
 	  struct node{
 		  string date;
 		  float close;

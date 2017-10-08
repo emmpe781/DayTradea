@@ -136,7 +136,6 @@ void Portfolio::remove_from_bank(float volume,string date)
 				if (tmpnode->name=="bank"){
 					tmpnode->volume = tmpnode->volume-volume;
 					portfolio->volume= portfolio->volume - volume;
-					cout << portfolio->volume << endl;
 				}
 				tmpnode=tmpnode->next;
 				}
