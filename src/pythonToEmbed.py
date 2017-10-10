@@ -1,7 +1,11 @@
+import sys, os
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go 
+sys.stdout = open(os.devnull, 'w')
 plotly.offline.init_notebook_mode()
+sys.stdout = sys.__stdout__
+
 import numpy as np
 from datetime import datetime
 dateList=[]
