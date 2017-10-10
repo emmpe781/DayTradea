@@ -16,11 +16,16 @@ Algorithms::Algorithms() {
 
 }
 
-void Algorithms::Buy_BearBull(Portfolio* port_p,Stock* stock_p) {
+void Algorithms::Buy_BearBull(Portfolio* port_p, Stock* stock_p) {
 
 	Stock::node *stocktmp = stock_p->head;
 
+	//for (int i = 1; i < 10; ++i)
+	//{
 	while(stocktmp != NULL){
+
+		//port_p->buy(*stock_p, 1, stocktmp->date);
+
 		/*if (stocktmp->bearBull == 1800){
 			port_p->buy(*stock_p,1,stocktmp->date);
 			cout << stocktmp->date << endl;
@@ -39,4 +44,3 @@ void Algorithms::Buy_BearBull(Portfolio* port_p,Stock* stock_p) {
 Algorithms::~Algorithms() {
 	// TODO Auto-generated destructor stub
 }
-

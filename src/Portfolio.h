@@ -11,10 +11,13 @@
 #ifndef SRC_PORTFOLIO_H_
 #define SRC_PORTFOLIO_H_
 
+
 class Portfolio {
 public:
+
 	  string portfolioname;
 	  int portfoliolength;
+
 	  struct portfolionode{
 		 string date;
 		 struct stockinfo{
@@ -22,12 +25,17 @@ public:
 			 float volume;
 			 stockinfo *next;
 		 };
-         stockinfo *head = NULL;
+
+         stockinfo *curStock = NULL;
          stockinfo *tail = NULL;
 		 portfolionode *next;
 	  };
-	portfolionode *head = NULL;
-	portfolionode *tail = NULL;
+
+	typedef portfolionode* portfolionode_p;
+
+	portfolionode *curPortfolio = NULL;
+	portfolionode_p curPortfolio_p = NULL; //Current Portfolio Content
+	portfolionode *tail = NULL; //Not Used
 
 	Portfolio(string);
 	void Print();

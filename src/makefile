@@ -12,7 +12,7 @@
 #
 # for C++ define  CC = g++
 CC = g++
-CFLAGS  = -g -Wall -Wl,-subsystem,console -std=c++0x 
+CFLAGS  = -g -Wall -Wl,-subsystem,console -std=c++0x -D_hypot=hypot
 
 
 #main: main.cpp matplotlibcpp.h
@@ -30,7 +30,7 @@ all: main
 # countwords.o, counter.o, and scanner.o:
 #
 main: main.o portfolio.o stock.o readfile.o plot.o algorithms.o
-	$(CC) $(CFLAGS) -o main main.o portfolio.o stock.o readfile.o plot.o algorithms.o -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+	$(CC) $(CFLAGS) -o main main.o portfolio.o stock.o readfile.o plot.o algorithms.o -I C:/Python36-32/include -L C:/Python36-32/libs -l python36
 #-DWITHOUT_NUMPY
 
 # To create the object file main.o, we need the source
@@ -57,12 +57,11 @@ stock.o:  stock.cpp portfolio.h readfile.h stock.h
 algorithms.o:  algorithms.cpp portfolio.h stock.h 
 	$(CC) $(CFLAGS) -c algorithms.cpp 
 
-plot.o: plot.cpp stock.h portfolio.h matplotlibcpp.h
-	$(CC) $(CFLAGS) -c -DWITHOUT_NUMPY plot.cpp -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+plot.o: plot.cpp stock.h portfolio.h
+	$(CC) $(CFLAGS) -c plot.cpp -I C:/Python36-32/include -L C:/Python36-32/libs -l python36
 
-matplotlibcpp.o:  .cpp portfolio.h readfile.h stock.h
-	$(CC) $(CFLAGS) -c -DWITHOUT_NUMPY plot.cpp -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
-
+ignorePythonWarnings : CXXFLAGS += -w
+ignorePythonWarnings : plot.o
 
 # To start over from scratch, type 'make clean'.  This
 # removes the executable file, as well as old .o object
@@ -71,5 +70,5 @@ matplotlibcpp.o:  .cpp portfolio.h readfile.h stock.h
 clean: 
 	$(RM) main *.o *~
 
-# g++ -g -Wall main.cpp stock.cpp portfolio.cpp -o main -DWITHOUT_NUMPY -std=gnu++11 -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+# g++ -g -Wall main.cpp stock.cpp portfolio.cpp -o main -DWITHOUT_NUMPY -std=gnu++11 -I C:/Users/Äma/Python36-32/include -L C:/Users/Äma/Python36-32/libs -l python36
 #-c -fmessage-length=0 -std=c++0x 

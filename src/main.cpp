@@ -9,12 +9,13 @@
 using namespace std;
 
 int main() {
-	string startdate = "1987-03-05";
+	//string startdate = "1987-03-05";
+	string startdate = "2016-03-05";
 	Portfolio Reference(startdate);
-	Reference.add_to_bank(100,startdate);
+	Reference.add_to_bank(1000,startdate);
 
 	Portfolio ImbaPortfolio(startdate);
-	ImbaPortfolio.add_to_bank(100,startdate);
+	ImbaPortfolio.add_to_bank(1000,startdate);
 
 	Algorithms Algo;
 	ReadFile rf; //TODO: create namespace instead of object

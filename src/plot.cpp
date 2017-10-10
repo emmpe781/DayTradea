@@ -5,7 +5,8 @@
  *      Author: Otur1337
  */
 #pragma once
-
+#include <cmath>
+#include <Python.h>
 #include "plot.h"
 #include "portfolio.h"
 #include "stock.h"
@@ -28,7 +29,6 @@
 #include <functional>
 #endif
 
-#include <Python.h>
 
 #if PY_MAJOR_VERSION >= 3
 #define PyString_FromString PyUnicode_FromString
@@ -37,7 +37,8 @@
 using namespace std;
 PyObject *pFileName,*pModule;
 PyObject *pFuncAppendList,*pFuncPlot;
-PyObject *pArgTuple,*pArgTuple3, *pValue, *pValue1,*pArgEmpty, *pXVec, *pYVec, *pYVec2,*pYVecEst,*pYVecMa200,*pYVecBearBull, *pArgTuplebearbull,*pArgTuplema200,*pArgTupleest;
+PyObject *pArgTuple, *pArgTuple3, *pValue, *pValue1,*pArgEmpty, *pXVec, 
+*pYVec, *pYVec2,*pYVecEst,*pYVecMa200,*pYVecBearBull, *pArgTuplebearbull,*pArgTuplema200,*pArgTupleest;
 	
 Plot::Plot(void)
 {
@@ -74,8 +75,8 @@ void Plot::Append_One_Portfolio(Portfolio port)
 {
 	pArgTuple = PyTuple_New(4);	
 
-	Portfolio::portfolionode *tmp = port.head;
-	Portfolio::portfolionode::stockinfo *infotmp = tmp->head;
+	Portfolio::portfolionode *tmp = port.curPortfolio;
+	Portfolio::portfolionode::stockinfo *infotmp = tmp->curStock;
 
 	int n=port.portfoliolength;
 
@@ -91,7 +92,7 @@ void Plot::Append_One_Portfolio(Portfolio port)
 			infotmp=infotmp->next;
 		}
 		i=i+1;
-    	infotmp=tmp->head;
+    	infotmp=tmp->curStock;
 		tmp=tmp->next;
    		}
 

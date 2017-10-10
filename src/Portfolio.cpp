@@ -67,21 +67,21 @@ void Portfolio::add_date(string date,string name)
 
 	tmpnode->name = "portfolio value";
 	tmpnode->volume = 0;
-    tmpnode->next=tmp->head;
+    tmpnode->next=tmp->curStock;
 
-    tmp->head=tmpnode;
+    tmp->curStock=tmpnode;
 
     tmpnode=new portfolionode::stockinfo;
 	tmpnode->name = "bank";
 	tmpnode->volume = 0;
-    tmpnode->next=tmp->head;
+    tmpnode->next=tmp->curStock;
 
-    tmp->head=tmpnode;
+    tmp->curStock=tmpnode;
 	tmp->next = NULL;
 
-	if(head == NULL)
+	if(curPortfolio == NULL)
 	{
-		head = tmp;
+		curPortfolio = tmp;
 		tail = tmp;
 	}
 	else
@@ -92,28 +92,30 @@ void Portfolio::add_date(string date,string name)
 }
 
 
-void Portfolio::add_to_bank(float volume,string date)
+void Portfolio::add_to_bank(float value, string date)
 {
-	portfolionode *tmp = head;
-	portfolionode::stockinfo *tmpnode = tmp->head;
+	portfolionode *tmp = curPortfolio;
+	portfolionode::stockinfo *tmpnode = tmp->curStock;
 
-	while((tmp!= NULL)){
+	while(tmp != NULL){
 		if (tmp->date >= date){
-			tmpnode=tmp->head;
+			tmpnode=tmp->curStock;
 			while (tmpnode != NULL){
 				portfolionode::stockinfo *portfolio = tmpnode;
 
 				while (portfolio->name!="portfolio value"){
 					portfolio=portfolio->next;
 				}
+
 				if (tmpnode->name=="bank"){
-					tmpnode->volume = tmpnode->volume+volume;
-					portfolio->volume= portfolio->volume + volume;
+					tmpnode->volume = tmpnode->volume+value;
+					portfolio->volume= portfolio->volume + value;
 				}
+
 				tmpnode=tmpnode->next;
-				}
 			}
-		tmpnode=tmp->head;
+		}
+		tmpnode=tmp->curStock;
 		tmp=tmp->next;
 	}
 }
@@ -122,12 +124,12 @@ void Portfolio::add_to_bank(float volume,string date)
 
 void Portfolio::remove_from_bank(float volume,string date)
 {
-	portfolionode *tmp = head;
-	portfolionode::stockinfo *tmpnode = tmp->head;
+	portfolionode *tmp = curPortfolio;
+	portfolionode::stockinfo *tmpnode = tmp->curStock;
 
 	while((tmp!= NULL)){
 		if (tmp->date >= date){
-			tmpnode=tmp->head;
+			tmpnode=tmp->curStock;
 			while (tmpnode != NULL){
 				portfolionode::stockinfo *portfolio = tmpnode;
 				while (portfolio->name!="portfolio value"){
@@ -140,18 +142,18 @@ void Portfolio::remove_from_bank(float volume,string date)
 				tmpnode=tmpnode->next;
 				}
 			}
-		tmpnode=tmp->head;
+		tmpnode=tmp->curStock;
 		tmp=tmp->next;
 	}
 }
 
 
 
-void Portfolio::buy(Stock stock,float volume,string date)
+void Portfolio::buy(Stock stock, float volume, string date)
 {
 
-	portfolionode *tmp = head;
-	portfolionode::stockinfo *tmpnode = tmp->head;
+	portfolionode *tmp = curPortfolio;
+	portfolionode::stockinfo *tmpnode = tmp->curStock;
 	Stock::node *stocktmp = stock.head;
 	int bankupdated = 0;
 
@@ -162,19 +164,23 @@ void Portfolio::buy(Stock stock,float volume,string date)
 			}
 
 			if (stocktmp->date == tmp->date){
-				tmpnode=tmp->head;
+				tmpnode=tmp->curStock;
 				portfolionode::stockinfo *portfolio = tmpnode;
-				portfolionode::stockinfo *bank = tmpnode;
+
 
 				int stockexist = 0;
 				while (tmpnode != NULL){
-					if (tmpnode->name == "portfolio value"){portfolio=tmpnode;}
-					if (tmpnode->name == "bank"){bank=tmpnode;}
+					if (tmpnode->name == "portfolio value"){
+
+						portfolio=tmpnode;
+					}
+
 					tmpnode=tmpnode->next;
 				}
-				tmpnode=tmp->head;
+				tmpnode=tmp->curStock;
 
-				//Check if the stock exist. If it exist it will be updated. If it does not exist it will be added.
+				//Check if the stock exist. If it exist it will be updated. 
+				//If it does not exist it will be added.
 				while (tmpnode != NULL){
 					if (tmpnode->name==stock.name){
 						//The stock exist. updating node"
@@ -183,11 +189,11 @@ void Portfolio::buy(Stock stock,float volume,string date)
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
 							cout << "REMOVED FROM BANK" << endl;
-						}
+						} /*if*/
 						portfolio->volume= portfolio->volume + (stocktmp->close)*volume;
 						stockexist=1;
 						break;
-					}
+					} /*if*/
 
 					tmpnode=tmpnode->next;
 
@@ -201,26 +207,26 @@ void Portfolio::buy(Stock stock,float volume,string date)
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
 							cout << "REMOVED FROM BANK" << endl;
-						}
+						}/*if*/
 					   portfolio->volume = portfolio->volume + (stocktmp->close)*volume;
-         			   tmpnode->next=tmp->head;
-					   tmp->head=tmpnode;
+         			   tmpnode->next=tmp->curStock;
+					   tmp->curStock=tmpnode;
    					   tmpnode=NULL;
 
-					 }
-				}
-			}
-		}
-		tmpnode=tmp->head;
+					}/*if*/
+				}/*while*/
+			}/*if*/
+		}/*if*/
+		tmpnode=tmp->curStock;
 		tmp=tmp->next;
-	}
+	}/*if*/
 }
 
 void Portfolio::sell(Stock stock,float volume,string date)
 {
 
-	portfolionode *tmp = head;
-	portfolionode::stockinfo *tmpnode = tmp->head;
+	portfolionode *tmp = curPortfolio;
+	portfolionode::stockinfo *tmpnode = tmp->curStock;
 	Stock::node *stocktmp = stock.head;
 	int bankupdated = 0;
 
@@ -231,17 +237,22 @@ void Portfolio::sell(Stock stock,float volume,string date)
 			}
 
 			if (stocktmp->date == tmp->date){
-				tmpnode=tmp->head;
+				tmpnode=tmp->curStock;
 				portfolionode::stockinfo *portfolio = tmpnode;
 				portfolionode::stockinfo *bank = tmpnode;
 
 				int stockexist = 0;
 				while (tmpnode != NULL){
-					if (tmpnode->name == "portfolio value"){portfolio=tmpnode;}
-					if (tmpnode->name == "bank"){bank=tmpnode;}
+					if (tmpnode->name == "portfolio value"){
+						portfolio = tmpnode;
+					}
+
+					if (tmpnode->name == "bank"){
+						bank = tmpnode;
+					}
 					tmpnode=tmpnode->next;
 				}
-				tmpnode=tmp->head;
+				tmpnode=tmp->curStock;
 
 				//Check if the stock exist. If it exist it will be updated. If it does not exist it will be added.
 				while (tmpnode != NULL){
@@ -266,7 +277,7 @@ void Portfolio::sell(Stock stock,float volume,string date)
 				}
 			}
 		}
-		tmpnode=tmp->head;
+		tmpnode=tmp->curStock;
 		tmp=tmp->next;
 	}
 }
@@ -274,8 +285,8 @@ void Portfolio::sell(Stock stock,float volume,string date)
 void Portfolio::Print()
 {
 	cout << "PRINT: " << endl;
-	portfolionode *tmp = head;
-	portfolionode::stockinfo *infotmp = tmp->head;
+	portfolionode *tmp = curPortfolio;
+	portfolionode::stockinfo *infotmp = tmp->curStock;
    	 
 
     while(tmp!= NULL){
@@ -285,7 +296,7 @@ void Portfolio::Print()
 			cout<< ", volume: " << infotmp->volume << endl;
 			infotmp=infotmp->next;
 		}
-    	infotmp=tmp->head;
+    	infotmp=tmp->curStock;
 		tmp=tmp->next;
    }
 }
