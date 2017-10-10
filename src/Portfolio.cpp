@@ -60,7 +60,7 @@ void Portfolio::insert_start(string date)
 */
 void Portfolio::add_date(string date,string name)
 {
-	portfolionode *tmp = new portfolionode;
+	portfolionode_p tmp = new portfolionode;
 	tmp->date = date;
 
 	portfolionode::stockinfo *tmpnode = new portfolionode::stockinfo;
@@ -94,12 +94,12 @@ void Portfolio::add_date(string date,string name)
 
 void Portfolio::add_to_bank(float value, string date)
 {
-	portfolionode *tmp = curPortfolio;
-	portfolionode::stockinfo *tmpnode = tmp->curStock;
+	portfolionode_p portfolio_p = curPortfolio;
+	portfolionode::stockinfo *tmpnode = portfolio_p->curStock;
 
-	while(tmp != NULL){
-		if (tmp->date >= date){
-			tmpnode=tmp->curStock;
+	while(portfolio_p != NULL){
+		if (portfolio_p->date >= date){
+			tmpnode=portfolio_p->curStock;
 			while (tmpnode != NULL){
 				portfolionode::stockinfo *portfolio = tmpnode;
 
@@ -115,8 +115,8 @@ void Portfolio::add_to_bank(float value, string date)
 				tmpnode=tmpnode->next;
 			}
 		}
-		tmpnode=tmp->curStock;
-		tmp=tmp->next;
+		tmpnode=portfolio_p->curStock;
+		portfolio_p=portfolio_p->next;
 	}
 }
 
@@ -124,7 +124,7 @@ void Portfolio::add_to_bank(float value, string date)
 
 void Portfolio::remove_from_bank(float volume,string date)
 {
-	portfolionode *tmp = curPortfolio;
+	portfolionode_p tmp = curPortfolio;
 	portfolionode::stockinfo *tmpnode = tmp->curStock;
 
 	while((tmp!= NULL)){
@@ -225,7 +225,7 @@ void Portfolio::buy(Stock stock, float volume, string date)
 void Portfolio::sell(Stock stock,float volume,string date)
 {
 
-	portfolionode *tmp = curPortfolio;
+	portfolionode_p tmp = curPortfolio;
 	portfolionode::stockinfo *tmpnode = tmp->curStock;
 	Stock::node *stocktmp = stock.head;
 	int bankupdated = 0;
@@ -254,7 +254,8 @@ void Portfolio::sell(Stock stock,float volume,string date)
 				}
 				tmpnode=tmp->curStock;
 
-				//Check if the stock exist. If it exist it will be updated. If it does not exist it will be added.
+				//Check if the stock exist. If it exist it will be updated.
+				//If it does not exist it will be added.
 				while (tmpnode != NULL){
 					if (tmpnode->name==stock.name){
 						//The stock exist. updating node"
@@ -285,7 +286,7 @@ void Portfolio::sell(Stock stock,float volume,string date)
 void Portfolio::Print()
 {
 	cout << "PRINT: " << endl;
-	portfolionode *tmp = curPortfolio;
+	portfolionode_p tmp = curPortfolio;
 	portfolionode::stockinfo *infotmp = tmp->curStock;
    	 
 

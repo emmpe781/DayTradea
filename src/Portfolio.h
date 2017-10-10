@@ -33,8 +33,7 @@ public:
 
 	typedef portfolionode* portfolionode_p;
 
-	portfolionode *curPortfolio = NULL;
-	portfolionode_p curPortfolio_p = NULL; //Current Portfolio Content
+	portfolionode_p curPortfolio = NULL; //Current Portfolio Content
 	portfolionode *tail = NULL; //Not Used
 
 	Portfolio(string);
