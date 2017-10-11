@@ -5,7 +5,7 @@ using namespace std;
 
 Stock::Stock(void)
 {
-	head = NULL;
+	firstStockDate = NULL;
 	tail = NULL;
 	Stock::stocklength = 0;
 }
@@ -23,9 +23,9 @@ void Stock::add_node_to_end(string date,float close)
 	date_node->ma50 = 0;
 	date_node->next = NULL;
 
-	if(head == NULL)
+	if(firstStockDate == NULL)
 	{
-		head = date_node;
+		firstStockDate = date_node;
 		tail = date_node;
 	}
 	else
@@ -37,7 +37,7 @@ void Stock::add_node_to_end(string date,float close)
 
 void Stock::Print()
 {
-	node *date_node = head;
+	node *date_node = firstStockDate;
     while(date_node!= NULL){
 		cout<< "date: " << date_node->date;
 		cout<< ", close: " <<  date_node->close << endl;

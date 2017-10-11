@@ -22,18 +22,21 @@ class Stock{
 		  string date;
 		  float close;
 		  float est;
-		  //0=unknown, 1 = bull, 2 = bear
+		  //0=unknown, 1800 = bull, 2 = bear
 		  int bearBull;
 		  float ma200;
 		  float ma100;
 		  float ma50;
-		  node *next;
+		  node *next; //Ta bort på sikt! mot nextDate
+		  node *nextDate;
 	  };
-		node *head,*tail;
+		node *firstStockDate;
+		node *tail;
 		Stock();
 		void add_node_to_end(string,float);
 
 		void Print();
 };
+typedef Stock* Stock_p;
 
 #endif /* STOCK_H */

@@ -9,16 +9,23 @@
 using namespace std;
 
 int main() {
-	float startValue = 1000;
+	float startValue = 1400;
 	//string startdate = "1987-03-05";
-	string startdate = "2016-03-05";
+	string startdate = "2016-09-17";
 	Portfolio Reference(startdate);
 	Reference.add_to_bank(startValue,startdate);
 
+	//Min portfölj börjar:
 	Portfolio ImbaPortfolio(startdate);
-	ImbaPortfolio.add_to_bank(1000,startdate);
+	ImbaPortfolio.setStartValue(startValue);
 
-	Algorithms Algo;
+
+
+
+	//
+	//ImbaPortfolio.add_to_bank(1000,startdate);
+
+
 	ReadFile rf; //TODO: create namespace instead of object
 
 	Stock omx30;
@@ -27,9 +34,13 @@ int main() {
 	rf.PopulateStock(&omx30);
 
 	Reference.buy(omx30,1,startdate);
-	ImbaPortfolio.buy(omx30,1,startdate);
+	//ImbaPortfolio.buy(omx30,1,startdate);
 
-	Algo.Buy_BearBull(&ImbaPortfolio,&omx30);
+
+	//Min algh. startar
+	Algorithms Algo;
+	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30);
+
 	Plot plt1;
 	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
 

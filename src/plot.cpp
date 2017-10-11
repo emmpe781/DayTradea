@@ -87,7 +87,7 @@ void Plot::Append_One_Portfolio(Portfolio port)
 		t.at(i) = tmp->date;
 		while(infotmp!=NULL){
 			if (infotmp->name=="portfolio value"){
-				portfolio_value_1.at(i) = infotmp->volume;
+				portfolio_value_1.at(i) = infotmp->stockValue;
 				}
 			infotmp=infotmp->next;
 		}
@@ -144,7 +144,7 @@ void Plot::Append_One_Stock(Stock stock)
 	
 	int n=stock.stocklength;
 
-	Stock::node *stocktmp = stock.head;
+	Stock::node *stocktmp = stock.firstStockDate;
 
    	vector<double> close_value_stock(n,stock.tail->close);
    	vector<double> est_stock(n,stock.tail->est);
@@ -213,7 +213,7 @@ void Plot::Append_One_Stock(Stock stock)
 	PyTuple_SetItem(pArgTuplema200, 1, pXVec);
 	PyTuple_SetItem(pArgTuplema200, 2, pYVecMa200);
 	PyTuple_SetItem(pArgTuplema200, 3, PyString_FromString("Ma200"));
-	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplema200);
+	//pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplema200);
 
 	//Transfer the other C++ vector to a python tuple
 	pYVecBearBull = PyTuple_New(bearbull.size());	
@@ -231,7 +231,7 @@ void Plot::Append_One_Stock(Stock stock)
 	PyTuple_SetItem(pArgTuplebearbull, 1, pXVec);
 	PyTuple_SetItem(pArgTuplebearbull, 2, pYVecBearBull);
 	PyTuple_SetItem(pArgTuplebearbull, 3, PyString_FromString("Bear-Bull"));
-	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplebearbull);
+	//pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplebearbull);
 
 	//Transfer the other C++ vector to a python tuple
 	pYVecEst = PyTuple_New(est_stock.size());	
@@ -250,7 +250,7 @@ void Plot::Append_One_Stock(Stock stock)
 	PyTuple_SetItem(pArgTupleest, 1, pXVec);
 	PyTuple_SetItem(pArgTupleest, 2, pYVecEst);
 	PyTuple_SetItem(pArgTupleest, 3, PyString_FromString("est"));
-	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTupleest);
+	//pValue1 = PyObject_CallObject(pFuncAppendList,pArgTupleest);
 
 	Py_DECREF(pArgTuplema200);
 	Py_DECREF(pArgTuplebearbull);

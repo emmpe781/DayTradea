@@ -9,20 +9,40 @@
 #include "Portfolio.h"
 #include "Stock.h"
 using namespace std;
-
+const Stock::node * lastStockDate = NULL;
 
 Algorithms::Algorithms() {
 	// TODO Auto-generated constructor stub
 
 }
 
-void Algorithms::Buy_BearBull(Portfolio* port_p, Stock* stock_p) {
+void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 
-	Stock::node *stocktmp = stock_p->head;
+	//Hur ska algen fungera?
+	//1 loopa igenom alla datum i index
+	//2 när index ligger i bull -> var 100 % investerad
+	//3 när index ligger i bear -> var 0 & investerad
 
-	//for (int i = 1; i < 10; ++i)
-	//{
-	while(stocktmp != NULL){
+	//The amount of startingcash in portfolio.
+
+
+	Stock::node *stock = omxS30_p->firstStockDate;
+
+	portfolio_p->buy2(omxS30_p ,portfolio_p->money, stock->date);
+	portfolio_p->buy(*omxS30_p, 1, stock->date);
+
+	while(stock != lastStockDate){
+
+
+
+		if (stock->bearBull == 1800){
+
+			cout << "BULL Handla!" << endl;
+		}
+
+		else {
+			cout << "BEAR Handla inte!" << endl;
+		}
 
 		//port_p->buy(*stock_p, 1, stocktmp->date);
 
@@ -37,7 +57,7 @@ void Algorithms::Buy_BearBull(Portfolio* port_p, Stock* stock_p) {
 			cout << "BEAR" << endl;
 		}*/
 
-	stocktmp=stocktmp->next;
+		stock=stock->nextDate;
 	}
 }
 

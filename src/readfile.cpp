@@ -126,7 +126,7 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 	float expectedValue;
 	expectedIncrease = (percentage/100)/365+1;
 	bool first=true;
-	Stock::node *tmp = stock->head;
+	Stock::node *tmp = stock->firstStockDate;
     while(tmp!= NULL){
     		if (first){
     			//Set expectedValue to the value of our start date.
@@ -146,7 +146,7 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 
 void ReadFile::BearBull(Stock* stock)
 {
-	Stock::node *stockHead = stock->head;
+	Stock::node *stockHead = stock->firstStockDate;
 	float lastMa200 = 0;
 	float const diffValue = 0.00085f;
 	static int lastBearBull = 0;
@@ -220,8 +220,8 @@ void ReadFile::Mean(Stock *stock,int days)
 	float sumStockClose=0;
 	float mean;
 	int i = 0;
-	Stock::node *stockTail = stock->head;
-	Stock::node *stockHead = stock->head;
+	Stock::node *stockTail = stock->firstStockDate;
+	Stock::node *stockHead = stock->firstStockDate;
 
 	while(stockHead!= NULL){
 

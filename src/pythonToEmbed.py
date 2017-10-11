@@ -61,7 +61,7 @@ def plotStdVectors(*arg):
             type='date'
             ),
             yaxis=dict(
-                type='log',
+                #type='log',
                 autorange=True,
                 showgrid=True,
                 zeroline=True,

@@ -17,15 +17,17 @@ public:
 
 	  string portfolioname;
 	  int portfoliolength;
-
+	  float money; //The amount of money
 	  struct portfolionode{
 		 string date;
 		 struct stockinfo{
 			 string name;
-			 float volume;
+			 float stockValue;
+			 int nrOfStocks;
 			 stockinfo *next;
 		 };
 
+		 float totalValue; //The amount of money + stockValue for each date
          stockinfo *curStock = NULL;
          stockinfo *tail = NULL;
 		 portfolionode *next;
@@ -39,17 +41,20 @@ public:
 	Portfolio(string);
 	void Print();
 
+	void setStartValue(float);
 	void add_date(string,string);
 	void add_to_bank(float,string);
 	void remove_from_bank(float,string);
 	void insert_end(string);
 	void insert_start(string);
 
+	void buy2(Stock*, float, string);
 	void buy(Stock,float,string);
 	void sell(Stock,float,string);
 
 	void calculateValue();
 	virtual ~Portfolio();
 };
+typedef Portfolio* Portfolio_p;
 
 #endif /* SRC_PORTFOLIO_H_ */
