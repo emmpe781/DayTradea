@@ -17,7 +17,7 @@ public:
 
 	  string portfolioname;
 	  int portfoliolength;
-	  float money; //The amount of money
+	  float portfolioMoney; //The amount of money
 	  struct portfolionode{
 		 string date;
 		 struct stockinfo{
@@ -29,6 +29,7 @@ public:
 
 		 float totalValue; //The amount of money + stockValue for each date
          stockinfo *curStock = NULL;
+         stockinfo *nextStock = NULL;
          stockinfo *tail = NULL;
 		 portfolionode *next;
 	  };
@@ -40,7 +41,7 @@ public:
 
 	Portfolio(string);
 	void Print();
-
+	bool stockInPortfolio(string);
 	void setStartValue(float);
 	void add_date(string,string);
 	void add_to_bank(float,string);

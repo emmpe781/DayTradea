@@ -85,12 +85,7 @@ void Plot::Append_One_Portfolio(Portfolio port)
 	int i = 0;
     while(tmp!= NULL){
 		t.at(i) = tmp->date;
-		while(infotmp!=NULL){
-			if (infotmp->name=="portfolio value"){
-				portfolio_value_1.at(i) = infotmp->stockValue;
-				}
-			infotmp=infotmp->next;
-		}
+		portfolio_value_1.at(i)= tmp->totalValue;
 		i=i+1;
     	infotmp=tmp->curStock;
 		tmp=tmp->next;
@@ -261,12 +256,12 @@ void Plot::Append_One_Stock(Stock stock)
 }
 
 
-void Plot::Plot_all(Portfolio port1,Portfolio port2,Stock stock)
+void Plot::Plot_all(Portfolio port1, Portfolio port2, Stock stock)
 {
 	Append_One_Portfolio(port1);
-	Append_One_Portfolio(port2);
+	//Append_One_Portfolio(port2);
 
-	//Append_One_Stock(stock);
+	Append_One_Stock(stock);
 
     pValue = PyObject_CallObject(pFuncPlot, pArgEmpty);
 

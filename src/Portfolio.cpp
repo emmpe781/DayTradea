@@ -13,7 +13,6 @@
 using namespace std;
 
 Portfolio::Portfolio(string date) {
-	cout << "initiating Portfolio... " << endl;
 	Stock portf_time;
 	string fname_time="../data/stockdata_Portfolio_use.dat";
 	ReadFile rf;
@@ -93,8 +92,8 @@ void Portfolio::add_date(string date,string name)
 
 void Portfolio::setStartValue(float startValue)
 {
-	money = startValue;
-	cout << money << " = amount of money" << endl;
+	portfolioMoney = startValue;
+	cout << portfolioMoney << " = amount of money" << endl;
 }
 
 
@@ -154,24 +153,60 @@ void Portfolio::remove_from_bank(float stockValue,string date)
 	}
 }
 
+bool Portfolio::stockInPortfolio(string stock)
+{
+	portfolionode *tmpPortfolio_p = curPortfolio;
+	portfolionode::stockinfo *tmpnode = tmpPortfolio_p->curStock;
+
+	while (tmpnode != NULL)
+	{
+		if (stock == tmpnode->name)
+		{
+			return true;
+		}
+		tmpnode = tmpnode->next;
+	}
+	return false;
+}
 
 void Portfolio::buy2(Stock *stock, float money, string date)
 {
-	//Vad vill jag göra?
-	//1 köp max antal aktier för money
-	//den aktuella dagen, lägg till i portföljen
-	//2 dra av summan från portföljens pengar
-
-	//portfolionode::stockinfo *tmpnode = tmp->curStock;
-
+	int nrOfStocks = 0;
 	Stock::node *tmpStock = stock->firstStockDate;
 
-	while (money >= tmpStock->close)
+	//Kolla att stocken inte finns i portföljen -> lägg till en ny!
+	if (stockInPortfolio(stock->name) == false)
 	{
-		//dra av värdet i portföljen för varje aktie jag köper
-		money = money - tmpStock->close;
+
+		while (money >= tmpStock->close)
+		{
+			//dra av värdet i portföljen för varje aktie jag köper
+			portfolioMoney = portfolioMoney - tmpStock->close;
+			money = money - tmpStock->close;
+			++nrOfStocks;
+		}
+
+		portfolionode *tmpPortfolio_p = curPortfolio;
+		portfolionode::stockinfo *tmpnode = tmpPortfolio_p->curStock;
+
+		//Skapa en ny aktie i portföljen
+
+		tmpnode = new portfolionode::stockinfo;
+		tmpnode->name = stock->name;
+		tmpnode->nrOfStocks = nrOfStocks;
+		tmpnode->stockValue = tmpStock->close;
+
+		//Sätt portföljen att peka på noden jag precis fyllde på med data
+	    tmpPortfolio_p->curStock=tmpnode->next;
+		cout << "tmpnode->name " << tmpnode->name << endl;
+		cout << "nr of stocks: " << tmpnode->nrOfStocks << endl;
+		cout << "DATUM::::" << tmpPortfolio_p->date << endl;
+	    tmpnode=NULL;
 
 	}
+
+
+
 }
 
 void Portfolio::buy(Stock stock, float volume, string date)

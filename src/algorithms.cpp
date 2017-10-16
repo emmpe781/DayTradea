@@ -23,15 +23,36 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	//2 när index ligger i bull -> var 100 % investerad
 	//3 när index ligger i bear -> var 0 & investerad
 
-	//The amount of startingcash in portfolio.
+	//Pekar på min portfölj
+	Portfolio::portfolionode *tmpPortfolio = portfolio_p->curPortfolio;
+
+	//Pekar på min första aktie i portföljen
+
+
+	Portfolio::portfolionode::stockinfo *tmpStock = tmpPortfolio->curStock;
 
 
 	Stock::node *stock = omxS30_p->firstStockDate;
+	cout << "stockdate: " <<  stock->date << endl;
+	//Kanske måste skicka in referensen till portfolio_p
+	portfolio_p->buy2(omxS30_p ,portfolio_p->portfolioMoney, stock->date);
+	//Nu har jag handlat vissa aktier, dags att gå igenom värdet för portföljen!
 
-	portfolio_p->buy2(omxS30_p ,portfolio_p->money, stock->date);
-	portfolio_p->buy(*omxS30_p, 1, stock->date);
+	//tmpPortfolio->curStock = tmpPortfolio->curStock->next;
+	//tmpPortfolio->curStock = tmpPortfolio->curStock->next;
+	while(tmpPortfolio->curStock != NULL){
+		cout << "sven date: " << tmpPortfolio->date << endl;
+		cout << "name: " << tmpPortfolio->curStock->name << endl;
+		cout << "nr of stocks: " << tmpPortfolio->curStock->nrOfStocks << endl;
+		tmpPortfolio->curStock = tmpPortfolio->curStock->next;
+	}
+	//portfolio_p->buy(*omxS30_p, 1, stock->date);
+
 
 	while(stock != lastStockDate){
+
+		//cout << stock->date << endl;
+		/*
 
 
 
@@ -44,21 +65,20 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 			cout << "BEAR Handla inte!" << endl;
 		}
 
-		//port_p->buy(*stock_p, 1, stocktmp->date);
 
-		/*if (stocktmp->bearBull == 1800){
-			port_p->buy(*stock_p,1,stocktmp->date);
-			cout << stocktmp->date << endl;
-			cout << "BULL" << endl;
-		}
-		if (stocktmp->bearBull == 10){
-			port_p->sell(*stock_p,1,stocktmp->date);
-			cout << stocktmp->date << endl;
-			cout << "BEAR" << endl;
-		}*/
 
-		stock=stock->nextDate;
+		//Uppdatera aktievärdet från föregående varv:
+		tmpPortfolio->totalValue =
+			tmpStock->stockValue * tmpStock->nrOfStocks + portfolio_p->portfolioMoney;
+
+
+		cout << "Portfolio->TotalValue: " << tmpPortfolio->totalValue << endl;
+		cout << "Portfolio->stockValue: " << tmpStock->stockValue << endl;
+		cout << "portfolio_p->portfolioMoney: " << portfolio_p->portfolioMoney << endl;
+		*/
+		stock=stock->next;
 	}
+
 }
 
 Algorithms::~Algorithms() {

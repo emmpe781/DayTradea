@@ -9,15 +9,13 @@
 using namespace std;
 
 int main() {
-	float startValue = 1400;
+	float startValue = 13370;
 	//string startdate = "1987-03-05";
 	string startdate = "2016-09-17";
 	Portfolio Reference(startdate);
 	Reference.add_to_bank(startValue,startdate);
 
-	//Min portfölj börjar:
-	Portfolio ImbaPortfolio(startdate);
-	ImbaPortfolio.setStartValue(startValue);
+
 
 
 
@@ -37,33 +35,17 @@ int main() {
 	//ImbaPortfolio.buy(omx30,1,startdate);
 
 
+	//Min portfölj börjar:
+	Portfolio ImbaPortfolio(startdate);
+	ImbaPortfolio.setStartValue(startValue);
+
 	//Min algh. startar
 	Algorithms Algo;
 	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30);
 
-	Plot plt1;
-	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
+//	Plot plt1;
+//	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
 
 
 	return 0;
 }
-
-
-//OLD STUFF
-
-/*Stock volvo;
-string fname_volvo="data/stockdata_VOLVO_1991-05-31_2017-07-03fill.dat";
-rf.Read(fname_volvo,volvo);*/
-
-//cout << "adding 100 000 SEK" << endl;
-
-//ImbaPortfolio.buy(omx30,1,"2012-03-06");
-
-//
-
-//Plot plt1;
-//plt1.Plot_port(ImbaPortfolio,omx30expected);
-
-//omx30.Plot();
-
-//ImbaPortfolio.Plot();

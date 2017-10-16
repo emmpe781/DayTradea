@@ -30,12 +30,11 @@ class Stock{
 		  node *next; //Ta bort på sikt! mot nextDate
 		  node *nextDate;
 	  };
-		node *firstStockDate;
-		node *tail;
-		Stock();
-		void add_node_to_end(string,float);
-
-		void Print();
+	  node *firstStockDate;
+	  node *tail;
+	  Stock();
+	  void add_node_to_end(string,float);
+	  void Print();
 };
 typedef Stock* Stock_p;
 
