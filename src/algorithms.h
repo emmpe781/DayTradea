@@ -15,7 +15,7 @@ using namespace std;
 class Algorithms {
 public:
 	Algorithms();
-	void Buy_BearBull(Portfolio*,Stock*);
+	void Buy_BearBull(Portfolio*,Stock*,string);
 	virtual ~Algorithms();
 };
 

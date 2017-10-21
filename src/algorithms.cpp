@@ -16,7 +16,7 @@ Algorithms::Algorithms() {
 
 }
 
-void Algorithms::Buy_BearBull(Portfolio* port_p,Stock* stock_p) {
+void Algorithms::Buy_BearBull(Portfolio* port_p,Stock* stock_p,string startdate) {
 
 	Stock::node *stocktmp = stock_p->head;
 

@@ -114,6 +114,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 		}
 	}
 	if (date >= startdate){
+		cout<<date<<endl;
 		stock->add_node_to_end(date,close);
 	}
 }
@@ -185,33 +186,6 @@ void ReadFile::BearBull(Stock* stock)
 		stockHead=stockHead->next;
 	}
 }
-
-/*void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
-{
-	float expectedIncrease;
-	float expectedValue;
-	expectedIncrease = (percentage/100)/365+1;
-	bool first=true;
-	Stock::node *tmp = stock->head;
-    while(tmp!= NULL){
-    	if (tmp->date >= date){
-    		if (first){
-    			//Set expectedValue to the value of our start date.
-    			//Only done once.
-    			expectedValue = tmp->close;
-    			first=false;
-    		}
-    		else {
-    			//Återkoppla skillnaden mellan omxs30 och vårt estimerade värde
-    			//kalibrera om estimerade värdet ifall bear till bull,
-
-    			expectedValue= expectedValue*expectedIncrease;
-    			tmp->close = expectedValue;
-			}
-    	}
-		tmp=tmp->next;
-    }
-}*/
 
 
 //Approved by Sven

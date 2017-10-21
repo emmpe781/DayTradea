@@ -20,14 +20,14 @@ int main() {
 	ReadFile rf; //TODO: create namespace instead of object
 
 	Stock omx30;
-	string fname_omx30="../data/stockdata_OMX30_1986-09-30_2017-03-24.dat";
+	string fname_omx30="../data/stockdata_OMX30_1986-10-01_2017-10-18_fill.dat";
 	rf.Read(fname_omx30,&omx30,startdate);
 	rf.PopulateStock(&omx30);
 
 	Reference.buy(omx30,1,startdate);
 	ImbaPortfolio.buy(omx30,1,startdate);
 
-	Algo.Buy_BearBull(&ImbaPortfolio,&omx30);
+	//Algo.Buy_BearBull(&ImbaPortfolio,&omx30);
 	Plot plt1;
 	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
 
