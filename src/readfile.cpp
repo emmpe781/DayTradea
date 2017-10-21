@@ -114,7 +114,6 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 		}
 	}
 	if (date >= startdate){
-		cout<<date<<endl;
 		stock->add_node_to_end(date,close);
 	}
 }
