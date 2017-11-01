@@ -36,8 +36,8 @@
 
 using namespace std;
 PyObject *pFileName,*pModule;
-PyObject *pFuncAppendList,*pFuncPlot;
-PyObject *pArgTuple,*pArgTuple3, *pValue, *pValue1,*pArgEmpty, *pXVec, *pYVec, *pYVec2,*pYVecEst,*pYVecMa200,*pYVecBearBull, *pArgTuplebearbull,*pArgTuplema200,*pArgTupleest;
+PyObject *pFuncAppendList,*pFuncAppendListFill,*pFuncPlot;
+PyObject *pArgTuple,*pArgTuple3, *pValue, *pValue1,*pValue2,*pValueLower,*pValueUpper,*pArgEmpty, *pXVec, *pYVec, *pYVec2,*pYVecEst,*pYVecMa200,*pYVecBearBull,*pYVecBearBullUpper,*pYVecBearBullLower, *pArgTuplebearbull,*pArgTuplebearbullFill,*pArgTuplema200,*pArgTupleest;
 	
 Plot::Plot(void)
 {
@@ -54,8 +54,9 @@ Plot::Plot(void)
 
 	if (pModule != NULL) {
 		pFuncAppendList = PyObject_GetAttrString(pModule,"appendList");
+		pFuncAppendListFill = PyObject_GetAttrString(pModule,"appendListFill");
 		pFuncPlot = PyObject_GetAttrString(pModule, "plotStdVectors"); 
-		if (pFuncAppendList && pFuncPlot && PyCallable_Check(pFuncAppendList) && PyCallable_Check(pFuncPlot)) {
+		if (pFuncAppendList && pFuncAppendListFill && pFuncPlot && PyCallable_Check(pFuncAppendList) && PyCallable_Check(pFuncAppendListFill) && PyCallable_Check(pFuncPlot)) {
 			cout << "lyckades ladda" << endl;
 		}
 		else {
@@ -98,7 +99,7 @@ void Plot::Append_One_Portfolio(Portfolio port)
 	//Transfer the C++ vector to a python tuple
 	pXVec = PyTuple_New(t.size());	
 	for (i = 0; i < t.size(); ++i) {
-		pValue = PyString_FromString(t[i].c_str());
+		pValue = PyString_FromString(t[i].c_str()); 
 		if (!pValue) {
 			Py_DECREF(pXVec);
 			Py_DECREF(pModule);
@@ -138,6 +139,7 @@ void Plot::Append_One_Stock(Stock stock)
 {
 	pArgTuple = PyTuple_New(4);	
 	pArgTuplebearbull = PyTuple_New(4);
+	pArgTuplebearbullFill = PyTuple_New(5);
 	pArgTuplema200 = PyTuple_New(4);	
 	pArgTupleest = PyTuple_New(4);	
 	
@@ -216,21 +218,49 @@ void Plot::Append_One_Stock(Stock stock)
 
 	//Transfer the other C++ vector to a python tuple
 	pYVecBearBull = PyTuple_New(bearbull.size());	
+	pYVecBearBullUpper = PyTuple_New(bearbull.size());	
+	pYVecBearBullLower = PyTuple_New(bearbull.size());	
+
 	for (i = 0; i < bearbull.size(); ++i) {
 		pValue = PyFloat_FromDouble(bearbull[i]);
+		if (i>200) {
+			if (bearbull[i]==1800) {
+			pValueUpper = PyFloat_FromDouble(ma200_stock[i]+0.30*ma200_stock[i]);
+			pValueLower = PyFloat_FromDouble(ma200_stock[i]-0.30*ma200_stock[i]);
+		}	else {
+				pValueUpper = PyFloat_FromDouble(ma200_stock[i]+0.05*ma200_stock[i]);
+				pValueLower = PyFloat_FromDouble(ma200_stock[i]-0.05*ma200_stock[i]);
+		}
+		}
+		else {
+			pValueUpper = PyFloat_FromDouble(ma200_stock[i]);
+			pValueLower = PyFloat_FromDouble(ma200_stock[i]);
+		}
 		if (!pValue) {
 			Py_DECREF(pYVecBearBull);
+			Py_DECREF(pYVecBearBullUpper);
+			Py_DECREF(pYVecBearBullLower);
 			Py_DECREF(pModule);
 			fprintf(stderr, "Cannot convert array value");
 			//return 1;
 		}
 		PyTuple_SetItem(pYVecBearBull, i, pValue); //
+		PyTuple_SetItem(pYVecBearBullUpper, i, pValueUpper); //
+		PyTuple_SetItem(pYVecBearBullLower, i, pValueLower); //
+
 	}
 	PyTuple_SetItem(pArgTuplebearbull, 0, PyString_FromString("stock"));
 	PyTuple_SetItem(pArgTuplebearbull, 1, pXVec);
 	PyTuple_SetItem(pArgTuplebearbull, 2, pYVecBearBull);
 	PyTuple_SetItem(pArgTuplebearbull, 3, PyString_FromString("Bear-Bull"));
-	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplebearbull);
+	//pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplebearbull);
+	PyTuple_SetItem(pArgTuplebearbullFill, 0, PyString_FromString("stock"));
+	PyTuple_SetItem(pArgTuplebearbullFill, 1, pXVec);
+	PyTuple_SetItem(pArgTuplebearbullFill, 2, pYVecBearBullUpper);
+	PyTuple_SetItem(pArgTuplebearbullFill, 3, pYVecBearBullLower);
+	PyTuple_SetItem(pArgTuplebearbullFill, 4, PyString_FromString("Bear-Bull"));
+	pValue2 = PyObject_CallObject(pFuncAppendListFill,pArgTuplebearbullFill);
+
 
 	//Transfer the other C++ vector to a python tuple
 	pYVecEst = PyTuple_New(est_stock.size());	
@@ -253,6 +283,7 @@ void Plot::Append_One_Stock(Stock stock)
 
 	Py_DECREF(pArgTuplema200);
 	Py_DECREF(pArgTuplebearbull);
+	Py_DECREF(pArgTuplebearbullFill);
 	Py_DECREF(pArgTupleest);
 	Py_DECREF(pArgTuple);
 	Py_DECREF(pXVec);
