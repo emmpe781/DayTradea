@@ -13,15 +13,24 @@ import datetime as dt
 import flask
 import os
 import pandas as pd
+from pandas_datareader.data import DataReader
 import time
-import csv
-#import pythonToCpp as ToCpp
+import plotly.plotly as py
+import plotly.graph_objs as go
 server = flask.Flask('stock-tickers')
 server.secret_key = os.environ.get('secret_key', 'secret')
 tickerList = []
 count=0
+colorscale = cl.scales['9']['qual']['Paired']
 
 df_symbol = pd.read_csv('tickers.csv')
+
+def bbands(price, window_size=10, num_of_std=5):
+    rolling_mean = price.rolling(window=window_size).mean()
+    rolling_std  = price.rolling(window=window_size).std()
+    upper_band = rolling_mean + (rolling_std*num_of_std)
+    lower_band = rolling_mean - (rolling_std*num_of_std)
+    return rolling_mean, upper_band, lower_band
 
 def init_layout(app):
     app.layout = html.Div([
@@ -48,10 +57,16 @@ def init_layout(app):
             multi=True
         ),
         html.Div([
-            html.Button('Plot', id='myButton'),
+            html.Button('CreateData', id='createdatabutton'),
             html.Div(id='out'),
             html.Div(id='tickerList'),
-        ]), 
+        ]),
+        html.Div([
+            html.Button('Plot', id='plotbutton'),
+            html.Div(id='out2'),
+            html.Div(id='tickerList'),
+        ]),  
+        html.Div(id='graphs')
     ], className="container")
 
 
@@ -72,24 +87,90 @@ def callbacks(app):
 
     @app.callback(
         Output(component_id='out',      component_property='children'),
-        events=[Event('myButton', 'click')],)
-    def plotButton():
+        events=[Event('createdatabutton', 'click')],)
+    def CreateData():
         f = open("Buttonpushed.txt", "a")
         f.write("PUSHED"+ "\n")
         f.close()
-        return("PUSHED")
 
+    """@app.callback(
+        dash.dependencies.Output('graphs','children'),
+        [dash.dependencies.Input('stockTickerInput', 'value')])
+    def update_graph(tickers):
+        graphs = []
+        for i, ticker in enumerate(tickers):
+            try:
+                df = DataReader(ticker, 'google',
+                                dt.datetime(2017, 1, 1),
+                                dt.datetime.now())
+            except:
+                graphs.append(html.H3(
+                    'Data is not available for {}'.format(ticker),
+                    style={'marginTop': 20, 'marginBottom': 20}
+                ))
+                continue
+
+            candlestick = {
+                'x': df.index,
+                'open': df['Open'],
+                'high': df['High'],
+                'low': df['Low'],
+                'close': df['Close'],
+                'type': 'candlestick',
+                'name': ticker,
+                'legendgroup': ticker,
+                'increasing': {'line': {'color': colorscale[0]}},
+                'decreasing': {'line': {'color': colorscale[1]}}
+            }
+            graphs.append(dcc.Graph(
+                id=ticker,
+                figure={
+                    'data': [candlestick],
+                    'layout': {
+                        'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
+                        'legend': {'x': 0}
+                    }
+                }
+            ))
+        #return graphs"""
+
+    @app.callback(
+        Output(component_id='out2', component_property='children'),
+        events=[Event('plotbutton', 'click')],)
+    def plotButton():
+        # Create random data with numpy
+        import numpy as np
+
+        N = 500
+        random_x = np.linspace(0, 1, N)
+        random_y = np.random.randn(N)
+
+        # Create a trace
+        trace = go.Scatter(
+            x = random_x,
+            y = random_y
+        )
+
+
+        graph=dcc.Graph(id="PLOT",
+                        figure={
+                                'data': [trace],
+                                'layout': {
+                                    'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
+                                    'legend': {'x': 0}
+                                }
+                            })
+        return graph
+
+      
 def start():
+    appendedgraphs = []
     app = dash.Dash()
     init_layout(app)
     callbacks(app)
     app.run_server(threaded=True)
-
-def start2():
-    print("HEEEJ")
-    
+   
 
 def main():
     start()
-    #threading.Thread(target=start).start()
-    print("PASSED THREAD")
+
