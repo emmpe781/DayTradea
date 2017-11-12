@@ -3,7 +3,7 @@
  *
  *  Created on: 3 juni 2017
  *      Author: Otur1337
- */
+ *//*
 #pragma once
 
 #include "plot.h"
@@ -308,3 +308,4 @@ Plot::~Plot()
 	  	Py_Finalize();
 }
 
+*/

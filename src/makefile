@@ -29,8 +29,8 @@ all: main
 # To create the executable file count we need the object files
 # countwords.o, counter.o, and scanner.o:
 #
-main: main.o portfolio.o stock.o readfile.o plot.o algorithms.o
-	$(CC) $(CFLAGS) -o main main.o portfolio.o stock.o readfile.o plot.o algorithms.o -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+main: main.o startthreads.o portfolio.o stock.o readfile.o plot.o algorithms.o 
+	$(CC) $(CFLAGS) -o main main.o startthreads.o  portfolio.o stock.o readfile.o plot.o algorithms.o  -lpthread -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
 #-DWITHOUT_NUMPY
 
 # To create the object file main.o, we need the source
@@ -42,9 +42,12 @@ main: main.o portfolio.o stock.o readfile.o plot.o algorithms.o
 # To create the object file counter.o, we need the source files
 # counter.c and counter.h:
 #
-main.o:  main.cpp portfolio.h readfile.h stock.h plot.h algorithms.h
-	$(CC) $(CFLAGS) -c main.cpp
+main.o:  main.cpp startthreads.h portfolio.h readfile.h stock.h plot.h algorithms.h 
+	$(CC) $(CFLAGS) -c main.cpp  -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
 	
+startthreads.o:  startthreads.cpp 
+	$(CC) $(CFLAGS) -c -DWITHOUT_NUMPY startthreads.cpp -lpthread -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+
 portfolio.o:  portfolio.cpp portfolio.h readfile.h stock.h 
 	$(CC) $(CFLAGS) -c portfolio.cpp
 
@@ -60,8 +63,6 @@ algorithms.o:  algorithms.cpp portfolio.h stock.h
 plot.o: plot.cpp stock.h portfolio.h matplotlibcpp.h
 	$(CC) $(CFLAGS) -c -DWITHOUT_NUMPY plot.cpp -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
 
-matplotlibcpp.o:  .cpp portfolio.h readfile.h stock.h
-	$(CC) $(CFLAGS) -c -DWITHOUT_NUMPY plot.cpp -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
 
 
 # To start over from scratch, type 'make clean'.  This
