@@ -14,12 +14,12 @@
 using namespace std;
 
 
-ReadFile::ReadFile(void)
+ReadFile1::ReadFile1(void)
 {
-    cout << "Initiating readfile" << '\n';
+    cout << "Initiating readfile1" << '\n';
 }
 
-void ReadFile::Read(string fname,Stock *stock_p,string startdate)
+void ReadFile1::Read(string fname,Stock *stock_p,string startdate)
 {
 	string rawData;
 	ifstream myfile (fname.c_str());
@@ -34,7 +34,7 @@ void ReadFile::Read(string fname,Stock *stock_p,string startdate)
 	}
 }
 
-void ReadFile::PopulateStock(Stock *stock_p)
+void ReadFile1::PopulateStock(Stock *stock_p)
 {
 
 	ExpectedValue(stock_p, 7.5);
@@ -42,7 +42,7 @@ void ReadFile::PopulateStock(Stock *stock_p)
 	BearBull(stock_p);
 }
 
-void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
+void ReadFile1::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 {
 	int startValue = 0;
 	int endValue= 0;
@@ -71,7 +71,7 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 void nyfunction(){
 }
 
-void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
+void ReadFile1::ExtractStockData(string line, Stock *stock,string startdate)
 {
 	int startvalue = 0;
 	int endvalue = 0;
@@ -120,7 +120,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 
 
 //Approved by Sven
-void ReadFile::ExpectedValue(Stock* stock,float percentage)
+void ReadFile1::ExpectedValue(Stock* stock,float percentage)
 {
 	float expectedIncrease;
 	float expectedValue;
@@ -144,7 +144,7 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 
 
 
-void ReadFile::BearBull(Stock* stock)
+void ReadFile1::BearBull(Stock* stock)
 {
 	Stock::node *stockHead = stock->head;
 	float lastMa200 = 0;
@@ -188,7 +188,7 @@ void ReadFile::BearBull(Stock* stock)
 
 
 //Approved by Sven
-void ReadFile::Mean(Stock *stock,int days)
+void ReadFile1::Mean(Stock *stock,int days)
 {
 	float sumStockClose=0;
 	float mean;
@@ -216,6 +216,6 @@ void ReadFile::Mean(Stock *stock,int days)
 }
 
 //Approved by Sven
-ReadFile::~ReadFile()
+ReadFile1::~ReadFile1()
 {}
 

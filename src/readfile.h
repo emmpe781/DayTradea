@@ -12,10 +12,10 @@
 
 using namespace std;
 
-class ReadFile
+class ReadFile1
 {
 public:
-	ReadFile();
+	ReadFile1();
 	void Read(string,Stock *,string);
 	void PopulateStock(Stock *);
 	void ExtractDayData(string,Stock*,string);
@@ -25,7 +25,7 @@ public:
 	void ExpectedValue2(Stock*,float);
 	void Mean(Stock*,int);
 	void nyfunction(){}
-	virtual ~ReadFile();
+	virtual ~ReadFile1();
 
 };
 

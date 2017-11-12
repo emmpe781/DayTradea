@@ -16,8 +16,8 @@ Portfolio::Portfolio(string date) {
 	cout << "initiating Portfolio... " << endl;
 	Stock portf_time;
 	string fname_time="../data/stockdata_portfolio_1986-10-01_2017-10-18_fill.dat";
-	ReadFile rf;
-	rf.Read(fname_time,&portf_time,date);
+	ReadFile1 rf2;
+	rf2.Read(fname_time,&portf_time,date);
 	Portfolio::portfoliolength = 0;
 	Stock::node *stocktmp = portf_time.head;
 
