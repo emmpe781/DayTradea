@@ -10,6 +10,9 @@
 #include <cstdlib>
 #include <pthread.h>
 #include <Python.h>
+#include <fstream>
+#include <windows.h>
+
 #define NUM_THREADS 1
 
 void *StartPython(void *threadid) {
@@ -19,11 +22,28 @@ void *StartPython(void *threadid) {
 }
 
 int main () {
-    cout << "threadPython starting..." << endl;
-
+    string rawData;
+    bool pushed = false;
 	pthread_t threads[NUM_THREADS];
 	int i=1;
 	pthread_create(&threads[1], NULL, StartPython, (void *)i);
+	Sleep(10000);
+
+	while (!pushed)
+	{
+		try{
+			ifstream myfile ("Buttonpushed.txt");
+			getline (myfile,rawData);
+			if(rawData == "PUSHED"){
+				cout << "puuuushed" << endl;
+				pushed = true;
+			}
+		}
+		catch (int e) 
+		{
+			    cout << "An exception occurred. Exception Nr. "  << '\n';
+		}
+	}
 
 	string startdate = "1987-03-05";
 	Portfolio Reference(startdate);
@@ -43,11 +63,12 @@ int main () {
 	Reference.buy(omx30,1,startdate);
 	ImbaPortfolio.buy(omx30,1,startdate);
 
-	pthread_exit(NULL);
+
 
 	//Algo.Buy_BearBull(&ImbaPortfolio,&omx30);
 	//Plot plt1;
 	//plt1.Plot_all(ImbaPortfolio,Reference,omx30);
+	pthread_exit(NULL);
 
 	return 0;
 }

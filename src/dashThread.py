@@ -24,13 +24,8 @@ count=0
 colorscale = cl.scales['9']['qual']['Paired']
 
 df_symbol = pd.read_csv('tickers.csv')
-
-def bbands(price, window_size=10, num_of_std=5):
-    rolling_mean = price.rolling(window=window_size).mean()
-    rolling_std  = price.rolling(window=window_size).std()
-    upper_band = rolling_mean + (rolling_std*num_of_std)
-    lower_band = rolling_mean - (rolling_std*num_of_std)
-    return rolling_mean, upper_band, lower_band
+f = open("Buttonpushed.txt", "w")
+f.close()
 
 def init_layout(app):
     app.layout = html.Div([
@@ -92,47 +87,6 @@ def callbacks(app):
         f = open("Buttonpushed.txt", "a")
         f.write("PUSHED"+ "\n")
         f.close()
-
-    """@app.callback(
-        dash.dependencies.Output('graphs','children'),
-        [dash.dependencies.Input('stockTickerInput', 'value')])
-    def update_graph(tickers):
-        graphs = []
-        for i, ticker in enumerate(tickers):
-            try:
-                df = DataReader(ticker, 'google',
-                                dt.datetime(2017, 1, 1),
-                                dt.datetime.now())
-            except:
-                graphs.append(html.H3(
-                    'Data is not available for {}'.format(ticker),
-                    style={'marginTop': 20, 'marginBottom': 20}
-                ))
-                continue
-
-            candlestick = {
-                'x': df.index,
-                'open': df['Open'],
-                'high': df['High'],
-                'low': df['Low'],
-                'close': df['Close'],
-                'type': 'candlestick',
-                'name': ticker,
-                'legendgroup': ticker,
-                'increasing': {'line': {'color': colorscale[0]}},
-                'decreasing': {'line': {'color': colorscale[1]}}
-            }
-            graphs.append(dcc.Graph(
-                id=ticker,
-                figure={
-                    'data': [candlestick],
-                    'layout': {
-                        'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
-                        'legend': {'x': 0}
-                    }
-                }
-            ))
-        #return graphs"""
 
     @app.callback(
         Output(component_id='out2', component_property='children'),
