@@ -29,33 +29,6 @@ Portfolio::Portfolio(string date) {
 }
 
 
-
-/*void Portfolio::insert_end(string date)
-  {
-	portfolionode *temp=new portfolionode;
-    temp->date=date;
-    temp->next=NULL;
-    if(head==NULL)
-    {
-      head=temp;
-      tail=temp;
-      temp=NULL;
-    }
-    else
-    {
-      tail->next=temp;
-      tail=temp;
-    }
-  }
-
-void Portfolio::insert_start(string date)
-{
-	portfolionode *temp=new portfolionode;
-    temp->date=date;
-	temp->next=head;
-	head=temp;
-}
-*/
 void Portfolio::add_date(string date,string name)
 {
 	portfolionode *tmp = new portfolionode;

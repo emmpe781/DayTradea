@@ -11,6 +11,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+
 using namespace std;
 
 
@@ -31,6 +33,47 @@ void ReadFile1::Read(string fname,Stock *stock_p,string startdate)
 	 }
 	else {
 		cout << "Unable to open file"<<endl;
+	}
+}
+
+void ReadFile1::ReadTicks(vector<string> * array)
+{
+	vector<string> *arr = array;
+    string rawData;
+	int startValue = 0;
+	int endValue= 0;
+	string tick("");
+
+	ifstream myfile ("Tickers.txt");
+
+	getline (myfile,rawData);
+
+	int length = rawData.size();
+	for (int i=0; i<length; i++) {
+		if (rawData[i]=='[')
+		{
+			startValue = i+2;
+		}
+		if (rawData[i]==',')
+		{
+			endValue = i-2;
+			for (int k=startValue; k<endValue;k++){
+				tick += rawData[k];
+			}
+			arr->push_back(tick);
+			tick = "";			
+			startValue = i+3;
+		}
+
+		if (rawData[i]==']')		
+		{
+			endValue = i-1;
+			for (int k=startValue; k<endValue;k++){
+				tick += rawData[k];
+			}
+			arr->push_back(tick);
+			tick = "";
+		}
 	}
 }
 

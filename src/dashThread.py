@@ -48,18 +48,17 @@ def init_layout(app):
             id='stockTickerInput',
             options=[{'label': s[0], 'value': s[1]}
                      for s in zip(df_symbol.Company, df_symbol.Symbol)],
-            value=['YHOO', 'GOOGL'],
+            value=['OMXS30'],
             multi=True
         ),
         html.Div([
             html.Button('CreateData', id='createdatabutton'),
             html.Div(id='out'),
-            html.Div(id='tickerList'),
+            html.Div(id='tickerout'),
         ]),
         html.Div([
             html.Button('Plot', id='plotbutton'),
             html.Div(id='out2'),
-            html.Div(id='tickerList'),
         ]),  
         html.Div(id='graphs')
     ], className="container")
@@ -73,12 +72,15 @@ def init_layout(app):
 
 def callbacks(app):
     @app.callback(
-        Output(component_id='tickerList',           component_property='children'),
+        Output(component_id='tickerout',           component_property='children'),
         [Input(component_id='stockTickerInput',     component_property='value')])
     def updateTickers(tickers):
         tickerList = []
         for i, ticker in enumerate(tickers):
-            tickerList.append(ticker)
+            tickerList.append(str(ticker))
+        f = open("Tickers.txt", "w")
+        f.write(str(tickerList))
+        f.close()        
 
     @app.callback(
         Output(component_id='out',      component_property='children'),
@@ -87,6 +89,7 @@ def callbacks(app):
         f = open("Buttonpushed.txt", "a")
         f.write("PUSHED"+ "\n")
         f.close()
+        return "Calculates data in c++"
 
     @app.callback(
         Output(component_id='out2', component_property='children'),

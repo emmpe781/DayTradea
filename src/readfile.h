@@ -9,6 +9,7 @@
 #define READFILE_H
 #include <string>
 #include "stock.h"
+#include <vector>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ class ReadFile1
 public:
 	ReadFile1();
 	void Read(string,Stock *,string);
+	void ReadTicks(vector<string> *);
 	void PopulateStock(Stock *);
 	void ExtractDayData(string,Stock*,string);
 	void ExtractStockData(string,Stock*,string);

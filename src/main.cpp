@@ -12,7 +12,7 @@
 #include <Python.h>
 #include <fstream>
 #include <windows.h>
-
+#include <vector>
 #define NUM_THREADS 1
 
 void *StartPython(void *threadid) {
@@ -23,11 +23,12 @@ void *StartPython(void *threadid) {
 
 int main () {
     string rawData;
+
     bool pushed = false;
 	pthread_t threads[NUM_THREADS];
 	int i=1;
 	pthread_create(&threads[1], NULL, StartPython, (void *)i);
-	Sleep(10000);
+	Sleep(3000);
 
 	while (!pushed)
 	{
@@ -35,7 +36,6 @@ int main () {
 			ifstream myfile ("Buttonpushed.txt");
 			getline (myfile,rawData);
 			if(rawData == "PUSHED"){
-				cout << "puuuushed" << endl;
 				pushed = true;
 			}
 		}
@@ -43,6 +43,16 @@ int main () {
 		{
 			    cout << "An exception occurred. Exception Nr. "  << '\n';
 		}
+	}
+	Sleep(200);
+	ReadFile1 rf;
+   	vector< string > arr;
+
+	rf.ReadTicks(&arr);
+
+	for (int x = 0; x != arr.size(); ++x)
+	{
+	     cout << arr[x] << "- subscripting" << endl;
 	}
 
 	string startdate = "1987-03-05";
@@ -53,8 +63,7 @@ int main () {
 	ImbaPortfolio.add_to_bank(100,startdate);
 
 	Algorithms Algo;
-	ReadFile1 rf;
-
+	
 	Stock omx30;
 	string fname_omx30="../data/stockdata_OMX30_1986-10-01_2017-10-18_fill.dat";
 	rf.Read(fname_omx30,&omx30,startdate);
