@@ -151,15 +151,57 @@ def callbacks(app):
             y = random_y
         )
 
+        layout = go.Layout(
+                    autosize=True,
+                    height=500,
+                    font=dict(color='#CCCCCC'),
+                    titlefont=dict(color='#CCCCCC', size='14'),
+                    margin=dict(
+                        l=42,
+                        r=42,
+                        b=55,
+                        t=45
+                    ),
+                    legend=dict(font=dict(size=10), orientation='h'),
+                    xaxis=dict(
+                        rangeselector=dict(
+                        buttons=list([
+                            dict(count=1,
+                                label='1m',
+                                step='month',
+                                stepmode='backward'),     
+                            dict(count=6,
+                                label='6m',
+                                step='month',
+                                stepmode='backward'),
+                            dict(count=1,
+                                label='YTD',
+                                step='year',
+                                stepmode='todate'),
+                            dict(count=1,
+                                label='1y',
+                                step='year',
+                                stepmode='backward'),
+                            dict(step='all')
+                        ])
+                    ),
+                    ),
+                    yaxis=dict(
+                        type='log',
+                        autorange=True,
+                        showgrid=True,
+                        zeroline=True,
+                        showline=True,
+                        autotick=True,
+                )           
+            )
 
         graph=dcc.Graph(id="PLOT",
                         figure={
                                 'data': [trace],
-                                'layout': {
-                                    'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
-                                    'legend': {'x': 0}
+                                'layout': layout
                                 }
-                            })
+                            )
         return graph
 
       
