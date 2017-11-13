@@ -86,6 +86,7 @@ def callbacks(app):
         Output(component_id='out',      component_property='children'),
         events=[Event('createdatabutton', 'click')],)
     def CreateData():
+        #TODO: open python file for data extraction. This file will create txt files for c++ to open. 
         f = open("Buttonpushed.txt", "a")
         f.write("PUSHED"+ "\n")
         f.close()
