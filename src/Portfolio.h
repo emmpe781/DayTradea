@@ -31,12 +31,14 @@ public:
          stockinfo *curStock = NULL;
          stockinfo *nextStock = NULL;
          stockinfo *tail = NULL;
+         stockinfo myStockinfo;
 		 portfolionode *next;
 	  };
 
 	typedef portfolionode* portfolionode_p;
 
 	portfolionode_p curPortfolio = NULL; //Current Portfolio Content
+	portfolionode* test;
 	portfolionode *tail = NULL; //Not Used
 
 	Portfolio(string);
@@ -49,11 +51,11 @@ public:
 	void insert_end(string);
 	void insert_start(string);
 
+
 	void buy2(Stock*, float, string);
+	float portfolioValue(Portfolio* ,string);
 	void buy(Stock,float,string);
 	void sell(Stock,float,string);
-
-	void calculateValue();
 	virtual ~Portfolio();
 };
 typedef Portfolio* Portfolio_p;

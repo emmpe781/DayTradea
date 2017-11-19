@@ -33,6 +33,7 @@ class Stock{
 	  node *firstStockDate;
 	  node *tail;
 	  Stock();
+	  float stockValue(string ,string);
 	  void add_node_to_end(string,float);
 	  void Print();
 };

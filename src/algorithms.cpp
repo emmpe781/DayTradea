@@ -29,27 +29,39 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	//Pekar på min första aktie i portföljen
 
 
-	Portfolio::portfolionode::stockinfo *tmpStock = tmpPortfolio->curStock;
+	//Portfolio::portfolionode::stockinfo *tmpStock = tmpPortfolio->curStock;
 
 
 	Stock::node *stock = omxS30_p->firstStockDate;
 	cout << "stockdate: " <<  stock->date << endl;
 	//Kanske måste skicka in referensen till portfolio_p
 	portfolio_p->buy2(omxS30_p ,portfolio_p->portfolioMoney, stock->date);
+
+
+
 	//Nu har jag handlat vissa aktier, dags att gå igenom värdet för portföljen!
 
 	//tmpPortfolio->curStock = tmpPortfolio->curStock->next;
 	//tmpPortfolio->curStock = tmpPortfolio->curStock->next;
-	while(tmpPortfolio->curStock != NULL){
-		cout << "sven date: " << tmpPortfolio->date << endl;
-		cout << "name: " << tmpPortfolio->curStock->name << endl;
-		cout << "nr of stocks: " << tmpPortfolio->curStock->nrOfStocks << endl;
-		tmpPortfolio->curStock = tmpPortfolio->curStock->next;
-	}
+	cout << "sven date: efter denna det pajjar? " << tmpPortfolio->date << endl;
+	cout << "name: " << tmpPortfolio->curStock->name << endl;
+	cout << "nr of stocks: " << tmpPortfolio->curStock->nrOfStocks << endl;
+	//tmpPortfolio->curStock = tmpPortfolio->curStock->next;
+
+//	while(tmpPortfolio->curStock != NULL){
+//
+//	}
 	//portfolio_p->buy(*omxS30_p, 1, stock->date);
 
 
 	while(stock != lastStockDate){
+		//nu borde jag uppdatera värdet för alla parametrar:
+		// 1: datumet
+		// 2: värdet på portföljen
+		// 3: antalet aktier?
+
+
+
 
 		//cout << stock->date << endl;
 		/*
@@ -76,7 +88,15 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 		cout << "Portfolio->stockValue: " << tmpStock->stockValue << endl;
 		cout << "portfolio_p->portfolioMoney: " << portfolio_p->portfolioMoney << endl;
 		*/
+
+
+		tmpPortfolio->totalValue = portfolio_p->portfolioValue(portfolio_p, stock->date);
+
 		stock=stock->next;
+		tmpPortfolio->date = stock->date;
+
+		//cout << "sven date: " << tmpPortfolio->date << endl;
+
 	}
 
 }

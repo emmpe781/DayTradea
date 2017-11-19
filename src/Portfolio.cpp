@@ -197,16 +197,43 @@ void Portfolio::buy2(Stock *stock, float money, string date)
 		tmpnode->stockValue = tmpStock->close;
 
 		//Sätt portföljen att peka på noden jag precis fyllde på med data
-	    tmpPortfolio_p->curStock=tmpnode->next;
+	    tmpPortfolio_p->curStock=tmpnode;//->next;
 		cout << "tmpnode->name " << tmpnode->name << endl;
 		cout << "nr of stocks: " << tmpnode->nrOfStocks << endl;
 		cout << "DATUM::::" << tmpPortfolio_p->date << endl;
-	    tmpnode=NULL;
+	    //tmpnode=NULL;
 
 	}
+}
+
+float Portfolio::portfolioValue(Portfolio* portfolio, string date)
+{
+	//string stockName = portfolio->myPortfolionode.myStockinfo.name;
+	portfolionode_p tmpNode = portfolio->curPortfolio;
+
+	Portfolio::portfolionode::stockinfo *stock = tmpNode->curStock;
+	tmpNode->totalValue = portfolioMoney;
+
+	//cout << "stockName = " << stockName << endl;
+	//cout << "portfolio->portfolionode::date = " << portfolio->portfolionode::date << endl;
+	Stock tmpStock;
+	while(stock != NULL)
+	{
+		string stockName = stock->name;
+		tmpNode->totalValue = tmpNode->totalValue + tmpStock.stockValue(stockName, date);
+		cout << " tmpNode->totalValue = " << tmpNode->totalValue << endl;
+		stock = stock->next;
+	}
+	/*	string stockName = portfolio->portfolionode::stockinfo::name;
+		//stockinfo =
+
+		portfolio->portfolionode::totalValue =
+				portfolio->portfolionode::totalValue + Stock::stockValue(stockName, date);
+
+	}*/
 
 
-
+	return 1.337;
 }
 
 void Portfolio::buy(Stock stock, float volume, string date)

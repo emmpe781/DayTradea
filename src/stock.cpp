@@ -35,6 +35,30 @@ void Stock::add_node_to_end(string date,float close)
 	}
 }
 
+float Stock::stockValue(string stockName, string date)
+{
+
+	//Skapa en global stockList som innehåller alla aktier vi har läst in
+	//Borde göras om till en map på sikt så vi slipper att loopa igenom.
+	//while (stockList != NULL)
+	//{
+	Stock_p stock_p;
+	stock_p = omx30;
+
+		if (omx30.name == stockName)
+		{
+			while (stock_p->firstStockDate->date != date)
+			{
+				stock_p->firstStockDate->date = stock_p->firstStockDate->nextDate;
+			}
+			return stock_p->firstStockDate->close;
+		}
+
+	//}
+
+	return 100.0;
+}
+
 void Stock::Print()
 {
 	node *date_node = firstStockDate;
