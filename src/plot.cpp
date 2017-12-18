@@ -4,7 +4,6 @@
  *  Created on: 3 juni 2017
  *      Author: Otur1337
  */
-#pragma once
 #include <cmath>
 #include <Python.h>
 #include "plot.h"

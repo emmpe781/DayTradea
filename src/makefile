@@ -19,7 +19,6 @@ CFLAGS  = -g -Wall -Wl,-subsystem,console -std=c++0x -D_hypot=hypot
 #	g++ main.cpp -I/usr/include/python3.5 -lpython3.5 -o main -std=c++11
 
 
-
 # typing 'make' will invoke the first target entry in the file 
 # (in this case the default target entry)
 # you can name this target entry anything, but "default" or "all"
@@ -29,8 +28,12 @@ all: main
 # To create the executable file count we need the object files
 # countwords.o, counter.o, and scanner.o:
 #
+#main: main.o portfolio.o stock.o readfile.o plot.o algorithms.o
+#	$(CC) $(CFLAGS) -o main main.o portfolio.o stock.o readfile.o plot.o algorithms.o -I C:/Python36-32/include -L C:/Python36-32/libs -l python36
 main: main.o portfolio.o stock.o readfile.o plot.o algorithms.o
-	$(CC) $(CFLAGS) -o main main.o portfolio.o stock.o readfile.o plot.o algorithms.o -I C:/Python36-32/include -L C:/Python36-32/libs -l python36
+		$(CC) $(CFLAGS) -o main main.o  portfolio.o stock.o readfile.o plot.o algorithms.o  -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+
+
 #-DWITHOUT_NUMPY
 
 # To create the object file main.o, we need the source
@@ -58,7 +61,8 @@ algorithms.o:  algorithms.cpp portfolio.h stock.h
 	$(CC) $(CFLAGS) -c algorithms.cpp 
 
 plot.o: plot.cpp stock.h portfolio.h
-	$(CC) $(CFLAGS) -c plot.cpp -I C:/Python36-32/include -L C:/Python36-32/libs -l python36
+	$(CC) $(CFLAGS) -c plot.cpp -I C:/Users/Otur1337/Python36-32/include -L C:/Users/Otur1337/Python36-32/libs -l python36
+
 
 ignorePythonWarnings : CXXFLAGS += -w
 ignorePythonWarnings : plot.o

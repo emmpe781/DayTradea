@@ -43,7 +43,7 @@ public:
 
 	Portfolio(string);
 	void Print();
-	bool stockInPortfolio(string);
+	bool stockInPortfolio(string,Portfolio::portfolionode::stockinfo*);
 	void setStartValue(float);
 	void add_date(string,string);
 	void add_to_bank(float,string);
@@ -53,6 +53,7 @@ public:
 
 
 	void buy2(Stock*, float, string);
+	void buy3(Stock::node*,string,float, Portfolio::portfolionode*);
 	float portfolioValue(Portfolio* ,string);
 	void buy(Stock,float,string);
 	void sell(Stock,float,string);

@@ -12,17 +12,11 @@ int main() {
 	float startValue = 13370;
 	//string startdate = "1987-03-05";
 	string startdate = "2016-09-17";
+
 	Portfolio Reference(startdate);
 	Reference.add_to_bank(startValue,startdate);
-
-
-
-
-
-
 	//
 	//ImbaPortfolio.add_to_bank(1000,startdate);
-
 
 	ReadFile rf; //TODO: create namespace instead of object
 
@@ -35,10 +29,10 @@ int main() {
 	//ImbaPortfolio.buy(omx30,1,startdate);
 
 
-	//Min portfölj börjar:
+	//Min portfÃ¶lj bÃ¶rjar:
 	Portfolio ImbaPortfolio(startdate);
+	ImbaPortfolio.portfolioname = "ImbaPortfolio";
 	ImbaPortfolio.setStartValue(startValue);
-
 	//Min algh. startar
 	Algorithms Algo;
 	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30);

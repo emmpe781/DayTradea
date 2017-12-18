@@ -35,7 +35,7 @@ void Stock::add_node_to_end(string date,float close)
 	}
 }
 
-float Stock::stockValue(string stockName, string date)
+/*float Stock::stockValue(string stockName, string date)
 {
 
 	//Skapa en global stockList som innehåller alla aktier vi har läst in
@@ -57,8 +57,8 @@ float Stock::stockValue(string stockName, string date)
 	//}
 
 	return 100.0;
-}
-
+}*/
+	
 void Stock::Print()
 {
 	node *date_node = firstStockDate;
