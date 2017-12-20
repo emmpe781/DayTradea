@@ -17,17 +17,19 @@ public:
 
 	  string portfolioname;
 	  int portfoliolength;
-	  float portfolioMoney; //The amount of money
+      float cash; //The amount of money
+
 	  struct portfolionode{
 		 string date;
+		 float portfolioValue; //The amount of money + stockValue for each date   porfolioValue=cash+"value of all stocks in portfolio"
+
 		 struct stockinfo{
 			 string name;
-			 float stockValue;
+			 float stockValue; ///REMOVE
 			 int nrOfStocks;
 			 stockinfo *next;
 		 };
 
-		 float totalValue; //The amount of money + stockValue for each date
          stockinfo *curStock = NULL;
          stockinfo *nextStock = NULL;
          stockinfo *tail = NULL;
@@ -45,7 +47,7 @@ public:
 	void Print();
 	bool stockInPortfolio(string,Portfolio::portfolionode::stockinfo*);
 	void setStartValue(float);
-	void add_date(string,string);
+	void add_date(string);
 	void add_to_bank(float,string);
 	void remove_from_bank(float,string);
 	void insert_end(string);
@@ -53,7 +55,7 @@ public:
 
 
 	void buy2(Stock*, float, string);
-	void buy3(Stock::node*,string,float, Portfolio::portfolionode*);
+	void buy3(Stock::node*,string,float, Portfolio::portfolionode*, Portfolio*);
 	float portfolioValue(Portfolio* ,string);
 	void buy(Stock,float,string);
 	void sell(Stock,float,string);

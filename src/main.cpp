@@ -25,7 +25,7 @@ int main() {
 	rf.Read(fname_omx30,&omx30,startdate);
 	rf.PopulateStock(&omx30);
 
-	Reference.buy(omx30,1,startdate);
+	//Reference.buy(omx30,1,startdate);
 	//ImbaPortfolio.buy(omx30,1,startdate);
 
 
@@ -35,7 +35,7 @@ int main() {
 	ImbaPortfolio.setStartValue(startValue);
 	//Min algh. startar
 	Algorithms Algo;
-	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30);
+	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30); //borde skicka in const på omx30
 
 //	Plot plt1;
 //	plt1.Plot_all(ImbaPortfolio,Reference,omx30);

@@ -18,68 +18,26 @@ Portfolio::Portfolio(string date) {
 	ReadFile rf;
 	rf.Read(fname_time, &portf_time, date);
 	Portfolio::portfoliolength = 0;
+	Portfolio::cash = 0;
 	Stock::node *stocktmp = portf_time.firstStockDate;
 
 	while(stocktmp!= NULL){
-		//if (stocktmp->date >= date){
-			add_date(stocktmp->date,"bank");
-			Portfolio::portfoliolength++;
-		//}
+		add_date(stocktmp->date);
+		Portfolio::portfoliolength++;
 		stocktmp=stocktmp->next;
 	}
 }
 
-
-
-/*void Portfolio::insert_end(string date)
-  {
-	portfolionode *temp=new portfolionode;
-    temp->date=date;
-    temp->next=NULL;
-    if(head==NULL)
-    {
-      head=temp;
-      tail=temp;
-      temp=NULL;
-    }
-    else
-    {
-      tail->next=temp;
-      tail=temp;
-    }
-  }
-
-void Portfolio::insert_start(string date)
-{
-	portfolionode *temp=new portfolionode;
-    temp->date=date;
-	temp->next=head;
-	head=temp;
-}
-*/
-void Portfolio::add_date(string date,string name)
+void Portfolio::add_date(string date)
 {
 	portfolionode_p tmp = new portfolionode;
 	tmp->date = date;
-
-	portfolionode::stockinfo *tmpnode = new portfolionode::stockinfo;
-
-	tmpnode->name = "portfolio value";
-	tmpnode->stockValue = 0;
-    tmpnode->next=tmp->curStock;
-
-    tmp->curStock=tmpnode;
-
-    tmpnode=new portfolionode::stockinfo;
-	tmpnode->name = "bank";
-	tmpnode->stockValue = 0;
-    tmpnode->next=tmp->curStock;
-
-    tmp->curStock=tmpnode;
-	tmp->next = NULL;
+	tmp->portfolioValue = 0;
+	
+	tmp->next = NULL; //TODO: Kontrollera vad som faktiskt sker nedan
 
 	if(curPortfolio == NULL)
-	{
+	{	
 		curPortfolio = tmp;
 		tail = tmp;
 	}
@@ -92,15 +50,15 @@ void Portfolio::add_date(string date,string name)
 
 void Portfolio::setStartValue(float startValue)
 {
-	portfolioMoney = startValue;
-	cout << portfolioMoney << " = amount of money" << endl;
+	cash = startValue;
+	cout << cash << " = cash" << endl;
 }
 
 
 
 void Portfolio::add_to_bank(float value, string date)
 {
-	portfolionode_p portfolio_p = curPortfolio;
+	/*portfolionode_p portfolio_p = curPortfolio;
 	portfolionode::stockinfo *tmpnode = portfolio_p->curStock;
 
 	while(portfolio_p != NULL){
@@ -123,14 +81,14 @@ void Portfolio::add_to_bank(float value, string date)
 		}
 		tmpnode=portfolio_p->curStock;
 		portfolio_p=portfolio_p->next;
-	}
+	}*/
 }
 
 
 
 void Portfolio::remove_from_bank(float stockValue,string date)
 {
-	portfolionode_p tmp = curPortfolio;
+	/*portfolionode_p tmp = curPortfolio;
 	portfolionode::stockinfo *tmpnode = tmp->curStock;
 
 	while((tmp!= NULL)){
@@ -150,12 +108,12 @@ void Portfolio::remove_from_bank(float stockValue,string date)
 			}
 		tmpnode=tmp->curStock;
 		tmp=tmp->next;
-	}
+	}*/
 }
 
 
-/*void Portfolio::buy2(Stock *stock, float money, string date)
-{
+void Portfolio::buy2(Stock *stock, float money, string date)
+{/*
 	int nrOfStocks = 0;
 	Stock::node *tmpStock = stock->firstStockDate;
 	//Kolla att stocken inte finns i portföljen -> lägg till en ny!
@@ -186,9 +144,9 @@ void Portfolio::remove_from_bank(float stockValue,string date)
 		cout << "DATUM::::" << tmpPortfolio_p->date << endl;
 	    //tmpnode=NULL;
 
-	}
+	}*/
 }
-*/
+
 bool Portfolio::stockInPortfolio(string stockname,Portfolio::portfolionode::stockinfo *portnode)
 {
 	while (portnode != NULL)
@@ -202,44 +160,42 @@ bool Portfolio::stockInPortfolio(string stockname,Portfolio::portfolionode::stoc
 	return false;
 }
 
-void Portfolio::buy3(Stock::node *stocknode, string stockname, float money, Portfolio::portfolionode *portnode)
+void Portfolio::buy3(Stock::node *stocknode, string stockname, float money, Portfolio::portfolionode *portnode, Portfolio *port)
 {
 	int nrOfStocks = 0;
-	cout << "stockname: " << stocknode->date << endl;
-	cout << "portname: " << portnode->date << endl;
+	if (money <= port->cash) {
 	//Kolla att stocken inte finns i portföljen -> lägg till en ny!
 	if (stockInPortfolio(stockname,portnode->curStock) == false)
 	{	
 		cout << "--------------- aktie saknas: skapa nytt element --------------------" << endl;
-		
 		while (money >= stocknode->close)
-		{
-			//dra av värdet i portföljen för varje aktie jag köper
-			portfolioMoney = portfolioMoney - stocknode->close;
-			money = money - stocknode->close;
-			++nrOfStocks;
-		}
+			{
+				//dra av värdet i portföljen för varje aktie jag köper
+				money = money - stocknode->close;
+				port->cash = port->cash - stocknode->close;
+				++nrOfStocks;
+			}
 		//Skapa en ny aktie i portföljen
 		Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
 		
 		tmpnode->name = stockname;
 		tmpnode->nrOfStocks = nrOfStocks;
-		tmpnode->stockValue = stocknode->close;
-		//Sätt portföljen att peka på noden jag precis fyllde på med data
-		portnode->curStock = tmpnode; //pekar just nu på fel nod, första istället för sista!!!!!!!!!! 
+	    tmpnode->next=portnode->curStock;
+	    portnode->curStock=tmpnode;
 	}
 	else {
 		cout << "--------------- aktie finns: lägg till i existerande --------------------" << endl;
 	}
 }
+}
 
 float Portfolio::portfolioValue(Portfolio* portfolio, string date)
 {
-	//string stockName = portfolio->myPortfolionode.myStockinfo.name;
+	/*//string stockName = portfolio->myPortfolionode.myStockinfo.name;
 	portfolionode_p tmpNode = portfolio->curPortfolio;
 
 	Portfolio::portfolionode::stockinfo *stock = tmpNode->curStock;
-	tmpNode->totalValue = portfolioMoney;
+	tmpNode->portfolioValue = cash;
 
 	//cout << "stockName = " << stockName << endl;
 	//cout << "portfolio->portfolionode::date = " << portfolio->portfolionode::date << endl;
@@ -248,9 +204,9 @@ float Portfolio::portfolioValue(Portfolio* portfolio, string date)
 	{
 		string stockName = stock->name;
 		//tmpNode->totalValue = tmpNode->totalValue + tmpStock.stockValue(stockName, date);
-		cout << " tmpNode->totalValue = " << tmpNode->totalValue << endl;
+		cout << " tmpNode->portfolioValue = " << tmpNode->portfolioValue << endl;
 		stock = stock->next;
-	}
+	}*/
 	/*	string stockName = portfolio->portfolionode::stockinfo::name;
 		//stockinfo =
 
@@ -265,7 +221,7 @@ float Portfolio::portfolioValue(Portfolio* portfolio, string date)
 
 void Portfolio::buy(Stock stock, float volume, string date)
 {
-
+/*
 	portfolionode *tmp = curPortfolio;
 	portfolionode::stockinfo *tmpnode = tmp->curStock;
 	Stock::node *stocktmp = stock.firstStockDate;
@@ -303,11 +259,11 @@ void Portfolio::buy(Stock stock, float volume, string date)
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
 							cout << "REMOVED FROM BANK" << endl;
-						} /*if*/
+						} 
 						portfolio->stockValue= portfolio->stockValue + (stocktmp->close)*volume;
 						stockexist=1;
 						break;
-					} /*if*/
+					} 
 
 					tmpnode=tmpnode->next;
 
@@ -321,25 +277,25 @@ void Portfolio::buy(Stock stock, float volume, string date)
 							remove_from_bank((stocktmp->close)*volume,tmp->date);
 							bankupdated=1;
 							cout << "REMOVED FROM BANK" << endl;
-						}/*if*/
+						}
 					   portfolio->stockValue = portfolio->stockValue + (stocktmp->close)*volume;
          			   tmpnode->next=tmp->curStock;
 					   tmp->curStock=tmpnode;
    					   tmpnode=NULL;
 
-					}/*if*/
-				}/*while*/
-			}/*if*/
-		}/*if*/
+					}
+				}
+			}
+		}
 		tmpnode=tmp->curStock;
 		tmp=tmp->next;
-	}/*if*/
+	}*/
 }
 
 void Portfolio::sell(Stock stock,float volume,string date)
 {
 
-	portfolionode_p tmp = curPortfolio;
+	/*portfolionode_p tmp = curPortfolio;
 	portfolionode::stockinfo *tmpnode = tmp->curStock;
 	Stock::node *stocktmp = stock.firstStockDate;
 	int bankupdated = 0;
@@ -394,12 +350,12 @@ void Portfolio::sell(Stock stock,float volume,string date)
 		}
 		tmpnode=tmp->curStock;
 		tmp=tmp->next;
-	}
+	}*/
 }
 
 void Portfolio::Print()
 {
-	cout << "PRINT: " << endl;
+	/*cout << "PRINT: " << endl;
 	portfolionode_p tmp = curPortfolio;
 	portfolionode::stockinfo *infotmp = tmp->curStock;
    	 
@@ -413,7 +369,7 @@ void Portfolio::Print()
 		}
     	infotmp=tmp->curStock;
 		tmp=tmp->next;
-   }
+   }*/
 }
 
 
