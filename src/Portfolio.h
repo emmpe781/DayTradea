@@ -56,6 +56,7 @@ public:
 
 	void buy2(Stock*, float, string);
 	void buy3(Stock::node*,string,float, Portfolio::portfolionode*, Portfolio*);
+	void updateBeginningOfDay(Portfolio::portfolionode*,Portfolio::portfolionode*,Stock::node*,Stock::node*);
 	float portfolioValue(Portfolio* ,string);
 	void buy(Stock,float,string);
 	void sell(Stock,float,string);

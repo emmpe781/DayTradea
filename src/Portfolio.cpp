@@ -189,6 +189,23 @@ void Portfolio::buy3(Stock::node *stocknode, string stockname, float money, Port
 }
 }
 
+void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Portfolio::portfolionode *currentPort,Stock::node *previousStock,Stock::node *currentStock)
+{	
+	Portfolio::portfolionode::stockinfo *previousDay = previousPort->curStock;
+	Portfolio::portfolionode::stockinfo *currentDay = currentPort->curStock;
+
+	while (previousDay != NULL)
+	{	
+		Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
+		tmpnode->name = previousDay->name;
+		tmpnode->nrOfStocks = previousDay->nrOfStocks;
+
+	    tmpnode->next=currentPort->curStock;
+	    currentPort->curStock=tmpnode;
+	    previousDay = previousDay->next;
+	}
+}
+
 float Portfolio::portfolioValue(Portfolio* portfolio, string date)
 {
 	/*//string stockName = portfolio->myPortfolionode.myStockinfo.name;

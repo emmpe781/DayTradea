@@ -23,17 +23,20 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	//2 när index ligger i bull -> var 100 % investerad
 	//3 när index ligger i bear -> var 0 & investerad
 
-	Portfolio::portfolionode *tmpPortfolio = portfolio_p->curPortfolio; 	//Pekar på noden för mitt första datum i portföljen
-	Portfolio::portfolionode::stockinfo *tmpStock = tmpPortfolio->curStock; //Pekar på noden för första aktien i portföljens första datum
+	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio; 	//Pekar på noden för mitt första datum i portföljen
+	Portfolio::portfolionode *previousPortfolioDay = portfolio_p->curPortfolio; 
+	Portfolio::portfolionode::stockinfo *tmpStock = tmpPortfolioDay->curStock; //Pekar på noden för första aktien i portföljens första datum
 	Stock::node *index = omxS30_p->firstStockDate; 							//Pekar på noden för första datumet i mitt index (OMX30)
+	Stock::node *previousIndex = omxS30_p->firstStockDate;
 	float PreviousPortfolioValue = portfolio_p->cash; //TEMPORARY
 
 	int i = 0;
 	while(i<5) {
-	//portfolio_p->updateBeginningOfDay()
-	tmpPortfolio->portfolioValue = PreviousPortfolioValue;
+	tmpPortfolioDay->portfolioValue = PreviousPortfolioValue;
+	cout << "UPDAATE: " << endl;
+	portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
 
-	//while(tmpPortfolio != NULL){
+	//while(tmpPortfolioDay != NULL){
 		if (index->bearBull == 1800){
 			//cout << "BULL Handla!" << endl;
 			//handla så många aktier du har råd att handla den dagen
@@ -42,16 +45,17 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 		if (i == 2) {
 			//cout << "BEAR Handla inte!" << endl;
 			float moneyToBuyWith = 5000;
-			portfolio_p->buy3(index,omxS30_p->name,moneyToBuyWith, tmpPortfolio, portfolio_p);
+			portfolio_p->buy3(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay, portfolio_p);
+			portfolio_p->buy3(index,"HEJ",moneyToBuyWith, tmpPortfolioDay, portfolio_p);
 		}
 		}
 
 		cout << "--------------- PRINTING --------------------" << endl;
-		tmpStock = tmpPortfolio->curStock;
+		tmpStock = tmpPortfolioDay->curStock;
 
 		cout << "Cash: " <<  portfolio_p->cash << endl;
-		cout << "Date: " <<  tmpPortfolio->date << endl;
-		cout << "PortfolioValue: " <<  tmpPortfolio->portfolioValue << endl;
+		cout << "Date: " <<  tmpPortfolioDay->date << endl;
+		cout << "PortfolioValue: " <<  tmpPortfolioDay->portfolioValue << endl;
 		while(tmpStock != NULL){
 			cout << "  StockName: " <<  tmpStock->name << endl;
 			cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
@@ -59,10 +63,10 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 
 			tmpStock = tmpStock->next;
 		}
-
-		//portfolio_p->updateEndOfDay()
-		tmpStock = tmpPortfolio->curStock;
-		tmpPortfolio=tmpPortfolio->next;
+		previousPortfolioDay=tmpPortfolioDay;
+		previousIndex=index;
+		tmpStock = tmpPortfolioDay->curStock;
+		tmpPortfolioDay=tmpPortfolioDay->next;
 		index=index->next;
 		i=i+1;
 	}
