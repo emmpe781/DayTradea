@@ -194,16 +194,23 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Port
 	Portfolio::portfolionode::stockinfo *previousDay = previousPort->curStock;
 	Portfolio::portfolionode::stockinfo *currentDay = currentPort->curStock;
 
-	while (previousDay != NULL)
+	if (previousDay != NULL)
 	{	
 		Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
 		tmpnode->name = previousDay->name;
 		tmpnode->nrOfStocks = previousDay->nrOfStocks;
-
+		cout << "diff: " << ((currentStock->close)-(previousStock->close)) << endl;
+		cout << "previous current: " << previousStock->close << endl;
+		cout << "close current: " << currentStock->close << endl;
+		currentPort->portfolioValue =  previousPort->portfolioValue + (tmpnode->nrOfStocks)*((currentStock->close)-(previousStock->close));
 	    tmpnode->next=currentPort->curStock;
 	    currentPort->curStock=tmpnode;
 	    previousDay = previousDay->next;
+
 	}
+	else{currentPort->portfolioValue =  previousPort->portfolioValue;}
+	
+
 }
 
 float Portfolio::portfolioValue(Portfolio* portfolio, string date)

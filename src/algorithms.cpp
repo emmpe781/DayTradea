@@ -31,22 +31,22 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	float PreviousPortfolioValue = portfolio_p->cash; //TEMPORARY
 
 	int i = 0;
-	while(i<5) {
-	tmpPortfolioDay->portfolioValue = PreviousPortfolioValue;
-	cout << "UPDAATE: " << endl;
-	portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
 
-	//while(tmpPortfolioDay != NULL){
-		if (index->bearBull == 1800){
+	while(tmpPortfolioDay != NULL){
+	//while(i<5) {
+	cout << "UPDAATE: " << endl;
+	tmpPortfolioDay->portfolioValue = PreviousPortfolioValue;
+
+	portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
+	if (index->bearBull == 1800){
 			//cout << "BULL Handla!" << endl;
 			//handla så många aktier du har råd att handla den dagen
 		} 
 		else { 
 		if (i == 2) {
 			//cout << "BEAR Handla inte!" << endl;
-			float moneyToBuyWith = 5000;
+			float moneyToBuyWith = 1422;
 			portfolio_p->buy3(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay, portfolio_p);
-			portfolio_p->buy3(index,"HEJ",moneyToBuyWith, tmpPortfolioDay, portfolio_p);
 		}
 		}
 

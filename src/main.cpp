@@ -9,7 +9,7 @@
 using namespace std;
 
 int main() {
-	float startValue = 13370;
+	float startValue = 1422;
 	//string startdate = "1987-03-05";
 	string startdate = "2016-09-17";
 
@@ -37,8 +37,8 @@ int main() {
 	Algorithms Algo;
 	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30); //borde skicka in const på omx30
 
-//	Plot plt1;
-//	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
+	Plot plt1;
+	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
 
 
 	return 0;

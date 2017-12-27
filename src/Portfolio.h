@@ -31,7 +31,6 @@ public:
 		 };
 
          stockinfo *curStock = NULL;
-         stockinfo *nextStock = NULL;
          stockinfo *tail = NULL;
          stockinfo myStockinfo;
 		 portfolionode *next;
@@ -40,7 +39,6 @@ public:
 	typedef portfolionode* portfolionode_p;
 
 	portfolionode_p curPortfolio = NULL; //Current Portfolio Content
-	portfolionode* test;
 	portfolionode *tail = NULL; //Not Used
 
 	Portfolio(string);
