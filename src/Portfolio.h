@@ -46,17 +46,8 @@ public:
 	bool stockInPortfolio(string,Portfolio::portfolionode::stockinfo*);
 	void setStartValue(float);
 	void add_date(string);
-	void add_to_bank(float,string);
-	void remove_from_bank(float,string);
-	void insert_end(string);
-	void insert_start(string);
-
-
-	void buy2(Stock*, float, string);
-	void buy3(Stock::node*,string,float, Portfolio::portfolionode*, Portfolio*);
+	void buy(Stock::node*,string,float, Portfolio::portfolionode*, Portfolio*);
 	void updateBeginningOfDay(Portfolio::portfolionode*,Portfolio::portfolionode*,Stock::node*,Stock::node*);
-	float portfolioValue(Portfolio* ,string);
-	void buy(Stock,float,string);
 	void sell(Stock,float,string);
 	virtual ~Portfolio();
 };

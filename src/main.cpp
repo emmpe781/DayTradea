@@ -9,12 +9,12 @@
 using namespace std;
 
 int main() {
-	float startValue = 1422;
+	float startValue = 1406;
 	//string startdate = "1987-03-05";
-	string startdate = "2016-09-17";
+	string startdate = "1987-09-17";
 
 	Portfolio Reference(startdate);
-	Reference.add_to_bank(startValue,startdate);
+	Reference.setStartValue(startValue);
 	//
 	//ImbaPortfolio.add_to_bank(1000,startdate);
 
