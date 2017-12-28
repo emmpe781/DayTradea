@@ -57,11 +57,11 @@ def plotStdVectors(*arg):
                     dict(step='all')
                 ])
             ),
-            rangeslider=dict(),
+            #rangeslider=dict(),
             type='date'
             ),
             yaxis=dict(
-                #type='log',
+                type='log',
                 autorange=True,
                 showgrid=True,
                 zeroline=True,

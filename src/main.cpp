@@ -9,9 +9,9 @@
 using namespace std;
 
 int main() {
-	float startValue = 1406;
+	float startValue = 160;
 	//string startdate = "1987-03-05";
-	string startdate = "1987-09-17";
+	string startdate = "2015-09-17";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);
@@ -33,7 +33,7 @@ int main() {
 	Portfolio ImbaPortfolio(startdate);
 	ImbaPortfolio.portfolioname = "ImbaPortfolio";
 	ImbaPortfolio.setStartValue(startValue);
-	//Min algh. startar
+	//Min algh. startar 
 	Algorithms Algo;
 	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30); //borde skicka in const på omx30
 

@@ -48,7 +48,7 @@ public:
 	void add_date(string);
 	void buy(Stock::node*,string,float, Portfolio::portfolionode*, Portfolio*);
 	void updateBeginningOfDay(Portfolio::portfolionode*,Portfolio::portfolionode*,Stock::node*,Stock::node*);
-	void sell(Stock,float,string);
+	void sell(Stock::node*,string,int, Portfolio::portfolionode*, Portfolio*);
 	virtual ~Portfolio();
 };
 typedef Portfolio* Portfolio_p;

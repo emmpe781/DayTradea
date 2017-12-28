@@ -71,38 +71,56 @@ void Portfolio::buy(Stock::node *stocknode, string stockname, float money, Portf
 {
 	int nrOfStocks = 0;
 	if (money <= port->cash) {
-	//Kolla att stocken inte finns i portföljen -> lägg till en ny!
-	if (stockInPortfolio(stockname,portnode->curStock) == false)
-	{	
-		cout << "--------------- aktie saknas: skapa nytt element --------------------" << endl;
-		while (money >= stocknode->close)
-			{
-				//dra av värdet i portföljen för varje aktie jag köper
-				money = money - stocknode->close;
-				port->cash = port->cash - stocknode->close;
-				++nrOfStocks;
-			}
-		//Skapa en ny aktie i portföljen
-		Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
-		
-		tmpnode->name = stockname;
-		tmpnode->nrOfStocks = nrOfStocks;
-	    tmpnode->next=portnode->curStock;
-	    portnode->curStock=tmpnode;
-	}
-	else {
-		cout << "--------------- aktie finns: lägg till i existerande --------------------" << endl;
-		while (money >= stocknode->close)
-			{
-				//dra av värdet i portföljen för varje aktie jag köper
-				money = money - stocknode->close;
-				port->cash = port->cash - stocknode->close;
-				++nrOfStocks;
-				portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks + nrOfStocks;
+		//Kolla att stocken inte finns i portföljen -> lägg till en ny!
+		if (stockInPortfolio(stockname,portnode->curStock) == false)
+		{	
+			cout << "--------------- aktie saknas: skapa nytt element --------------------" << endl;
+			while (money >= stocknode->close)
+				{
+					//dra av värdet i portföljen för varje aktie jag köper
+					money = money - stocknode->close;
+					port->cash = port->cash - stocknode->close;
+					++nrOfStocks;
+				}
+			//Skapa en ny aktie i portföljen
+			Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
+			
+			tmpnode->name = stockname;
+			tmpnode->nrOfStocks = nrOfStocks;
+		    tmpnode->next=portnode->curStock;
+		    portnode->curStock=tmpnode;
+		}
+		else {
+			cout << "--------------- aktie finns: lägg till i existerande --------------------" << endl;
+			while (money >= stocknode->close)
+				{
+					//dra av värdet i portföljen för varje aktie jag köper
+					money = money - stocknode->close;
+					port->cash = port->cash - stocknode->close;
+					++nrOfStocks;
+					portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks + nrOfStocks;
 
-			}
+				}
+		}
 	}
 }
+
+void Portfolio::sell(Stock::node *stocknode, string stockname, int nrOfStocks, Portfolio::portfolionode *portnode, Portfolio *port)
+{
+	if (stockInPortfolio(stockname,portnode->curStock) == true)
+	{
+		cout << "--------------- aktie finns: sälj --------------------" << endl;
+		if (portnode->curStock->nrOfStocks >= nrOfStocks)
+		{
+			port->cash = port->cash + stocknode->close;
+			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks - nrOfStocks;
+		}
+	}
+	else
+	{
+		cout << "--------------- aktie finns inte: sälj inget --------------------" << endl;
+	}
+	
 }
 
 void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Portfolio::portfolionode *currentPort,Stock::node *previousStock,Stock::node *currentStock)
@@ -127,12 +145,6 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Port
 	else{
 		currentPort->portfolioValue =  previousPort->portfolioValue;
 	}
-}
-
-void Portfolio::sell(Stock stock,float volume,string date)
-{
-
-	
 }
 
 void Portfolio::Print()

@@ -17,6 +17,8 @@ Algorithms::Algorithms() {
 
 }
 
+
+
 void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	//Hur ska algen fungera?
 	//1 loopa igenom alla datum i index
@@ -37,21 +39,21 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 		
 		if (index->bearBull == 1800){
 			cout << "BULL Handla!" << endl;
+			float moneyToBuyWith = portfolio_p->cash;
+			portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay, portfolio_p);
 			//handla så många aktier du har råd att handla den dagen
 		} 
 		else { 
-			//cout << "BEAR Handla inte!" << endl;
-			float moneyToBuyWith = portfolio_p->cash;
-			portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay, portfolio_p);
-			//portfolio_p->buy(index,"HEJ",moneyToBuyWith/2, tmpPortfolioDay, portfolio_p);
-		}
-		if (i == 40)
-		{
-			portfolio_p->cash = portfolio_p->cash + 1500;
-			tmpPortfolioDay->portfolioValue = tmpPortfolioDay->portfolioValue + 1500;
+			cout << "BEAR Handla inte!" << endl;
+			if(tmpPortfolioDay->curStock != NULL)
+			{
+				tmpStock = tmpPortfolioDay->curStock;
+				int numberofstock = tmpStock->nrOfStocks;
+				portfolio_p->sell(index,omxS30_p->name,numberofstock, tmpPortfolioDay, portfolio_p);
+			}
 		}
 
-		cout << "--------------- PRINTING --------------------" << endl;
+		cout << "--------------- PRINTING START --------------------" << endl;
 		tmpStock = tmpPortfolioDay->curStock;
 
 		cout << "Cash: " <<  portfolio_p->cash << endl;
@@ -64,6 +66,7 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 
 			tmpStock = tmpStock->next;
 		}
+		cout << "--------------- PRINTING END --------------------" << endl;
 
 		previousPortfolioDay=tmpPortfolioDay;
 		previousIndex=index;
