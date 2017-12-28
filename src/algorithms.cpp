@@ -47,9 +47,7 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 			cout << "BEAR Handla inte!" << endl;
 			if(tmpPortfolioDay->curStock != NULL)
 			{
-				tmpStock = tmpPortfolioDay->curStock;
-				int numberofstock = tmpStock->nrOfStocks;
-				portfolio_p->sell(index,omxS30_p->name,numberofstock, tmpPortfolioDay, portfolio_p);
+				portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay, portfolio_p);
 			}
 		}
 
@@ -81,30 +79,4 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 Algorithms::~Algorithms() {
 	// TODO Auto-generated destructor stub
 }
-
-	///ONLY FOR PRINTING
-	/*tmpPortfolio=portfolio_p->curPortfolio;
-	tmpStock = tmpPortfolio->curStock;
-	i=0;
-	cout << "Cash: " <<  portfolio_p->cash << endl;
-
-	cout << "--------------- PRINTING --------------------" << endl;
-	while(i<5){
-		cout << "------" << endl;
-
-	//while(tmpPortfolio != NULL){
-		cout << "Date: " <<  tmpPortfolio->date << endl;
-		cout << "PortfolioValue: " <<  tmpPortfolio->portfolioValue << endl;
-
-		while(tmpStock != NULL){
-			cout << "  StockName: " <<  tmpStock->name << endl;
-			cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
-			cout << "  --  " << endl;
-
-			tmpStock = tmpStock->next;
-		}
-		tmpStock = tmpPortfolio->curStock;
-		tmpPortfolio=tmpPortfolio->next;
-		i=i+1;
-	}*/
 

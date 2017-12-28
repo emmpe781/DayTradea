@@ -9,9 +9,9 @@
 using namespace std;
 
 int main() {
-	float startValue = 160;
+	float startValue = 300;
 	//string startdate = "1987-03-05";
-	string startdate = "2015-09-17";
+	string startdate = "1987-09-17";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);

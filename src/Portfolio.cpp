@@ -98,22 +98,22 @@ void Portfolio::buy(Stock::node *stocknode, string stockname, float money, Portf
 					money = money - stocknode->close;
 					port->cash = port->cash - stocknode->close;
 					++nrOfStocks;
-					portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks + nrOfStocks;
-
 				}
+			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks + nrOfStocks;
 		}
 	}
 }
 
-void Portfolio::sell(Stock::node *stocknode, string stockname, int nrOfStocks, Portfolio::portfolionode *portnode, Portfolio *port)
+void Portfolio::sell(Stock::node *stocknode, string stockname, int percentageOfStocks, Portfolio::portfolionode *portnode, Portfolio *port)
 {
 	if (stockInPortfolio(stockname,portnode->curStock) == true)
 	{
 		cout << "--------------- aktie finns: sälj --------------------" << endl;
-		if (portnode->curStock->nrOfStocks >= nrOfStocks)
+		while (portnode->curStock->nrOfStocks > 0)
 		{
+			cout << "HEJ; " <<portnode->curStock->nrOfStocks << endl;
 			port->cash = port->cash + stocknode->close;
-			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks - nrOfStocks;
+			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks - 1;
 		}
 	}
 	else
