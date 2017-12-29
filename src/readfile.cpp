@@ -62,6 +62,7 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 			for (int k=startValue; k<endValue;k++){
 				dayData += rawData[k];
 			}
+			cout << dayData << endl;
 			ExtractStockData(dayData,stock_p,startdate);
 			dayData = "";
 
@@ -100,7 +101,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 			};
 
 			if (currlatest == "Symbol") {stock->name = curr;}
-			if (currlatest == "Date") {date = curr;}
+			if (currlatest == "Date") {date = curr; }//cout << date << endl;}
 			if (currlatest == "Close") {close = stof(curr);}
 
 			currlatest=curr;

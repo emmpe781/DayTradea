@@ -38,20 +38,19 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 		
 		//START - ALGO
 		if (index->bearBull == 1800){
-			cout << "BULL Handla!" << endl;
+			//cout << "BULL Handla!" << endl;
 			float moneyToBuyWith = portfolio_p->cash;
 			portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay);
 			//handla så många aktier du har råd att handla den dagen
 		} 
 		else { 
-			cout << "BEAR Handla inte!" << endl;
+			//cout << "BEAR Handla inte!" << endl;
 			if(tmpPortfolioDay->curStock != NULL)
 			{
 				portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay);
 			}
 		}
 		//END - ALGO
-
 		previousPortfolioDay=tmpPortfolioDay;
 		previousIndex=index;
 		tmpStock = tmpPortfolioDay->curStock;
