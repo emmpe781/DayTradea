@@ -34,37 +34,23 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	int i = 0;
 	tmpPortfolioDay->portfolioValue = portfolio_p->cash;;
 	while(tmpPortfolioDay != NULL){
-		cout << "UPDAATE: " << endl;
 		portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
 		
+		//START - ALGO
 		if (index->bearBull == 1800){
 			cout << "BULL Handla!" << endl;
 			float moneyToBuyWith = portfolio_p->cash;
-			portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay, portfolio_p);
+			portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay);
 			//handla så många aktier du har råd att handla den dagen
 		} 
 		else { 
 			cout << "BEAR Handla inte!" << endl;
 			if(tmpPortfolioDay->curStock != NULL)
 			{
-				portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay, portfolio_p);
+				portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay);
 			}
 		}
-
-		cout << "--------------- PRINTING START --------------------" << endl;
-		tmpStock = tmpPortfolioDay->curStock;
-
-		cout << "Cash: " <<  portfolio_p->cash << endl;
-		cout << "Date: " <<  tmpPortfolioDay->date << endl;
-		cout << "PortfolioValue: " <<  tmpPortfolioDay->portfolioValue << endl;
-		while(tmpStock != NULL){
-			cout << "  StockName: " <<  tmpStock->name << endl;
-			cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
-			cout << "  --  " << endl;
-
-			tmpStock = tmpStock->next;
-		}
-		cout << "--------------- PRINTING END --------------------" << endl;
+		//END - ALGO
 
 		previousPortfolioDay=tmpPortfolioDay;
 		previousIndex=index;
@@ -80,3 +66,19 @@ Algorithms::~Algorithms() {
 	// TODO Auto-generated destructor stub
 }
 
+
+/*		cout << "--------------- PRINTING START --------------------" << endl;
+		tmpStock = tmpPortfolioDay->curStock;
+
+		cout << "Cash: " <<  portfolio_p->cash << endl;
+		cout << "Date: " <<  tmpPortfolioDay->date << endl;
+		cout << "PortfolioValue: " <<  tmpPortfolioDay->portfolioValue << endl;
+		while(tmpStock != NULL){
+			cout << "  StockName: " <<  tmpStock->name << endl;
+			cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
+			cout << "  --  " << endl;
+
+			tmpStock = tmpStock->next;
+		}
+		cout << "--------------- PRINTING END --------------------" << endl;
+*/
