@@ -10,17 +10,16 @@ using namespace std;
 
 int main() {
 	float startValue = 300;
-	string startdate = "1986-10-17";
+	string startdate = "1986-10-05";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);
 
 	ReadFile rf; //TODO: create namespace instead of object
 	Stock omx30;
-	string fname_omx30="../data/stockdata_OMX30_1986-10-01_2017-10-18_fill.dat";
+	string fname_omx30="../data/stockdata_OMX30_1986-09-30_2017-12-28_fill.dat";
 
 	rf.Read(fname_omx30,&omx30,startdate);
-
 	rf.PopulateStock(&omx30);
 
 	//Min portfölj börjar:

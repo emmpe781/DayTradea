@@ -13,46 +13,45 @@ from datetime import datetime, timedelta
 import copy
 
 
-with open('SE0000337842-1986-10-01-2017-10-18.csv', 'rt') as csvfile:
+with open('SE0000337842-1986-09-30-2017-12-28.csv', 'rt') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=';')
     #fieldnames = ['Symbol','Adj_Close','High','Open', 'Close','Volume','Date','Low']
     fieldnames = ['Symbol','Close','Date']
-    first=True
     temp=[]
+    i=0
     for row in spamreader:
-        if first:
-	        DateIndex=row.index('Date') 
-	        HighIndex=row.index('High price')    
-	        LowIndex=row.index('Low price')    
-	        CloseIndex=row.index('Closing price')    
-	        AverageIndex=row.index('Average price')    
-	        VolumeIndex=row.index('Total volume')    
-	        TurnoverIndex=row.index('Turnover')  
-	        TradesIndex=row.index('Trades')   
-	        first=False
-        else:
+        if i==1:
+            DateIndex=row.index('Date') 
+            HighIndex=row.index('High price')    
+            LowIndex=row.index('Low price')    
+            CloseIndex=row.index('Closing price')    
+            AverageIndex=row.index('Average price')    
+            VolumeIndex=row.index('Total volume')    
+            TurnoverIndex=row.index('Turnover')  
+            TradesIndex=row.index('Trades')   
+        if (i>1):
             #temp.append({'Symbol': 'OMX30', 'Adj_Close': '1','High': row[HighIndex],'Open': '1','Close': row[CloseIndex],'Volume': "1",'Date': row[DateIndex], 'Low': row[LowIndex]})
-            if (row[CloseIndex] == "0.00"):
+            if (row[CloseIndex] == "0,00"):
                 close = closeprevious
             else:
                 close = row[CloseIndex]
             closeprevious = close
-            temp.append({'Symbol': 'OMX30', 'Close': close,'Date': row[DateIndex]})
+            temp.append({'Symbol': 'OMX30', 'Close': close.replace(",","."),'Date': row[DateIndex]})
+        i=i+1;
 
-#,row[VolumeIndex]
-f = open('stockdata_'+'OMX30'+'_'+'1986-10-01'+'_'+'2017-10-18'+'.dat', 'w')                   
+f = open('stockdata_'+'OMX30'+'_'+'1986-09-30'+'_'+'2017-12-28'+'.dat', 'w')                   
 simplejson.dump(temp, f)
 f.close()
 
 stockDataReversed=[]  
 Temp=[] 
 stockDataTemp=[]
-stockData=simplejson.load(open('stockdata_OMX30_1986-10-01_2017-10-18.dat','r'))
+stockData=simplejson.load(open('stockdata_OMX30_1986-09-30_2017-12-28.dat','r'))
 for i in reversed(stockData):
     stockDataReversed.append(i)
 
 d=datetime.strptime(stockDataReversed[0]['Date'],'%Y-%m-%d')
-dend=datetime.strptime('2017-10-18','%Y-%m-%d')
+dend=datetime.strptime('2017-12-28','%Y-%m-%d')
 delta = timedelta(days=1)
 k=0
 while (d <= dend and k<len(stockDataReversed)):
@@ -79,7 +78,8 @@ while (d <= dend and k<len(stockDataReversed)):
         stockDataTemp[-1]['Date']=str(d)[0:10] 
         d += delta
 
-f = open('stockdata_OMX30_1986-10-01_2017-10-18_fill.dat', 'w')                   
-
-simplejson.dump(stockDataTemp, f)
+f1 = open('stockdata_OMX30_1986-09-30_2017-12-28_fill.dat', 'w')                   
+f2 = open('stockdata_portfolio_use.dat','w')
+simplejson.dump(stockDataTemp, f1)
+simplejson.dump(stockDataTemp, f2)
 f.close()
