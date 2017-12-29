@@ -15,7 +15,7 @@ import copy
 
 with open('SE0000337842-1986-10-01-2017-10-18.csv', 'rt') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=';')
-    fieldnames = ['Open', 'Close','Volume','Low','High','Adj_Close','Date','Symbol']
+    fieldnames = ['Symbol','Adj_Close','High','Open', 'Close','Volume','Low']
     first=True
     temp=[]
     for row in spamreader:
@@ -30,7 +30,7 @@ with open('SE0000337842-1986-10-01-2017-10-18.csv', 'rt') as csvfile:
 	        TradesIndex=row.index('Trades')   
 	        first=False
         else:
-            temp.append({'High': row[HighIndex], 'Date': row[DateIndex], 'Symbol': 'OMX30','Close': row[CloseIndex],'Low': row[LowIndex], 'Open': '1', 'Adj_Close': '1','Volume': row[VolumeIndex],})
+            temp.append({'Symbol': 'OMX30', 'Adj_Close': '1','High': row[HighIndex],'Open': '1','Close': row[CloseIndex],'Volume': row[VolumeIndex],'Date': row[DateIndex], 'Low': row[LowIndex]})
 
 f = open('stockdata_'+'OMX30'+'_'+'1986-10-01'+'_'+'2017-10-18'+'.dat', 'w')                   
 simplejson.dump(temp, f)
