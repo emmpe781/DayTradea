@@ -39,6 +39,7 @@ void ReadFile::PopulateStock(Stock *stock_p)
 
 	ExpectedValue(stock_p, 7.5);
 	Mean(stock_p, 200);
+	Mean(stock_p, 50);
 	BearBull(stock_p);
 }
 
@@ -127,18 +128,25 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 	expectedIncrease = (percentage/100)/365+1;
 	bool first=true;
 	Stock::node *tmp = stock->firstStockDate;
+	expectedValue = tmp->close;
+
     while(tmp!= NULL){
-    		if (first){
-    			//Set expectedValue to the value of our start date.
-    			//Only done once.
-    			expectedValue = tmp->close;
-    			first=false;
-    		}
-    		else {
-    			expectedValue= expectedValue*expectedIncrease;
-    			tmp->est = expectedValue;
-			}
-    		tmp=tmp->next;
+
+    	//Rekalibrera estimering om index går MEGA BULL!
+		if ((tmp->close - expectedValue) > expectedValue*1.4)
+		{
+			expectedValue = expectedValue*expectedIncrease + 
+    			(tmp->close - expectedValue)/2000;
+		}
+		//Rekalibrera estimering om index går MEGA BEAR!
+		else if (tmp->close < 0.65*expectedValue)
+		{
+			expectedValue = tmp->close*1.4; 			
+		}
+
+    	expectedValue = expectedValue*expectedIncrease;
+    	tmp->est = expectedValue;
+    	tmp=tmp->next;
     }
 }
 
@@ -148,7 +156,8 @@ void ReadFile::BearBull(Stock* stock)
 {
 	Stock::node *stockHead = stock->firstStockDate;
 	float lastMa200 = 0;
-	float const diffValue = 0.00085f;
+	float lastMa50 = 0;
+	float const diffValue = 0.00175f;
 	static int lastBearBull = 0;
 
 	while(stockHead != NULL){
@@ -160,15 +169,16 @@ void ReadFile::BearBull(Stock* stock)
 			//bull->bear
 			if ((stockHead->ma200 < lastMa200) &&
 				((stockHead->ma200 - lastMa200) < -diffValue*lastMa200) &&
-				(stockHead->bearBull == 1800)) //BULL macrot!
+				(stockHead->bearBull == 1800) &&
+				(stockHead->ma50 < lastMa50)) //BULL macrot!
 
 				{
 					stockHead->bearBull = BEAR;
 				}
 
 			//Bull->bear
-			if ((stockHead->ma200 > lastMa200) &&
-				((stockHead->ma200 - lastMa200) > lastMa200*diffValue) &&
+			if ((stockHead->ma50 > stockHead->ma200) &&
+				((stockHead->ma200 - lastMa200) > lastMa200*diffValue/2) &&
 				(stockHead->bearBull == 10)) //Använd BEAR macrot
 			{
 				stockHead->bearBull = BULL;
@@ -182,6 +192,7 @@ void ReadFile::BearBull(Stock* stock)
 		}
 		lastBearBull = stockHead->bearBull;
 		lastMa200 = stockHead->ma200;
+		lastMa50 = stockHead->ma50;
 		stockHead=stockHead->next;
 	}
 }
@@ -229,12 +240,22 @@ void ReadFile::Mean(Stock *stock,int days)
 		if (i < days){
 			sumStockClose = sumStockClose + (stockHead->close);
 			//stockHead->ma200=stockHead->close;
-			stockHead->ma200 = 0;
+			if(days==200){
+				stockHead->ma200 = 0;
+			}
+			if(days==50){
+				stockHead->ma50 = 0;
+			}
 			i++;
 		}
 		else {
 			mean=sumStockClose/days;
-			stockHead->ma200=mean;
+			if(days==200){
+				stockHead->ma200=mean;
+			}
+			if(days==50){
+				stockHead->ma50 = mean;
+			}	
 			stockTail=stockTail->next;
 			sumStockClose=sumStockClose+(stockHead->close)-(stockTail->close);
 		};
