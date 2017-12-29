@@ -90,13 +90,13 @@ void Portfolio::buy(Stock::node *stocknode, string stockname, float money, Portf
 		    portnode->curStock=tmpnode;
 		}
 		else {
-			while (money >= stocknode->close)
-				{
-					//dra av värdet i portföljen för varje aktie jag köper
-					money = money - stocknode->close;
-					cash = cash - stocknode->close;
-					++nrOfStocks;
-				}
+			while ((money >= stocknode->close) && (stocknode->close > 0))
+			{
+				//dra av värdet i portföljen för varje aktie jag köper
+				money = money - stocknode->close;
+				cash = cash - stocknode->close;
+				++nrOfStocks;
+			}
 			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks + nrOfStocks;
 		}
 	}
@@ -116,21 +116,18 @@ void Portfolio::sell(Stock::node *stocknode, string stockname, int percentageOfS
 
 void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Portfolio::portfolionode *currentPort,Stock::node *previousStock,Stock::node *currentStock)
 {	
-	Portfolio::portfolionode::stockinfo *previousDay = previousPort->curStock;
-	Portfolio::portfolionode::stockinfo *currentDay = currentPort->curStock;
-
-	if (previousDay != NULL)
+	if (previousPort->curStock != NULL)
 	{	
 		currentPort->portfolioValue =  previousPort->portfolioValue;
-		while (previousDay != NULL) 
+		while (previousPort->curStock != NULL) 
 		{
 			Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
-			tmpnode->name = previousDay->name;
-			tmpnode->nrOfStocks = previousDay->nrOfStocks;
+			tmpnode->name = previousPort->curStock->name;
+			tmpnode->nrOfStocks = previousPort->curStock->nrOfStocks;
 			currentPort->portfolioValue = currentPort->portfolioValue + (tmpnode->nrOfStocks)*((currentStock->close)-(previousStock->close));
 		    tmpnode->next=currentPort->curStock;
 		    currentPort->curStock=tmpnode;
-		    previousDay = previousDay->next;
+		    previousPort->curStock = previousPort->curStock->next;
 		}
 	}
 	else{

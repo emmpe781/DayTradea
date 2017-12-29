@@ -24,10 +24,9 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	//1 loopa igenom alla datum i index
 	//2 när index ligger i bull -> var 100 % investerad
 	//3 när index ligger i bear -> var 0 & investerad
-
+	
 	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio; 	//Pekar på noden för mitt första datum i portföljen
 	Portfolio::portfolionode *previousPortfolioDay = portfolio_p->curPortfolio; 
-	Portfolio::portfolionode::stockinfo *tmpStock = tmpPortfolioDay->curStock; //Pekar på noden för första aktien i portföljens första datum
 	Stock::node *index = omxS30_p->firstStockDate; 							//Pekar på noden för första datumet i mitt index (OMX30)
 	Stock::node *previousIndex = omxS30_p->firstStockDate;
 
@@ -35,7 +34,6 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	tmpPortfolioDay->portfolioValue = portfolio_p->cash;;
 	while(tmpPortfolioDay != NULL){
 		portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
-		
 		//START - ALGO
 		if (index->bearBull == 1800){
 			//cout << "BULL Handla!" << endl;
@@ -50,10 +48,10 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 				portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay);
 			}
 		}
+
 		//END - ALGO
 		previousPortfolioDay=tmpPortfolioDay;
 		previousIndex=index;
-		tmpStock = tmpPortfolioDay->curStock;
 		tmpPortfolioDay=tmpPortfolioDay->next;
 		index=index->next;
 		i=i+1;

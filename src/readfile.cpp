@@ -36,7 +36,6 @@ void ReadFile::Read(string fname,Stock *stock_p,string startdate)
 
 void ReadFile::PopulateStock(Stock *stock_p)
 {
-
 	ExpectedValue(stock_p, 7.5);
 	Mean(stock_p, 200);
 	Mean(stock_p, 50);
@@ -62,7 +61,6 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 			for (int k=startValue; k<endValue;k++){
 				dayData += rawData[k];
 			}
-			cout << dayData << endl;
 			ExtractStockData(dayData,stock_p,startdate);
 			dayData = "";
 
@@ -101,7 +99,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 			};
 
 			if (currlatest == "Symbol") {stock->name = curr;}
-			if (currlatest == "Date") {date = curr; }//cout << date << endl;}
+			if (currlatest == "Date") {date = curr;}
 			if (currlatest == "Close") {close = stof(curr);}
 
 			currlatest=curr;
@@ -127,7 +125,6 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 	float expectedIncrease;
 	float expectedValue;
 	expectedIncrease = (percentage/100)/365+1;
-	bool first=true;
 	Stock::node *tmp = stock->firstStockDate;
 	expectedValue = tmp->close;
 
