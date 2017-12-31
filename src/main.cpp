@@ -9,7 +9,7 @@
 using namespace std;
 
 int main() {
-	float startValue = 300;
+	float startValue = 250;
 	string startdate = "1986-10-05";
 
 	Portfolio Reference(startdate);

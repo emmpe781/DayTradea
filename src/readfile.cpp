@@ -155,8 +155,9 @@ void ReadFile::BearBull(Stock* stock)
 	Stock::node *stockHead = stock->firstStockDate;
 	float lastMa200 = 0;
 	float lastMa50 = 0;
-	float const diffValue = 0.00175f;
+	float const diffValue = 0.00085f;
 	static int lastBearBull = 0;
+	static float const diffEst = 1.2;
 
 	while(stockHead != NULL){
 
@@ -165,19 +166,18 @@ void ReadFile::BearBull(Stock* stock)
 		{
 
 			//bull->bear
-			if ((stockHead->ma200 < lastMa200) &&
-				((stockHead->ma200 - lastMa200) < -diffValue*lastMa200) &&
-				(stockHead->bearBull == 1800) &&
-				(stockHead->ma50 < lastMa50)) //BULL macrot!
-
+			if (((stockHead->ma200 - lastMa200) < -diffValue*lastMa200) && //Lutningen är tillräckligt negativ för ma200
+				(stockHead->bearBull == 1800)   && //vi är i Bulltrend
+				(stockHead->ma50 < lastMa50)    && //negativ lutning på ma50
+				(stockHead->close > stockHead->est*diffEst)) //Aktiekursen ska vara större än estimerade värdet
 				{
 					stockHead->bearBull = BEAR;
 				}
 
-			//Bull->bear
+			//Bear->Bull
 			if ((stockHead->ma50 > stockHead->ma200) &&
-				((stockHead->ma200 - lastMa200) > lastMa200*diffValue/2) &&
-				(stockHead->bearBull == 10)) //Använd BEAR macrot
+				((stockHead->ma200 - lastMa200) > lastMa200*diffValue/4) &&
+				(stockHead->bearBull == 10)) //*diffEst)) //Använd BEAR macrot
 			{
 				stockHead->bearBull = BULL;
 			}
