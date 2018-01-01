@@ -16,7 +16,8 @@ class Algorithms {
 public:
 	Algorithms();
 	void Buy_BearBull(Portfolio*,Stock*);
-	void BestFromIndex(Portfolio*,Stock*);
+	void CreateIndex(Portfolio*,Stock*);
+	void SlayIndex(Portfolio*,Stock*);
 	virtual ~Algorithms();
 };
 

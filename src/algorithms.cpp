@@ -58,16 +58,21 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	}
 }
 
-void Algorithms::BestFromIndex(Portfolio_p portfolio_p, Stock_p omxS30_p) {
-	//1 Ta in ett index som består av aktier, t.ex. 10 stycken investmentbolag
-	//2 kolla om vi är i bullperiod
-	
+void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock_p omxS30_p){
 	//DEL1 Skapa eget index
 	//Ta in de 10 största investmentbolagen och äg lika stor del av varje
 	//Bolagen:
 	//Investor, Industrivärden, Svolder, Creades, Ratos, Östersund, Bure, Latour, Lundberg
 	//Plotta ut resultatet
 
+
+}
+
+void Algorithms::SlayIndex(Portfolio_p portfolio_p, Stock_p omxS30_p) {
+	//1 Ta in ett index som består av aktier, t.ex. 10 stycken investmentbolag
+	//2 kolla om vi är i bullperiod
+	
+	
 	//DEL2 Se om det går att slå mitt egenskapta index.
 	//3 Loopa igenom alla aktier, välj ut de 4-8 bästa genom att välja bort de sämsta?
 	//4 Hur ska de värderas? P.s.s som Bear/Bull? Behöver de få en värderingssiffra?
