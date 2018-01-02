@@ -18,9 +18,18 @@ int main() {
 	ReadFile rf; //TODO: create namespace instead of object
 	Stock omx30;
 	string fname_omx30="../data/stockdata_OMX30_1986-09-30_2017-12-28_fill.dat";
-
 	rf.Read(fname_omx30,&omx30,startdate);
 	rf.PopulateStock(&omx30);
+
+	Stock bure;
+	string fname_bure="../data/ticks/stockdata_BURE.dat";
+	rf.Read(fname_bure,&bure,startdate);
+	rf.PopulateStock(&bure);
+
+	Stock cred_a;
+	string fname_cred_a="../data/ticks/stockdata_CRED-A.dat";
+	rf.Read(fname_cred_a,&cred_a,startdate);
+	rf.PopulateStock(&cred_a);
 
 	//Min portfölj börjar:
 	Portfolio ImbaPortfolio(startdate);
@@ -36,3 +45,6 @@ int main() {
 
 	return 0;
 }
+
+
+
