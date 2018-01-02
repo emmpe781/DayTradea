@@ -52,12 +52,20 @@ for TICK in TICKS:
     stockData=simplejson.load(open('stockdata_'+TICK+'.dat','r'))
     for i in reversed(stockData):
         stockDataReversed.append(i)
-
+    dstart=datetime.strptime('1986-09-30','%Y-%m-%d')
     d=datetime.strptime(stockDataReversed[0]['Date'],'%Y-%m-%d')
     dend=datetime.strptime('2017-12-28','%Y-%m-%d')
     delta = timedelta(days=1)
     k=0
-    while (d <= dend and k<len(stockDataReversed)):
+    while (dstart < d):
+        elem=copy.copy(stockDataReversed[0])
+        elem['Close']='1000'
+        elem['Date']=str(dstart)[0:10] 
+        stockDataTemp.append(elem)
+        dstart += delta
+
+    while (d >= dstart and d <= dend and k<len(stockDataReversed)):
+
         if k!=0:
             elempast=copy.copy(stockDataReversed[k-1])
             elem=copy.copy(stockDataReversed[k])
