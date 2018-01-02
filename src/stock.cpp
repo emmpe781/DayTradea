@@ -5,67 +5,43 @@ using namespace std;
 
 Stock::Stock(void)
 {
-	firstStockDate = NULL;
+	head = NULL;
 	tail = NULL;
-	Stock::stocklength = 0;
+	Stock::stockLength = 0;
 }
 
 void Stock::add_node_to_end(string date,float close)
 {
-	Stock::stocklength++;
-	node *date_node = new node;
-	date_node->date = date;
-	date_node->close = close;
-	date_node->est = 0;
-	date_node->bearBull = 0;
-	date_node->ma200 = 0;
-	date_node->ma100 = 0;
-	date_node->ma50 = 0;
-	date_node->next = NULL;
+	Stock::stockLength++;
+	dayInfo *day_info = new dayInfo;
+	day_info->date = date;
+	day_info->close = close;
+	day_info->est = 0;
+	day_info->bearBull = 0;
+	day_info->ma200 = 0;
+	day_info->ma100 = 0;
+	day_info->ma50 = 0;
+	day_info->next = NULL;
 
-	if(firstStockDate == NULL)
+	if(head == NULL)
 	{
-		firstStockDate = date_node;
-		tail = date_node;
+		head = day_info;
+		tail = day_info;
 	}
 	else
 	{
-		tail->next = date_node;
+		tail->next = day_info;
 		tail = tail->next;
 	}
 }
 
-/*float Stock::stockValue(string stockName, string date)
-{
-
-	//Skapa en global stockList som innehåller alla aktier vi har läst in
-	//Borde göras om till en map på sikt så vi slipper att loopa igenom.
-	//while (stockList != NULL)
-	//{
-	Stock_p stock_p;
-	stock_p = omx30;
-
-		if (omx30.name == stockName)
-		{
-			while (stock_p->firstStockDate->date != date)
-			{
-				stock_p->firstStockDate->date = stock_p->firstStockDate->nextDate;
-			}
-			return stock_p->firstStockDate->close;
-		}
-
-	//}
-
-	return 100.0;
-}*/
-	
 void Stock::Print()
 {
-	node *date_node = firstStockDate;
-    while(date_node!= NULL){
-		cout<< "date: " << date_node->date;
-		cout<< ", close: " <<  date_node->close << endl;
-		date_node=date_node->next;
+	dayInfo *day_info = head;
+    while(day_info!= NULL){
+		cout<< "date: " << day_info->date;
+		cout<< ", close: " <<  day_info->close << endl;
+		day_info=day_info->next;
     }
 }
 

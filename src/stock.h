@@ -17,8 +17,8 @@ class Stock{
 
 
 	  string name;
-	  int stocklength;	  
-	  struct node{
+	  int stockLength;	  
+	  struct dayInfo {
 		  string date;
 		  float close;
 		  float est;
@@ -27,11 +27,10 @@ class Stock{
 		  float ma200;
 		  float ma100;
 		  float ma50;
-		  node *next; //Ta bort på sikt! mot nextDate
-		  node *nextDate;
+		  dayInfo *next;
 	  };
-	  node *firstStockDate;
-	  node *tail;
+	  dayInfo *head;
+	  dayInfo *tail;
 	  Stock();
 	  float stockValue(string ,string);
 	  void add_node_to_end(string,float);

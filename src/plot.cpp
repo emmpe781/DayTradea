@@ -137,9 +137,9 @@ void Plot::Append_One_Stock(Stock stock)
 	pArgTuplema200 = PyTuple_New(4);	
 	pArgTupleest = PyTuple_New(4);	
 	
-	int n=stock.stocklength;
+	int n=stock.stockLength;
 
-	Stock::node *stocktmp = stock.firstStockDate;
+	Stock::dayInfo *stocktmp = stock.head;
 
    	vector<double> close_value_stock(n,stock.tail->close);
    	vector<double> est_stock(n,stock.tail->est);

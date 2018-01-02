@@ -10,7 +10,7 @@
 #include "Stock.h"
 #include "string"
 using namespace std;
-const Stock::node * lastStockDate = NULL;
+const Stock::dayInfo * lastStockDate = NULL;
 
 Algorithms::Algorithms() {
 	// TODO Auto-generated constructor stub
@@ -27,8 +27,8 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	
 	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio; 	//Pekar på noden för mitt första datum i portföljen
 	Portfolio::portfolionode *previousPortfolioDay = portfolio_p->curPortfolio; 
-	Stock::node *index = omxS30_p->firstStockDate; 							//Pekar på noden för första datumet i mitt index (OMX30)
-	Stock::node *previousIndex = omxS30_p->firstStockDate;
+	Stock::dayInfo *index = omxS30_p->head; 							//Pekar på noden för första datumet i mitt index (OMX30)
+	Stock::dayInfo *previousIndex = omxS30_p->head;
 
 	int i = 0;
 	tmpPortfolioDay->portfolioValue = portfolio_p->cash;;
@@ -66,13 +66,19 @@ void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock_p omxS30_p){
 	//Plotta ut resultatet
 
 
+	//if (omx30 bulltrend)
+		//while (stockInList != 0)
+			//portfolio_p->buy(curStock, portfolioMoney/10)
+
+	//else (omx30 beartrend)
+		//while (stockInList != 0)
+			//portfolio_p->sell(curStock)		
+
+
 }
 
 void Algorithms::SlayIndex(Portfolio_p portfolio_p, Stock_p omxS30_p) {
-	//1 Ta in ett index som består av aktier, t.ex. 10 stycken investmentbolag
-	//2 kolla om vi är i bullperiod
-	
-	
+
 	//DEL2 Se om det går att slå mitt egenskapta index.
 	//3 Loopa igenom alla aktier, välj ut de 4-8 bästa genom att välja bort de sämsta?
 	//4 Hur ska de värderas? P.s.s som Bear/Bull? Behöver de få en värderingssiffra?
@@ -82,14 +88,7 @@ void Algorithms::SlayIndex(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	//På sikt kanske det går att ta in nyckelvärden för respektive aktie och ta med i värdering.
 	//Dvs. hur förändras pe-tal över tid i jämförelse med aktiekursen?
 
-	//if (omx30 bulltrend)
-		//while (stockInList != 0)
-			//portfolio_p->buy(curStock, portfolioMoney/10)
-
-	//else (omx30 beartrend)
-		//while (stockInList != 0)
-			//portfolio_p->sell(curStock)		
-
+	
 }
 
 

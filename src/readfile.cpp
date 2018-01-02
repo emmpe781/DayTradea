@@ -125,7 +125,7 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 	float expectedIncrease;
 	float expectedValue;
 	expectedIncrease = (percentage/100)/365+1;
-	Stock::node *tmp = stock->firstStockDate;
+	Stock::dayInfo *tmp = stock->head;
 	expectedValue = tmp->close;
 
     while(tmp!= NULL){
@@ -152,7 +152,7 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 
 void ReadFile::BearBull(Stock* stock)
 {
-	Stock::node *stockHead = stock->firstStockDate;
+	Stock::dayInfo *stockHead = stock->head;
 	float lastMa200 = 0;
 	float lastMa50 = 0;
 	float const diffValue = 0.00085f;
@@ -195,42 +195,14 @@ void ReadFile::BearBull(Stock* stock)
 	}
 }
 
-/*void ReadFile::ExpectedValue2(string date,Stock* stock,float percentage)
-{
-	float expectedIncrease;
-	float expectedValue;
-	expectedIncrease = (percentage/100)/365+1;
-	bool first=true;
-	Stock::node *tmp = stock->head;
-    while(tmp!= NULL){
-    	if (tmp->date >= date){
-    		if (first){
-    			//Set expectedValue to the value of our start date.
-    			//Only done once.
-    			expectedValue = tmp->close;
-    			first=false;
-    		}
-    		else {
-    			//Återkoppla skillnaden mellan omxs30 och vårt estimerade värde
-    			//kalibrera om estimerade värdet ifall bear till bull,
-
-    			expectedValue= expectedValue*expectedIncrease;
-    			tmp->close = expectedValue;
-			}
-    	}
-		tmp=tmp->next;
-    }
-}*/
-
-
 //Approved by Sven
 void ReadFile::Mean(Stock *stock,int days)
 {
 	float sumStockClose=0;
 	float mean;
 	int i = 0;
-	Stock::node *stockTail = stock->firstStockDate;
-	Stock::node *stockHead = stock->firstStockDate;
+	Stock::dayInfo *stockTail = stock->head;
+	Stock::dayInfo *stockHead = stock->head;
 
 	while(stockHead!= NULL){
 

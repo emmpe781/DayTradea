@@ -19,7 +19,7 @@ Portfolio::Portfolio(string date) {
 	rf.Read(fname_time, &portf_time, date);
 	Portfolio::portfoliolength = 0;
 	Portfolio::cash = 0;
-	Stock::node *stocktmp = portf_time.firstStockDate;
+	Stock::dayInfo *stocktmp = portf_time.head;
 
 	while(stocktmp!= NULL){
 		add_date(stocktmp->date);
@@ -67,7 +67,7 @@ bool Portfolio::stockInPortfolio(string stockname,Portfolio::portfolionode::stoc
 	return false;
 }
 
-void Portfolio::buy(Stock::node *stocknode, string stockname, float money, Portfolio::portfolionode *portnode)
+void Portfolio::buy(Stock::dayInfo *stocknode, string stockname, float money, Portfolio::portfolionode *portnode)
 {
 	int nrOfStocks = 0;
 	if (money <= cash) {
@@ -102,7 +102,7 @@ void Portfolio::buy(Stock::node *stocknode, string stockname, float money, Portf
 	}
 }
 
-void Portfolio::sell(Stock::node *stocknode, string stockname, int percentageOfStocks, Portfolio::portfolionode *portnode)
+void Portfolio::sell(Stock::dayInfo *stocknode, string stockname, int percentageOfStocks, Portfolio::portfolionode *portnode)
 {
 	if (stockInPortfolio(stockname,portnode->curStock) == true)
 	{
@@ -114,7 +114,7 @@ void Portfolio::sell(Stock::node *stocknode, string stockname, int percentageOfS
 	}
 }
 
-void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Portfolio::portfolionode *currentPort,Stock::node *previousStock,Stock::node *currentStock)
+void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Portfolio::portfolionode *currentPort,Stock::dayInfo *previousStock,Stock::dayInfo *currentStock)
 {	
 	if (previousPort->curStock != NULL)
 	{	
