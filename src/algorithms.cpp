@@ -19,12 +19,7 @@ Algorithms::Algorithms() {
 
 
 
-void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
-	//Hur ska algen fungera?
-	//1 loopa igenom alla datum i index
-	//2 när index ligger i bull -> var 100 % investerad
-	//3 när index ligger i bear -> var 0 & investerad
-	
+void Algorithms::Algo(string algo,Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio; 	//Pekar på noden för mitt första datum i portföljen
 	Portfolio::portfolionode *previousPortfolioDay = portfolio_p->curPortfolio; 
 	Stock::dayInfo *index = omxS30_p->head; 							//Pekar på noden för första datumet i mitt index (OMX30)
@@ -35,26 +30,37 @@ void Algorithms::Buy_BearBull(Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	while(tmpPortfolioDay != NULL){
 		portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
 		//START - ALGO
-		if (index->bearBull == 1800){
-			//cout << "BULL Handla!" << endl;
-			float moneyToBuyWith = portfolio_p->cash;
-			portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay);
-			//handla så många aktier du har råd att handla den dagen
-		} 
-		else { 
-			//cout << "BEAR Handla inte!" << endl;
-			if(tmpPortfolioDay->curStock != NULL)
-			{
-				portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay);
-			}
+		if (algo == "BEARBULL")
+		{
+			Algo_BearBull(portfolio_p,omxS30_p,tmpPortfolioDay,index);
 		}
-
 		//END - ALGO
 		previousPortfolioDay=tmpPortfolioDay;
 		previousIndex=index;
 		tmpPortfolioDay=tmpPortfolioDay->next;
 		index=index->next;
 		i=i+1;
+	}
+}
+
+void Algorithms::Algo_BearBull(Portfolio_p portfolio_p,Stock_p omxS30_p,Portfolio::portfolionode *tmpPortfolioDay,Stock::dayInfo *index) {
+	//Hur ska algen fungera?
+	//1 loopa igenom alla datum i index
+	//2 när index ligger i bull -> var 100 % investerad
+	//3 när index ligger i bear -> var 0 & investerad
+
+	if (index->bearBull == 1800){
+		//cout << "BULL Handla!" << endl;
+		float moneyToBuyWith = portfolio_p->cash;
+		portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay);
+		//handla så många aktier du har råd att handla den dagen
+	} 
+	else { 
+		//cout << "BEAR Handla inte!" << endl;
+		if(tmpPortfolioDay->curStock != NULL)
+		{
+			portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay);
+		}
 	}
 }
 

@@ -15,7 +15,8 @@ using namespace std;
 class Algorithms {
 public:
 	Algorithms();
-	void Buy_BearBull(Portfolio*,Stock*);
+	void Algo(string,Portfolio*,Stock*);
+	void Algo_BearBull(Portfolio*,Stock*,Portfolio::portfolionode*,Stock::dayInfo*);
 	void CreateIndex(Portfolio*,Stock*);
 	void SlayIndex(Portfolio*,Stock*);
 	virtual ~Algorithms();

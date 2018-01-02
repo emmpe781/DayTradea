@@ -29,7 +29,7 @@ int main() {
 
 	//Min algh. startar 
 	Algorithms Algo;
-	Algo.Buy_BearBull(&ImbaPortfolio ,&omx30); //borde skicka in const på omx30
+	Algo.Algo("BEARBULL",&ImbaPortfolio ,&omx30); //borde skicka in const på omx30
 
 	Plot plt1;
 	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
