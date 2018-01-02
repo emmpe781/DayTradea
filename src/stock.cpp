@@ -10,12 +10,22 @@ Stock::Stock(void)
 	Stock::stockLength = 0;
 }
 
-void Stock::add_node_to_end(string date,float close)
+void Stock::add_node_to_end(string date,float close, string exist)
 {
+	bool eval;
+	if (exist == "YES"){
+		eval = true;
+	}
+	else{
+		eval = false;
+	}
+
 	Stock::stockLength++;
 	dayInfo *day_info = new dayInfo;
 	day_info->date = date;
 	day_info->close = close;
+	day_info->norm = 1;
+	day_info->exist = eval;
 	day_info->est = 0;
 	day_info->bearBull = 0;
 	day_info->ma200 = 0;

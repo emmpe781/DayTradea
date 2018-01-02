@@ -36,7 +36,7 @@ with open('SE0000337842-1986-09-30-2017-12-28.csv', 'rt') as csvfile:
             else:
                 close = row[CloseIndex]
             closeprevious = close
-            temp.append({'Symbol': 'OMX30', 'Close': close.replace(",","."),'Date': row[DateIndex]})
+            temp.append({'Symbol': 'OMX30', 'Close': close.replace(",","."),'Date': row[DateIndex],'Exist': 'YES'})
         i=i+1;
 
 f = open('stockdata_'+'OMX30'+'_'+'1986-09-30'+'_'+'2017-12-28'+'.dat', 'w')                   

@@ -34,6 +34,10 @@ void Algorithms::Algo(string algo,Portfolio_p portfolio_p, Stock_p omxS30_p) {
 		{
 			Algo_BearBull(portfolio_p,omxS30_p,tmpPortfolioDay,index);
 		}
+		if (algo == "CreateIndex")
+		{
+			CreateIndex(portfolio_p,omxS30_p);
+		}
 		//END - ALGO
 		previousPortfolioDay=tmpPortfolioDay;
 		previousIndex=index;

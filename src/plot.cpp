@@ -37,7 +37,7 @@ using namespace std;
 PyObject *pFileName,*pModule;
 PyObject *pFuncAppendList,*pFuncPlot;
 PyObject *pArgTuple, *pArgTuple3, *pValue, *pValue1,*pArgEmpty, *pXVec, 
-*pYVec, *pYVec2,*pYVecEst,*pYVecMa200,*pYVecMa50,*pYVecBearBull, *pArgTuplebearbull,*pArgTuplema200,*pArgTuplema50,*pArgTupleest;
+*pYVec, *pYVec2,*pYVecEst,*pVecNorm,*pYVecMa200,*pYVecMa50,*pYVecBearBull, *pArgTuplebearbull,*pArgTupleNorm,*pArgTuplema200,*pArgTuplema50,*pArgTupleest;
 	
 Plot::Plot(void)
 {
@@ -136,12 +136,14 @@ void Plot::Append_One_Stock(Stock stock)
 	pArgTuplema50 = PyTuple_New(4);	
 	pArgTuplema200 = PyTuple_New(4);	
 	pArgTupleest = PyTuple_New(4);	
-	
+	pArgTupleNorm = PyTuple_New(4);	
+
 	int n=stock.stockLength;
 
 	Stock::dayInfo *stocktmp = stock.head;
 
    	vector<double> close_value_stock(n,stock.tail->close);
+	vector<double> norm_value_stock(n,stock.tail->norm);
    	vector<double> est_stock(n,stock.tail->est);
    	vector<double> ma50_stock(n,stock.tail->ma50);
    	vector<double> ma200_stock(n,stock.tail->ma200);
@@ -150,13 +152,14 @@ void Plot::Append_One_Stock(Stock stock)
 
    	int i = 0;
     while(stocktmp != NULL){
-   		t.at(i) = stocktmp->date;
-       	close_value_stock.at(i) = stocktmp->close;
-    	est_stock.at(i) = stocktmp->est;
-        ma200_stock.at(i) = stocktmp->ma200;
-        ma50_stock.at(i) = stocktmp->ma50;
-        bearbull.at(i) = stocktmp->bearBull;
-   		i=i+1;
+	   	t.at(i) = stocktmp->date;
+	    close_value_stock.at(i) = stocktmp->close;
+	    norm_value_stock.at(i) = stocktmp->norm;
+	    est_stock.at(i) = stocktmp->est;
+	    ma200_stock.at(i) = stocktmp->ma200;
+	    ma50_stock.at(i) = stocktmp->ma50;
+	    bearbull.at(i) = stocktmp->bearBull;
+	    i=i+1;
    		stocktmp=stocktmp->next;
     }
 	
@@ -192,6 +195,27 @@ void Plot::Append_One_Stock(Stock stock)
 	PyTuple_SetItem(pArgTuple, 2, pYVec);
 	PyTuple_SetItem(pArgTuple, 3, PyString_FromString("close"));
 	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuple);
+
+
+	//Transfer the other C++ vector to a python tuple
+	pVecNorm = PyTuple_New(norm_value_stock.size());	
+	for (i = 0; i < norm_value_stock.size(); ++i) {
+		pValue = PyFloat_FromDouble(norm_value_stock[i]);
+		if (!pValue) {
+			Py_DECREF(pVecNorm);
+			Py_DECREF(pModule);
+			fprintf(stderr, "Cannot convert array value");
+			//return 1;
+		}
+		PyTuple_SetItem(pVecNorm, i, pValue); //
+	}
+
+	PyTuple_SetItem(pArgTupleNorm, 0, PyString_FromString("stock"));
+	PyTuple_SetItem(pArgTupleNorm, 1, pXVec);
+	PyTuple_SetItem(pArgTupleNorm, 2, pVecNorm);
+	PyTuple_SetItem(pArgTupleNorm, 3, PyString_FromString("norm"));
+	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTupleNorm);
+
 
 	//Transfer the other C++ vector to a python tuple
 	pYVecMa200 = PyTuple_New(ma200_stock.size());	
@@ -274,6 +298,7 @@ void Plot::Append_One_Stock(Stock stock)
 	Py_DECREF(pArgTuplebearbull);
 	Py_DECREF(pArgTupleest);
 	Py_DECREF(pArgTuple);
+	Py_DECREF(pArgTupleNorm);
 	Py_DECREF(pXVec);
 	Py_DECREF(pYVec);
 }

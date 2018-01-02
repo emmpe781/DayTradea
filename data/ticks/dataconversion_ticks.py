@@ -39,7 +39,7 @@ for TICK in TICKS:
                 else:
                     close = row[CloseIndex]
                 closeprevious = close
-                temp.append({'Symbol': TICK, 'Close': close.replace(",","."),'Date': row[DateIndex]})
+                temp.append({'Symbol': TICK, 'Close': close.replace(",","."),'Date': row[DateIndex],'Exist': 'YES'})
             i=i+1;
 
     f = open('stockdata_'+TICK+'.dat', 'w')                   
@@ -59,8 +59,9 @@ for TICK in TICKS:
     k=0
     while (dstart < d):
         elem=copy.copy(stockDataReversed[0])
-        elem['Close']='1000'
+        elem['Close']='0'
         elem['Date']=str(dstart)[0:10] 
+        elem['Exist']='NO'
         stockDataTemp.append(elem)
         dstart += delta
 

@@ -40,6 +40,7 @@ void ReadFile::PopulateStock(Stock *stock_p)
 	Mean(stock_p, 200);
 	Mean(stock_p, 50);
 	BearBull(stock_p);
+	Normalized(stock_p);
 }
 
 void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
@@ -56,8 +57,6 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 		if (rawData[i]=='}')
 		{
 			endValue = i;
-
-			nyfunction(); //CLEAN UP
 			for (int k=startValue; k<endValue;k++){
 				dayData += rawData[k];
 			}
@@ -68,8 +67,6 @@ void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
 	}
 }
 
-void nyfunction(){
-}
 
 void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 {
@@ -78,6 +75,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 	string curr("");
 	string currlatest("");
 	string date="";
+	string exist="";
 	double close=0;
 
     bool first = true;
@@ -101,7 +99,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 			if (currlatest == "Symbol") {stock->name = curr;}
 			if (currlatest == "Date") {date = curr;}
 			if (currlatest == "Close") {close = stof(curr);}
-
+			if (currlatest == "Exist") {exist = curr;}
 			currlatest=curr;
 			curr = "";
 
@@ -114,7 +112,7 @@ void ReadFile::ExtractStockData(string line, Stock *stock,string startdate)
 		}
 	}
 	if (date >= startdate){
-		stock->add_node_to_end(date,close);
+		stock->add_node_to_end(date,close,exist);
 	}
 }
 
@@ -126,24 +124,27 @@ void ReadFile::ExpectedValue(Stock* stock,float percentage)
 	float expectedValue;
 	expectedIncrease = (percentage/100)/365+1;
 	Stock::dayInfo *tmp = stock->head;
+	while(!tmp->exist){
+    	tmp=tmp->next;
+	}
 	expectedValue = tmp->close;
 
     while(tmp!= NULL){
+	    	//Rekalibrera estimering om index går MEGA BULL!
+			if ((tmp->close - expectedValue) > expectedValue*1.4)
+			{
+				expectedValue = expectedValue*expectedIncrease + 
+	    			(tmp->close - expectedValue)/2000;
+			}
+			//Rekalibrera estimering om index går MEGA BEAR!
+			else if (tmp->close < 0.65*expectedValue)
+			{
+				expectedValue = tmp->close*1.4; 			
+			}
 
-    	//Rekalibrera estimering om index går MEGA BULL!
-		if ((tmp->close - expectedValue) > expectedValue*1.4)
-		{
-			expectedValue = expectedValue*expectedIncrease + 
-    			(tmp->close - expectedValue)/2000;
-		}
-		//Rekalibrera estimering om index går MEGA BEAR!
-		else if (tmp->close < 0.65*expectedValue)
-		{
-			expectedValue = tmp->close*1.4; 			
-		}
-
-    	expectedValue = expectedValue*expectedIncrease;
-    	tmp->est = expectedValue;
+	    	expectedValue = expectedValue*expectedIncrease;
+	    	tmp->est = expectedValue;
+    	
     	tmp=tmp->next;
     }
 }
@@ -160,33 +161,34 @@ void ReadFile::BearBull(Stock* stock)
 	static float const diffEst = 1.2;
 
 	while(stockHead != NULL){
+    	if (stockHead->exist){
+			stockHead->bearBull = lastBearBull;
+			if (stockHead->ma200 != 0)
+			{
 
-		stockHead->bearBull = lastBearBull;
-		if (stockHead->ma200 != 0)
-		{
+				//bull->bear
+				if (((stockHead->ma200 - lastMa200) < -diffValue*lastMa200) && //Lutningen är tillräckligt negativ för ma200
+					(stockHead->bearBull == 1800)   && //vi är i Bulltrend
+					(stockHead->ma50 < lastMa50)    && //negativ lutning på ma50
+					(stockHead->close > stockHead->est*diffEst)) //Aktiekursen ska vara större än estimerade värdet
+					{
+						stockHead->bearBull = BEAR;
+					}
 
-			//bull->bear
-			if (((stockHead->ma200 - lastMa200) < -diffValue*lastMa200) && //Lutningen är tillräckligt negativ för ma200
-				(stockHead->bearBull == 1800)   && //vi är i Bulltrend
-				(stockHead->ma50 < lastMa50)    && //negativ lutning på ma50
-				(stockHead->close > stockHead->est*diffEst)) //Aktiekursen ska vara större än estimerade värdet
+				//Bear->Bull
+				if ((stockHead->ma50 > stockHead->ma200) &&
+					((stockHead->ma200 - lastMa200) > lastMa200*diffValue/4) &&
+					(stockHead->bearBull == 10)) //*diffEst)) //Använd BEAR macrot
 				{
-					stockHead->bearBull = BEAR;
+					stockHead->bearBull = BULL;
 				}
 
-			//Bear->Bull
-			if ((stockHead->ma50 > stockHead->ma200) &&
-				((stockHead->ma200 - lastMa200) > lastMa200*diffValue/4) &&
-				(stockHead->bearBull == 10)) //*diffEst)) //Använd BEAR macrot
-			{
-				stockHead->bearBull = BULL;
-			}
+				if (stockHead->bearBull == 0 && stockHead->ma200 >= lastMa200) // Före BEAR/BULL
+				{
+					stockHead->bearBull = BULL;
+				}
 
-			if (stockHead->bearBull == 0 && stockHead->ma200 >= lastMa200) // Före BEAR/BULL
-			{
-				stockHead->bearBull = BULL;
 			}
-
 		}
 		lastBearBull = stockHead->bearBull;
 		lastMa200 = stockHead->ma200;
@@ -205,33 +207,60 @@ void ReadFile::Mean(Stock *stock,int days)
 	Stock::dayInfo *stockHead = stock->head;
 
 	while(stockHead!= NULL){
+    	if (stockHead->exist){
 
-		//fyll på ma 50/100/200
-		if (i < days){
-			sumStockClose = sumStockClose + (stockHead->close);
-			//stockHead->ma200=stockHead->close;
-			if(days==200){
-				stockHead->ma200 = 0;
+			//fyll på ma 50/100/200
+			if (i < days){
+				sumStockClose = sumStockClose + (stockHead->close);
+				//stockHead->ma200=stockHead->close;
+				if(days==200){
+					stockHead->ma200 = 0;
+				}
+				if(days==50){
+					stockHead->ma50 = 0;
+				}
+				i++;
 			}
-			if(days==50){
-				stockHead->ma50 = 0;
-			}
-			i++;
+			else {
+				mean=sumStockClose/days;
+				if(days==200){
+					stockHead->ma200=mean;
+				}
+				if(days==50){
+					stockHead->ma50 = mean;
+				}	
+				stockTail=stockTail->next;
+				sumStockClose=sumStockClose+(stockHead->close)-(stockTail->close);
+			};
+			stockHead=stockHead->next;
 		}
-		else {
-			mean=sumStockClose/days;
-			if(days==200){
-				stockHead->ma200=mean;
-			}
-			if(days==50){
-				stockHead->ma50 = mean;
-			}	
+		else{
 			stockTail=stockTail->next;
-			sumStockClose=sumStockClose+(stockHead->close)-(stockTail->close);
-		};
-		stockHead=stockHead->next;
+			stockHead=stockHead->next;
+		}
     }
 }
+
+
+void ReadFile::Normalized(Stock *stock)
+{
+	Stock::dayInfo *first_day = stock->head;
+	Stock::dayInfo *day = stock->head;
+
+	while(day!= NULL){
+
+		if (day->exist)
+		{
+			day->norm = day->close / first_day->close;
+		}
+		else
+		{
+			first_day=first_day->next;
+		}
+		day=day->next;
+    }
+}
+
 
 //Approved by Sven
 ReadFile::~ReadFile()

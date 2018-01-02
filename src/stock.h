@@ -20,7 +20,9 @@ class Stock{
 	  int stockLength;	  
 	  struct dayInfo {
 		  string date;
+		  bool exist;
 		  float close;
+		  float norm;
 		  float est;
 		  //0=unknown, 1800 = bull, 2 = bear
 		  int bearBull;
@@ -33,7 +35,7 @@ class Stock{
 	  dayInfo *tail;
 	  Stock();
 	  float stockValue(string ,string);
-	  void add_node_to_end(string,float);
+	  void add_node_to_end(string,float,string);
 	  void Print();
 };
 typedef Stock* Stock_p;

@@ -24,7 +24,7 @@ public:
 	void BearBull(Stock*);
 	void ExpectedValue2(Stock*,float);
 	void Mean(Stock*,int);
-	void nyfunction(){}
+	void Normalized(Stock*);
 	virtual ~ReadFile();
 
 };

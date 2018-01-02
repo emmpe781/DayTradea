@@ -73,10 +73,10 @@ int main() {
 
 	//Min algh. startar 
 	Algorithms Algo;
-	Algo.Algo("BEARBULL",&ImbaPortfolio ,&cred_a); //borde skicka in const på omx30
+	Algo.Algo("BEARBULL",&ImbaPortfolio ,&svol_b); //borde skicka in const på omx30
 
 	Plot plt1;
-	plt1.Plot_all(ImbaPortfolio,Reference,cred_a);
+	plt1.Plot_all(ImbaPortfolio,Reference,svol_b);
 
 	return 0;
 }

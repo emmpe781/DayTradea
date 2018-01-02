@@ -22,7 +22,7 @@ public:
 	  struct portfolionode{
 		 string date;
 		 float portfolioValue; //The amount of money + stockValue for each date   porfolioValue=cash+"value of all stocks in portfolio"
-
+		 float normValue;
 		 struct stockinfo{
 			 string name;
 			 float stockValue; ///REMOVE
