@@ -9,6 +9,7 @@
 
 
 using namespace std;
+const int NROFSTOCKS = 2;
 
 class Stock{
 	public:

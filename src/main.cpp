@@ -73,10 +73,16 @@ int main() {
 
 	//Min algh. startar 
 	Algorithms Algo;
-	Algo.Algo("BEARBULL",&ImbaPortfolio ,&svol_b); //borde skicka in const på omx30
+	//Algo.Algo("BEARBULL",&ImbaPortfolio ,&svol_b); //borde skicka in const på omx30
+	Stock stockArray[NROFSTOCKS] = {bure, cred_a};
 
-	Plot plt1;
-	plt1.Plot_all(ImbaPortfolio,Reference,svol_b);
+
+	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray);
+	//Plot plt1;
+	//plt1.Plot_all(ImbaPortfolio,Reference,svol_b);
+	
+	//Plot plt2;
+	//plt2.Plot_all(ImbaPortfolio,Reference, rato_b);
 
 	return 0;
 }

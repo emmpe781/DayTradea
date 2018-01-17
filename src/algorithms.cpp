@@ -12,6 +12,7 @@
 using namespace std;
 const Stock::dayInfo * lastStockDate = NULL;
 
+
 Algorithms::Algorithms() {
 	// TODO Auto-generated constructor stub
 
@@ -19,24 +20,27 @@ Algorithms::Algorithms() {
 
 
 
-void Algorithms::Algo(string algo,Portfolio_p portfolio_p, Stock_p omxS30_p) {
-	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio; 	//Pekar på noden för mitt första datum i portföljen
+void Algorithms::Algo(string algo,Portfolio_p portfolio_p, Stock stocks[]) {
+	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio;
 	Portfolio::portfolionode *previousPortfolioDay = portfolio_p->curPortfolio; 
-	Stock::dayInfo *index = omxS30_p->head; 							//Pekar på noden för första datumet i mitt index (OMX30)
-	Stock::dayInfo *previousIndex = omxS30_p->head;
+	Stock::dayInfo *index = stocks[0].head;
+	Stock::dayInfo *previousIndex = stocks[0].head;
 
 	int i = 0;
-	tmpPortfolioDay->portfolioValue = portfolio_p->cash;;
+	tmpPortfolioDay->portfolioValue = portfolio_p->cash;
 	while(tmpPortfolioDay != NULL){
-		portfolio_p->updateBeginningOfDay(previousPortfolioDay,tmpPortfolioDay,previousIndex,index);
+		portfolio_p->updateBeginningOfDay(previousPortfolioDay,
+			 							  tmpPortfolioDay, 
+			 							  previousIndex, 
+			 							  index);
 		//START - ALGO
 		if (algo == "BEARBULL")
 		{
-			Algo_BearBull(portfolio_p,omxS30_p,tmpPortfolioDay,index);
+			Algo_BearBull(portfolio_p, &stocks[0], tmpPortfolioDay, index);
 		}
-		if (algo == "CreateIndex")
+		if (algo == "CREATEINDEX")
 		{
-			CreateIndex(portfolio_p,omxS30_p);
+			CreateIndex(portfolio_p,stocks);
 		}
 		//END - ALGO
 		previousPortfolioDay=tmpPortfolioDay;
@@ -47,7 +51,9 @@ void Algorithms::Algo(string algo,Portfolio_p portfolio_p, Stock_p omxS30_p) {
 	}
 }
 
-void Algorithms::Algo_BearBull(Portfolio_p portfolio_p,Stock_p omxS30_p,Portfolio::portfolionode *tmpPortfolioDay,Stock::dayInfo *index) {
+void Algorithms::Algo_BearBull(Portfolio_p portfolio_p, Stock_p omxS30, 
+							   Portfolio::portfolionode *tmpPortfolioDay,
+							   Stock::dayInfo *index) {
 	//Hur ska algen fungera?
 	//1 loopa igenom alla datum i index
 	//2 när index ligger i bull -> var 100 % investerad
@@ -56,19 +62,31 @@ void Algorithms::Algo_BearBull(Portfolio_p portfolio_p,Stock_p omxS30_p,Portfoli
 	if (index->bearBull == 1800){
 		//cout << "BULL Handla!" << endl;
 		float moneyToBuyWith = portfolio_p->cash;
-		portfolio_p->buy(index,omxS30_p->name,moneyToBuyWith, tmpPortfolioDay);
+		portfolio_p->buy(index,omxS30->name,moneyToBuyWith, tmpPortfolioDay);
 		//handla så många aktier du har råd att handla den dagen
 	} 
 	else { 
 		//cout << "BEAR Handla inte!" << endl;
 		if(tmpPortfolioDay->curStock != NULL)
 		{
-			portfolio_p->sell(index,omxS30_p->name,1, tmpPortfolioDay);
+			portfolio_p->sell(index,omxS30->name,1, tmpPortfolioDay);
 		}
 	}
 }
 
-void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock_p omxS30_p){
+void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock stocks[]){
+
+	for(int i = 0; i < NROFSTOCKS; ++i)
+	{
+		cout << "stocks[i].name " << stocks[i].name << endl;
+		
+	}
+
+	
+
+
+
+
 	//DEL1 Skapa eget index
 	//Ta in de 10 största investmentbolagen och äg lika stor del av varje
 	//Bolagen:
@@ -83,6 +101,8 @@ void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock_p omxS30_p){
 	//else (omx30 beartrend)
 		//while (stockInList != 0)
 			//portfolio_p->sell(curStock)		
+
+	
 
 
 }

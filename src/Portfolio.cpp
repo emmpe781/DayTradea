@@ -54,7 +54,8 @@ void Portfolio::setStartValue(float startValue)
 	cout << cash << " = cash" << endl;
 }
 
-bool Portfolio::stockInPortfolio(string stockname,Portfolio::portfolionode::stockinfo *portnode)
+bool Portfolio::stockInPortfolio(string stockname,
+	 							 Portfolio::portfolionode::stockinfo *portnode)
 {
 	while (portnode != NULL)
 	{	
@@ -67,7 +68,10 @@ bool Portfolio::stockInPortfolio(string stockname,Portfolio::portfolionode::stoc
 	return false;
 }
 
-void Portfolio::buy(Stock::dayInfo *stocknode, string stockname, float money, Portfolio::portfolionode *portnode)
+void Portfolio::buy(Stock::dayInfo *stocknode, 
+					string stockname, 
+					float money, 
+					Portfolio::portfolionode *portnode)
 {
 	int nrOfStocks = 0;
 	if (money <= cash) {
@@ -82,7 +86,8 @@ void Portfolio::buy(Stock::dayInfo *stocknode, string stockname, float money, Po
 					++nrOfStocks;
 				}
 			//Skapa en ny aktie i portföljen
-			Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
+			Portfolio::portfolionode::stockinfo *tmpnode = 
+				new Portfolio::portfolionode::stockinfo;
 			
 			tmpnode->name = stockname;
 			tmpnode->nrOfStocks = nrOfStocks;
@@ -97,12 +102,16 @@ void Portfolio::buy(Stock::dayInfo *stocknode, string stockname, float money, Po
 				cash = cash - stocknode->close;
 				++nrOfStocks;
 			}
-			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks + nrOfStocks;
+			portnode->curStock->nrOfStocks = 
+				portnode->curStock->nrOfStocks + nrOfStocks;
 		}
 	}
 }
 
-void Portfolio::sell(Stock::dayInfo *stocknode, string stockname, int percentageOfStocks, Portfolio::portfolionode *portnode)
+void Portfolio::sell(Stock::dayInfo *stocknode, 
+					 string stockname, 
+					 int percentageOfStocks, 
+					 Portfolio::portfolionode *portnode)
 {
 	if (stockInPortfolio(stockname,portnode->curStock) == true)
 	{
@@ -114,17 +123,25 @@ void Portfolio::sell(Stock::dayInfo *stocknode, string stockname, int percentage
 	}
 }
 
-void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort,Portfolio::portfolionode *currentPort,Stock::dayInfo *previousStock,Stock::dayInfo *currentStock)
+void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort, 
+									 Portfolio::portfolionode *currentPort,
+									 Stock::dayInfo *previousStock,
+									 Stock::dayInfo *currentStock)
 {	
 	if (previousPort->curStock != NULL)
 	{	
 		currentPort->portfolioValue =  previousPort->portfolioValue;
 		while (previousPort->curStock != NULL) 
 		{
-			Portfolio::portfolionode::stockinfo *tmpnode = new Portfolio::portfolionode::stockinfo;
+			Portfolio::portfolionode::stockinfo *tmpnode = 
+				new Portfolio::portfolionode::stockinfo;
+
 			tmpnode->name = previousPort->curStock->name;
 			tmpnode->nrOfStocks = previousPort->curStock->nrOfStocks;
-			currentPort->portfolioValue = currentPort->portfolioValue + (tmpnode->nrOfStocks)*((currentStock->close)-(previousStock->close));
+
+			currentPort->portfolioValue = currentPort->portfolioValue + 
+				(tmpnode->nrOfStocks)*((currentStock->close)-(previousStock->close));
+		    
 		    tmpnode->next=currentPort->curStock;
 		    currentPort->curStock=tmpnode;
 		    previousPort->curStock = previousPort->curStock->next;
