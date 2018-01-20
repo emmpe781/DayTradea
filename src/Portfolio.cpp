@@ -123,32 +123,46 @@ void Portfolio::sell(Stock::dayInfo *stocknode,
 	}
 }
 
-void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *previousPort, 
-									 Portfolio::portfolionode *currentPort,
-									 Stock::dayInfo *previousStock,
-									 Stock::dayInfo *currentStock)
+void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode *cPortF,
+									  Stock::dayInfo *cStock)
 {	
-	if (previousPort->curStock != NULL)
+
+ cout << "updateBeginningOfDay2" << endl;
+}
+
+
+void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF, 
+									 Portfolio::portfolionode *cPortF,
+									 Stock::dayInfo *pStock,
+									 Stock::dayInfo *cStock)
+{	
+	
+
+
+
+
+	//Kommer behöva gå igenom alla akiter som finns i portföljen och uppdatera
+	if (pPortF->curStock != NULL)
 	{	
-		currentPort->portfolioValue =  previousPort->portfolioValue;
-		while (previousPort->curStock != NULL) 
+		cPortF->portfolioValue =  pPortF->portfolioValue;
+		while (pPortF->curStock != NULL) 
 		{
 			Portfolio::portfolionode::stockinfo *tmpnode = 
 				new Portfolio::portfolionode::stockinfo;
 
-			tmpnode->name = previousPort->curStock->name;
-			tmpnode->nrOfStocks = previousPort->curStock->nrOfStocks;
+			tmpnode->name = pPortF->curStock->name;
+			tmpnode->nrOfStocks = pPortF->curStock->nrOfStocks;
 
-			currentPort->portfolioValue = currentPort->portfolioValue + 
-				(tmpnode->nrOfStocks)*((currentStock->close)-(previousStock->close));
+			cPortF->portfolioValue = cPortF->portfolioValue + 
+				(tmpnode->nrOfStocks)*((cStock->close)-(pStock->close));
 		    
-		    tmpnode->next=currentPort->curStock;
-		    currentPort->curStock=tmpnode;
-		    previousPort->curStock = previousPort->curStock->next;
+		    tmpnode->next=cPortF->curStock;
+		    cPortF->curStock=tmpnode;
+		    pPortF->curStock = pPortF->curStock->next;
 		}
 	}
-	else{
-		currentPort->portfolioValue =  previousPort->portfolioValue;
+	else {
+		cPortF->portfolioValue =  pPortF->portfolioValue;
 	}
 }
 

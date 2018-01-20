@@ -15,15 +15,21 @@ using namespace std;
 class Algorithms {
 public:
 	Algorithms();
+	void updateStockDate(Stock[]);
 	void Algo(string, Portfolio*, Stock[]);
 	void Algo_BearBull(Portfolio*, 
 					   Stock*, 
 		               Portfolio::portfolionode*, 
 		               Stock::dayInfo*);
 
-	void CreateIndex(Portfolio*,Stock[]);
+	void CreateIndex(Portfolio*,
+					 Stock[], 
+					 Portfolio::portfolionode*, 
+		             Stock::dayInfo*);
+	
 	void SlayIndex(Portfolio*,Stock*);
 	virtual ~Algorithms();
+
 };
 
 #endif /* SRC_ALGORITHMS_H_ */

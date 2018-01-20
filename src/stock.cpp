@@ -10,7 +10,7 @@ Stock::Stock(void)
 	Stock::stockLength = 0;
 }
 
-void Stock::add_node_to_end(string date,float close, string exist)
+void Stock::add_node_to_end(string date, float close, string exist)
 {
 	bool eval;
 	if (exist == "YES"){

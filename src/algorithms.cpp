@@ -18,40 +18,82 @@ Algorithms::Algorithms() {
 
 }
 
-
-
-void Algorithms::Algo(string algo,Portfolio_p portfolio_p, Stock stocks[]) {
-	Portfolio::portfolionode *tmpPortfolioDay = portfolio_p->curPortfolio;
-	Portfolio::portfolionode *previousPortfolioDay = portfolio_p->curPortfolio; 
-	Stock::dayInfo *index = stocks[0].head;
-	Stock::dayInfo *previousIndex = stocks[0].head;
-
-	int i = 0;
-	tmpPortfolioDay->portfolioValue = portfolio_p->cash;
-	while(tmpPortfolioDay != NULL){
-		portfolio_p->updateBeginningOfDay(previousPortfolioDay,
-			 							  tmpPortfolioDay, 
-			 							  previousIndex, 
-			 							  index);
-		//START - ALGO
-		if (algo == "BEARBULL")
-		{
-			Algo_BearBull(portfolio_p, &stocks[0], tmpPortfolioDay, index);
-		}
-		if (algo == "CREATEINDEX")
-		{
-			CreateIndex(portfolio_p,stocks);
-		}
-		//END - ALGO
-		previousPortfolioDay=tmpPortfolioDay;
-		previousIndex=index;
-		tmpPortfolioDay=tmpPortfolioDay->next;
-		index=index->next;
-		i=i+1;
+void Algorithms::updateStockDate(Stock stocks[])
+{
+	int nrOfStocks = 2;
+	for (int i = 0; i < 2; ++i)
+	{
+		Stock::dayInfo *curStocks = stocks[i].head;
+		curStocks = curStocks->next;
+		stocks[i].head = curStocks;
 	}
 }
 
-void Algorithms::Algo_BearBull(Portfolio_p portfolio_p, Stock_p omxS30, 
+void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
+
+    
+	Portfolio::portfolionode *curPortfolioDay = 
+		portfolio_p->curPortfolio;
+
+	Portfolio::portfolionode *previousPortfolioDay = 
+		portfolio_p->curPortfolio; 
+
+
+	//Borde vilja flytta in allt stockrelaterat till algoritmerna?!
+	//Endast ha kvar hur portföljen uppdateras här ute?!
+	Stock::dayInfo *curStocks = stocks->head;
+	Stock::dayInfo *previousStocks = stocks->head;
+
+	curPortfolioDay->portfolioValue = portfolio_p->cash;
+
+	while(curPortfolioDay != NULL){
+
+		//Borde inte vilja skicka med previous och curPortfolioDay 
+		//utan endast curDay, eftersom portfolioklassen själv 
+		//borde ha kolla på gårdagens data.
+
+		//Även cur och Previous stocks borde ägas portfolioklassen
+		//Dvs, vi har en setfunktion i respektive algoritm som sätter 
+		//antal aktier direkt i portföljen som den sedan kan styra över.
+		portfolio_p->updateBeginningOfDay(previousPortfolioDay,
+			 							  curPortfolioDay, 
+			 							  previousStocks, 
+			 							  curStocks);
+
+		//portfolio_p->updateBeginningOfDay2(curPortfolioDay, stocks);
+
+		//START - ALGO
+		if (algo == "BEARBULL")
+		{
+			//Kommer behöva anpassas till den mer generiska designen
+			//Algo_BearBull(portfolio_p, &stocks[0], curPortfolioDay, index);
+		}
+		if (algo == "CREATEINDEX")
+		{
+			//Skicka med aktier, portfölj, curPortfolioDay, 
+			// curStocks kan jag ta fram i funktionen istället utifrån stocks.
+			CreateIndex(portfolio_p, stocks, curPortfolioDay, curStocks);
+		}
+		//END - ALGO
+
+		curPortfolioDay=curPortfolioDay->next;
+		updateStockDate(stocks);
+		//updateStocksDates(stocks);
+
+
+
+		//Kommer ge att vi endast uppdaterar till nästa portföljdag
+		//härifrån.
+/*
+		previousPortfolioDay=curPortfolioDay;
+		previousStocks=curStocks;
+		curPortfolioDay=curPortfolioDay->next;
+		curStocks=curStocks->next;*/
+	}
+}
+
+void Algorithms::Algo_BearBull(Portfolio_p portfolio_p, 
+							   Stock_p omxS30, 
 							   Portfolio::portfolionode *tmpPortfolioDay,
 							   Stock::dayInfo *index) {
 	//Hur ska algen fungera?
@@ -74,11 +116,22 @@ void Algorithms::Algo_BearBull(Portfolio_p portfolio_p, Stock_p omxS30,
 	}
 }
 
-void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock stocks[]){
+void Algorithms::CreateIndex(Portfolio_p portfolio_p, 
+							 Stock stocks[], 
+							 Portfolio::portfolionode *tmpPortfolioDay,
+							 Stock::dayInfo *index) {
 
+	//int nrOfActiveStocks = 0;
 	for(int i = 0; i < NROFSTOCKS; ++i)
 	{
-		cout << "stocks[i].name " << stocks[i].name << endl;
+		Stock::dayInfo *curStock = stocks[i].head;
+
+		if(stocks[i].head->exist)
+		{
+			cout << "stocks[i] existerar idag! " << stocks[i].name << endl;
+		}
+
+		cout << "stocks[i].head->close " << curStock->close << endl;
 		
 	}
 

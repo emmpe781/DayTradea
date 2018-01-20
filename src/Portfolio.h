@@ -47,7 +47,9 @@ public:
 	void setStartValue(float);
 	void add_date(string);
 	void buy(Stock::dayInfo*,string,float, Portfolio::portfolionode*);
-	void updateBeginningOfDay(Portfolio::portfolionode*,Portfolio::portfolionode*,Stock::dayInfo*,Stock::dayInfo*);
+	void updateBeginningOfDay(Portfolio::portfolionode*, Portfolio::portfolionode*, 
+							  Stock::dayInfo*,Stock::dayInfo*);
+	void updateBeginningOfDay2(Portfolio::portfolionode*, Stock::dayInfo*);
 	void sell(Stock::dayInfo*,string,int, Portfolio::portfolionode*);
 	virtual ~Portfolio();
 };
