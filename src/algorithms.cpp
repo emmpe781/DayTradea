@@ -57,8 +57,7 @@ void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
 		
 		portfolio_p->updateBeginningOfDay(previousPortfolioDay,
 			 							  curPortfolioDay, 
-			 							  previousStocks, 
-			 							  curStocks);
+			 							  stocks);
 			 							  
 
 		//START - ALGO
@@ -81,7 +80,7 @@ void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
 		//Borde ha en updatePortfolio här med!
 		//portfolio_p->updateBeginningOfDay2(curPortfolioDay, stocks);
 
-		//updateStockDate(stocks);
+		updateStockDate(stocks);
 
 
 
@@ -89,9 +88,9 @@ void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
 		//härifrån.
 
 		previousPortfolioDay=curPortfolioDay;
-		previousStocks=curStocks;
+		//previousStocks=curStocks;
 		curPortfolioDay=curPortfolioDay->next;
-		curStocks=curStocks->next;
+		//curStocks=curStocks->next;
 	}
 }
 

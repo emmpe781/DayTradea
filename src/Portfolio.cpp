@@ -133,45 +133,40 @@ void Portfolio::sell(Stock::dayInfo *stocknode,
 int Portfolio::NrOfStocksInPortfolio(Portfolio::portfolionode* curPortfolioDay,
 			   						 string stock)
 {
-	
+	string stockName = curPortfolioDay->curStock->name;
 
-	while (curPortfolioDay->curStock != NULL)
+	//We have found our stock in portfolio
+	if (stock == stockName)
 	{
-		string stockName = curPortfolioDay->curStock->name;
-		cout << " stockName = " << stockName << endl;
-		if (stock == stockName)
-		{
-			cout << "test otur!!" << endl;
-			return curPortfolioDay->curStock->nrOfStocks;
-			
-		}
-
-		curPortfolioDay->curStock = curPortfolioDay->curStock->next;
+		return curPortfolioDay->curStock->nrOfStocks;		
 	}
+
 	return 0;
 }
 
 int Portfolio::stockValue(Portfolio::portfolionode* curPortfolioDay,
-			   Stock stocks[])
+			   			  Stock stocks[])
 {
-	int stockValue = 0;
 
-	
 	for (int i = 0; i < NROFSTOCKS; ++i)
 	{
 		int nrOfStocks = 0;
 		Stock::dayInfo *curStocks = stocks[i].head;
 		
+
 		nrOfStocks = NrOfStocksInPortfolio(curPortfolioDay, stocks[i].name);
 		
-		if (nrOfStocks != 0 )
+		//We have found our stock in portfolio
+		if (nrOfStocks != 0)
 		{
-			cout << "nrOfStocks !!" << nrOfStocks << endl;
+			return nrOfStocks*curStocks->close;
 		}
-		stockValue = stockValue + nrOfStocks*curStocks->close;
+		
 	}
 
-	return stockValue;
+	//This should never happend! This means the stock 
+	//does not exist in stockclass, only in portfolio!
+	return 0;
 }
 
 void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode* portfolioNode,
@@ -194,7 +189,7 @@ void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode* portfolioNode,
 
 	if (portfolioNode->curStock != NULL)
 	{
-		cout << " portfolioNode OMGOM" << endl;
+		
 	
 		int totalStockValue = 0;
 		totalStockValue = stockValue(portfolioNode, stocks);
@@ -219,15 +214,20 @@ void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode* portfolioNode,
 
 void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF, 
 									 Portfolio::portfolionode *cPortF,
-									 Stock::dayInfo *pStock,
-									 Stock::dayInfo *cStock)
+									 Stock stocks[])
 {	
-	
+	//The value of the portfolio before 
+	//all stocks values are added
+	cPortF->portfolioValue = cash;
+
 	if (pPortF->curStock != NULL)
 	{	
-		cPortF->portfolioValue =  pPortF->portfolioValue;
+
 		while (pPortF->curStock != NULL) 
 		{
+			//The total value of all stocks of a specific type
+			int value = 0;
+
 			Portfolio::portfolionode::stockinfo *tmpnode = 
 				new Portfolio::portfolionode::stockinfo;
 
@@ -235,16 +235,20 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF,
 			tmpnode->nrOfStocks = pPortF->curStock->nrOfStocks;
 
 
-			//Räknar ut nästa värde på portföljen
-			cPortF->portfolioValue = cPortF->portfolioValue + 
-				(tmpnode->nrOfStocks)*((cStock->close)-(pStock->close));
+
+			//Value of one type of stocks in portfolio
+			value = stockValue(pPortF, stocks);
+			cPortF->portfolioValue = cPortF->portfolioValue + value;
+
 		    
 		    tmpnode->next=cPortF->curStock;
 		    cPortF->curStock=tmpnode;
 		    pPortF->curStock = pPortF->curStock->next;
 		}
 	}
-	else {
+	
+	else 
+	{
 		cPortF->portfolioValue =  pPortF->portfolioValue;
 	}
 }
