@@ -21,7 +21,8 @@ public:
 
 	  struct portfolionode{
 		 string date;
-		 float portfolioValue; //The amount of money + stockValue for each date   porfolioValue=cash+"value of all stocks in portfolio"
+		 float portfolioValue; //The amount of money + stockValue for each date 
+		 					   //porfolioValue=cash+"value of all stocks in portfolio"
 		 float normValue;
 		 struct stockinfo{
 			 string name;
@@ -46,11 +47,13 @@ public:
 	bool stockInPortfolio(string,Portfolio::portfolionode::stockinfo*);
 	void setStartValue(float);
 	void add_date(string);
-	void buy(Stock::dayInfo*,string,float, Portfolio::portfolionode*);
+	void buy(float, string, float, Portfolio::portfolionode*);
 	void updateBeginningOfDay(Portfolio::portfolionode*, Portfolio::portfolionode*, 
 							  Stock::dayInfo*,Stock::dayInfo*);
-	void updateBeginningOfDay2(Portfolio::portfolionode*, Stock::dayInfo*);
+	void updateBeginningOfDay2(Portfolio::portfolionode*, Stock[]);
 	void sell(Stock::dayInfo*,string,int, Portfolio::portfolionode*);
+	int NrOfStocksInPortfolio(Portfolio::portfolionode*, string);
+	int stockValue(Portfolio::portfolionode*, Stock[]);
 	virtual ~Portfolio();
 };
 typedef Portfolio* Portfolio_p;

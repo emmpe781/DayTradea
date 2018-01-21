@@ -15,6 +15,7 @@ using namespace std;
 class Algorithms {
 public:
 	Algorithms();
+	bool TimeToRecalibrate;
 	void updateStockDate(Stock[]);
 	void Algo(string, Portfolio*, Stock[]);
 	void Algo_BearBull(Portfolio*, 
@@ -22,11 +23,10 @@ public:
 		               Portfolio::portfolionode*, 
 		               Stock::dayInfo*);
 
-	void CreateIndex(Portfolio*,
-					 Stock[], 
-					 Portfolio::portfolionode*, 
-		             Stock::dayInfo*);
-	
+	void CreateIndex(Portfolio_p, Stock[]);
+	int MaxNumberOfStocks(const int, const int);
+	void RecalibratePortfolio(Portfolio_p, Stock[]);
+
 	void SlayIndex(Portfolio*,Stock*);
 	virtual ~Algorithms();
 

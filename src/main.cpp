@@ -10,7 +10,8 @@ using namespace std;
 
 int main() {
 	float startValue = 250;
-	string startdate = "1986-10-05";
+	//string startdate = "1986-10-05";
+	string startdate = "1988-10-05";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);
@@ -74,12 +75,12 @@ int main() {
 	//Min algh. startar 
 	Algorithms Algo;
 	//Algo.Algo("BEARBULL",&ImbaPortfolio ,&svol_b); //borde skicka in const på omx30
-	Stock stockArray[NROFSTOCKS] = {bure, cred_a};
+	Stock stockArray[NROFSTOCKS] = {inve_b, bure};
 
 
 	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray);
-	//Plot plt1;
-	//plt1.Plot_all(ImbaPortfolio,Reference,svol_b);
+	Plot plt1;
+	plt1.Plot_all(ImbaPortfolio,Reference,inve_b);
 	
 	//Plot plt2;
 	//plt2.Plot_all(ImbaPortfolio,Reference, rato_b);

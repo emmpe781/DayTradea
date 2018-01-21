@@ -68,43 +68,50 @@ bool Portfolio::stockInPortfolio(string stockname,
 	return false;
 }
 
-void Portfolio::buy(Stock::dayInfo *stocknode, 
+void Portfolio::buy(float stockValue, 
 					string stockname, 
 					float money, 
 					Portfolio::portfolionode *portnode)
 {
 	int nrOfStocks = 0;
 	if (money <= cash) {
-		//Kolla att stocken inte finns i portf�ljen -> l�gg till en ny!
+		//Kolla att stocken inte finns i portföljen -> lägg till en ny!
 		if (stockInPortfolio(stockname,portnode->curStock) == false)
 		{	
-			while (money >= stocknode->close)
+
+			while (money >= stockValue)
 				{
-					//dra av v�rdet i portf�ljen f�r varje aktie jag k�per
-					money = money - stocknode->close;
-					cash = cash - stocknode->close;
+					//dra av värdet i portföljen för varje aktie jag köper
+					money = money - stockValue;
+					cash = cash - stockValue;
 					++nrOfStocks;
+					cout << "money = " << money << endl;
+					cout << "stocknode->close = " << stockValue << endl;
 				}
-			//Skapa en ny aktie i portf�ljen
+			//Skapa en ny aktie i portföljen
 			Portfolio::portfolionode::stockinfo *tmpnode = 
 				new Portfolio::portfolionode::stockinfo;
+			
 			
 			tmpnode->name = stockname;
 			tmpnode->nrOfStocks = nrOfStocks;
 		    tmpnode->next=portnode->curStock;
 		    portnode->curStock=tmpnode;
 		}
+
+		
 		else {
-			while ((money >= stocknode->close) && (stocknode->close > 0))
+			
+			while ((money >= stockValue) && (stockValue > 0))
 			{
-				//dra av v�rdet i portf�ljen f�r varje aktie jag k�per
-				money = money - stocknode->close;
-				cash = cash - stocknode->close;
+				//dra av värdet i portföljen för varje aktie jag köper
+				money = money - stockValue;
+				cash = cash - stockValue;
 				++nrOfStocks;
 			}
-			portnode->curStock->nrOfStocks = 
+			portnode->curStock->nrOfStocks =
 				portnode->curStock->nrOfStocks + nrOfStocks;
-		}
+		} /*else*/
 	}
 }
 
@@ -123,11 +130,90 @@ void Portfolio::sell(Stock::dayInfo *stocknode,
 	}
 }
 
-void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode *cPortF,
-									  Stock::dayInfo *cStock)
-{	
+int Portfolio::NrOfStocksInPortfolio(Portfolio::portfolionode* curPortfolioDay,
+			   						 string stock)
+{
+	
 
- cout << "updateBeginningOfDay2" << endl;
+	while (curPortfolioDay->curStock != NULL)
+	{
+		string stockName = curPortfolioDay->curStock->name;
+		cout << " stockName = " << stockName << endl;
+		if (stock == stockName)
+		{
+			cout << "test otur!!" << endl;
+			return curPortfolioDay->curStock->nrOfStocks;
+			
+		}
+
+		curPortfolioDay->curStock = curPortfolioDay->curStock->next;
+	}
+	return 0;
+}
+
+int Portfolio::stockValue(Portfolio::portfolionode* curPortfolioDay,
+			   Stock stocks[])
+{
+	int stockValue = 0;
+
+	
+	for (int i = 0; i < NROFSTOCKS; ++i)
+	{
+		int nrOfStocks = 0;
+		Stock::dayInfo *curStocks = stocks[i].head;
+		
+		nrOfStocks = NrOfStocksInPortfolio(curPortfolioDay, stocks[i].name);
+		
+		if (nrOfStocks != 0 )
+		{
+			cout << "nrOfStocks !!" << nrOfStocks << endl;
+		}
+		stockValue = stockValue + nrOfStocks*curStocks->close;
+	}
+
+	return stockValue;
+}
+
+void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode* portfolioNode,
+									  Stock stocks[])
+{	
+	//vad vill jag göra i update?
+	/*
+	1: Lägga till allt som jag gjorde under gårdagen,
+	dvs: hade jag 3 A-aktier  inför igår och köpte två till
+	då ska jag lägga till så jag har 5 A-aktier nästa dag
+	*/
+	//cout << " portfolioNode->curStock wtf" << portfolioNode->curStock <<  endl; 
+	
+	Portfolio::portfolionode::stockinfo portfoloioNode;
+	portfoloioNode = portfolioNode->myStockinfo;
+	
+
+	cout << " stockName = " << portfoloioNode.name << endl;
+	cout << " nrOfStocks = " << portfoloioNode.nrOfStocks << endl;
+
+	if (portfolioNode->curStock != NULL)
+	{
+		cout << " portfolioNode OMGOM" << endl;
+	
+		int totalStockValue = 0;
+		totalStockValue = stockValue(portfolioNode, stocks);
+		//cout << "totalStockValue = " << totalStockValue << endl;
+		portfolioNode->portfolioValue = cash + totalStockValue;
+
+	//Uppdatera mitt gamla portföljvärde
+
+/*
+	for (int i = 0; i < NROFSTOCKS; ++i)
+	{
+		Stock::dayInfo *curStock = stocks[i].head;
+	}*/
+
+	}
+	portfolioNode=portfolioNode->next;
+
+ //cout << "updateBeginningOfDay2" << endl;
+ 
 }
 
 
@@ -137,11 +223,6 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF,
 									 Stock::dayInfo *cStock)
 {	
 	
-
-
-
-
-	//Kommer beh�va g� igenom alla akiter som finns i portf�ljen och uppdatera
 	if (pPortF->curStock != NULL)
 	{	
 		cPortF->portfolioValue =  pPortF->portfolioValue;
@@ -153,6 +234,8 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF,
 			tmpnode->name = pPortF->curStock->name;
 			tmpnode->nrOfStocks = pPortF->curStock->nrOfStocks;
 
+
+			//Räknar ut nästa värde på portföljen
 			cPortF->portfolioValue = cPortF->portfolioValue + 
 				(tmpnode->nrOfStocks)*((cStock->close)-(pStock->close));
 		    
