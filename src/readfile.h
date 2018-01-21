@@ -9,7 +9,7 @@
 #define READFILE_H
 #include <string>
 #include "stock.h"
-
+#include "portfolio.h"
 using namespace std;
 
 class ReadFile
@@ -25,6 +25,7 @@ public:
 	void ExpectedValue2(Stock*,float);
 	void Mean(Stock*,int);
 	void Normalized(Stock*);
+	void NormalizedPort(Portfolio*);
 	virtual ~ReadFile();
 
 };

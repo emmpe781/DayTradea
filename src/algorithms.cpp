@@ -9,6 +9,7 @@
 #include "Portfolio.h"
 #include "Stock.h"
 #include "string"
+#include "math.h"
 using namespace std;
 const Stock::dayInfo * lastStockDate = NULL;
 
@@ -136,7 +137,7 @@ void Algorithms::RecalibratePortfolio(Portfolio_p portfolio_p, Stock stocks[])
 	float moneyForEachStock = moneyToBuyWith/nrOfStocks;
 
 
-	cout << " Algorithms::RecalibratePortfolio otur" << endl;
+	cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
 	//int nrOfActiveStocks = 0;
 	for(int i = 0; i < NROFSTOCKS; ++i)
 	{
@@ -153,9 +154,14 @@ void Algorithms::RecalibratePortfolio(Portfolio_p portfolio_p, Stock stocks[])
 		Portfolio::portfolionode *curPortfolioDay = 
 			portfolio_p->curPortfolio;
 
+		//Printing the amount of each stock
+		cout << "                                " << stockName 
+			 << " = " << floor(moneyForEachStock/stockValue) << endl;
+
 		portfolio_p->buy(stockValue, stockName, 
 						 moneyForEachStock, curPortfolioDay);
 	}
+	cout << endl << endl << endl; 
 	TimeToRecalibrate = false;
 }
 

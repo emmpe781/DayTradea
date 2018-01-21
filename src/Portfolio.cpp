@@ -85,8 +85,6 @@ void Portfolio::buy(float stockValue,
 					money = money - stockValue;
 					cash = cash - stockValue;
 					++nrOfStocks;
-					cout << "money = " << money << endl;
-					cout << "stocknode->close = " << stockValue << endl;
 				}
 			//Skapa en ny aktie i portföljen
 			Portfolio::portfolionode::stockinfo *tmpnode = 
@@ -172,42 +170,6 @@ int Portfolio::stockValue(Portfolio::portfolionode* curPortfolioDay,
 void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode* portfolioNode,
 									  Stock stocks[])
 {	
-	//vad vill jag göra i update?
-	/*
-	1: Lägga till allt som jag gjorde under gårdagen,
-	dvs: hade jag 3 A-aktier  inför igår och köpte två till
-	då ska jag lägga till så jag har 5 A-aktier nästa dag
-	*/
-	//cout << " portfolioNode->curStock wtf" << portfolioNode->curStock <<  endl; 
-	
-	Portfolio::portfolionode::stockinfo portfoloioNode;
-	portfoloioNode = portfolioNode->myStockinfo;
-	
-
-	cout << " stockName = " << portfoloioNode.name << endl;
-	cout << " nrOfStocks = " << portfoloioNode.nrOfStocks << endl;
-
-	if (portfolioNode->curStock != NULL)
-	{
-		
-	
-		int totalStockValue = 0;
-		totalStockValue = stockValue(portfolioNode, stocks);
-		//cout << "totalStockValue = " << totalStockValue << endl;
-		portfolioNode->portfolioValue = cash + totalStockValue;
-
-	//Uppdatera mitt gamla portföljvärde
-
-/*
-	for (int i = 0; i < NROFSTOCKS; ++i)
-	{
-		Stock::dayInfo *curStock = stocks[i].head;
-	}*/
-
-	}
-	portfolioNode=portfolioNode->next;
-
- //cout << "updateBeginningOfDay2" << endl;
  
 }
 

@@ -84,7 +84,8 @@ void Plot::Append_One_Portfolio(Portfolio port)
 	int i = 0;
     while(tmp!= NULL){
 		t.at(i) = tmp->date;
-		portfolio_value_1.at(i)= tmp->portfolioValue;
+		//portfolio_value_1.at(i)= tmp->portfolioValue;
+		portfolio_value_1.at(i)= tmp->normValue;
 		i=i+1;
     	infotmp=tmp->curStock;
 		tmp=tmp->next;

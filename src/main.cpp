@@ -9,9 +9,9 @@
 using namespace std;
 
 int main() {
-	float startValue = 250;
+	float startValue = 2500;
 	//string startdate = "1986-10-05";
-	string startdate = "1988-10-05";
+	string startdate = "1995-10-05";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);
@@ -72,15 +72,17 @@ int main() {
 	ImbaPortfolio.portfolioname = "ImbaPortfolio";
 	ImbaPortfolio.setStartValue(startValue);
 
-	//Min algh. startar 
+	
 	Algorithms Algo;
-	//Algo.Algo("BEARBULL",&ImbaPortfolio ,&svol_b); //borde skicka in const på omx30
-	Stock stockArray[NROFSTOCKS] = {inve_b, bure};
+	//NROFSTOCKS definierad i stock.h
+	Stock stockArray[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
+									lato_b, lund_b, ores, rato_b, svol_b};
 
 
 	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray);
+	rf.NormalizedPort(&ImbaPortfolio);
 	Plot plt1;
-	plt1.Plot_all(ImbaPortfolio,Reference,inve_b);
+	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
 	
 	//Plot plt2;
 	//plt2.Plot_all(ImbaPortfolio,Reference, rato_b);

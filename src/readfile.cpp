@@ -261,6 +261,16 @@ void ReadFile::Normalized(Stock *stock)
     }
 }
 
+void ReadFile::NormalizedPort(Portfolio *port)
+{
+	Portfolio::portfolionode *first_day = port->curPortfolio;
+	Portfolio::portfolionode *day = port->curPortfolio;
+
+	while(day!= NULL){
+		day->normValue = day->portfolioValue / first_day->portfolioValue;
+		day=day->next;
+    }
+}
 
 //Approved by Sven
 ReadFile::~ReadFile()
