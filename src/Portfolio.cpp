@@ -112,20 +112,30 @@ void Portfolio::buy(float stockValue,
 	}
 }
 
-void Portfolio::sell(Stock::dayInfo *stocknode,  //float stockValue, 
+void Portfolio::sell(Stock::dayInfo *stocknode,  
 					 string stockname, 
-					 int percentageOfStocks,  //					float money, 
+					 int percentageOfStocks,  
 					 Portfolio::portfolionode *portnode)
 {
 	if (stockInPortfolio(stockname,portnode->curStock) == true)
 	{
-		while (portnode->curStock->nrOfStocks > 0)
-		{
-			cash = cash + stocknode->close;
-			portnode->curStock->nrOfStocks = portnode->curStock->nrOfStocks - 1;
+		Portfolio::portfolionode::stockinfo *tmp = portnode->curStock;
+		while (tmp != NULL)
+		{	
+			if (stockname == tmp->name)
+			{
+				while (tmp->nrOfStocks > 0)
+				{
+					cash = cash + stocknode->close;
+					tmp->nrOfStocks = tmp->nrOfStocks - 1;
+				}
+			}
+			tmp = tmp->next;
 		}
-	}
+		tmp = portnode->curStock;
+	}	
 }
+
 
 int Portfolio::NrOfStocksInPortfolio(Portfolio::portfolionode* curPortfolioDay,
 			   						 string stock)
