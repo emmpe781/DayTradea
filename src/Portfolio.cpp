@@ -90,7 +90,6 @@ void Portfolio::buy(float stockValue,
 			Portfolio::portfolionode::stockinfo *tmpnode = 
 				new Portfolio::portfolionode::stockinfo;
 			
-			
 			tmpnode->name = stockname;
 			tmpnode->nrOfStocks = nrOfStocks;
 		    tmpnode->next=portnode->curStock;
@@ -113,9 +112,9 @@ void Portfolio::buy(float stockValue,
 	}
 }
 
-void Portfolio::sell(Stock::dayInfo *stocknode, 
+void Portfolio::sell(Stock::dayInfo *stocknode,  //float stockValue, 
 					 string stockname, 
-					 int percentageOfStocks, 
+					 int percentageOfStocks,  //					float money, 
 					 Portfolio::portfolionode *portnode)
 {
 	if (stockInPortfolio(stockname,portnode->curStock) == true)
@@ -167,7 +166,7 @@ int Portfolio::stockValue(Portfolio::portfolionode* curPortfolioDay,
 	return 0;
 }
 
-void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode* portfolioNode,
+void Portfolio::updateBeginningOfDay2(Portfolio::portfolionode *portfolionode,
 									  Stock stocks[])
 {	
  

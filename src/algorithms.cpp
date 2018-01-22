@@ -63,11 +63,11 @@ void Algorithms::Algo(	string algo,
 			 							  stocks);
 			
 
-		///PRINTING	 
+		///PRINTING	 /////////////////////////////////////////////////////////////
 		Portfolio::portfolionode *tmp = curPortfolioDay;
 		Portfolio::portfolionode::stockinfo *infotmp = tmp->curStock;
 
-	    cout << "--- date: " << curPortfolioDay->date << endl;
+	    cout << "--- date: " << tmp->date << endl;
 		while(infotmp!=NULL){
 			cout<< "name: " << infotmp->name;
 			cout<< ", volume: " << infotmp->nrOfStocks << endl;
@@ -75,7 +75,7 @@ void Algorithms::Algo(	string algo,
 		}
 
        	infotmp=tmp->curStock;
-		///PRINTING	 
+		///PRINTING	 /////////////////////////////////////////////////////////////
 
 
 		//START - ALGO
@@ -154,8 +154,6 @@ void Algorithms::RecalibratePortfolio(	Portfolio *portfolio_p,
 
 	float moneyForEachStock = moneyToBuyWith/nrOfStocks;
 
-	cout << portfolio_p->curPortfolio->date << endl;
-
 	cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
 	//int nrOfActiveStocks = 0;
 	for(int i = 0; i < NROFSTOCKS; ++i)
@@ -179,6 +177,11 @@ void Algorithms::RecalibratePortfolio(	Portfolio *portfolio_p,
 
 		portfolio_p->buy(stockValue, stockName, 
 						 moneyForEachStock, curPortfolioDay);
+
+		//JUST TO TEST
+		portfolio_p->sell(curStock, stockName, 
+						 1, curPortfolioDay);	
+
 	}
 	cout << endl << endl << endl; 
 	TimeToRecalibrate = false;
