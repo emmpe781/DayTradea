@@ -33,14 +33,12 @@ public:
 
          stockinfo *curStock = NULL;
          stockinfo *tail = NULL;
-         stockinfo myStockinfo;
+
 		 portfolionode *next;
 	  };
 
-	typedef portfolionode* portfolionode_p;
-
-	portfolionode_p curPortfolio = NULL; //Current Portfolio Content
-	portfolionode *tail = NULL; //Not Used
+	portfolionode *curPortfolio = NULL; //Current Portfolio Content
+	portfolionode *tail = NULL; 
 
 	Portfolio(string);
 	void Print();
@@ -57,6 +55,5 @@ public:
 	int stockValue(Portfolio::portfolionode*, Stock[]);
 	virtual ~Portfolio();
 };
-typedef Portfolio* Portfolio_p;
 
 #endif /* SRC_PORTFOLIO_H_ */

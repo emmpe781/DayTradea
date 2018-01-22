@@ -29,7 +29,9 @@ void Algorithms::updateStockDate(Stock stocks[])
 	}
 }
 
-void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
+void Algorithms::Algo(	string algo, 
+						Portfolio *portfolio_p, 
+						Stock stocks[]) {
 
     
 	Portfolio::portfolionode *curPortfolioDay = 
@@ -59,7 +61,22 @@ void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
 		portfolio_p->updateBeginningOfDay(previousPortfolioDay,
 			 							  curPortfolioDay, 
 			 							  stocks);
-			 							  
+			
+
+		///PRINTING	 
+		Portfolio::portfolionode *tmp = curPortfolioDay;
+		Portfolio::portfolionode::stockinfo *infotmp = tmp->curStock;
+
+	    cout << "--- date: " << curPortfolioDay->date << endl;
+		while(infotmp!=NULL){
+			cout<< "name: " << infotmp->name;
+			cout<< ", volume: " << infotmp->nrOfStocks << endl;
+			infotmp=infotmp->next;
+		}
+
+       	infotmp=tmp->curStock;
+		///PRINTING	 
+
 
 		//START - ALGO
 		if (algo == "BEARBULL")
@@ -95,8 +112,8 @@ void Algorithms::Algo(string algo, Portfolio_p portfolio_p, Stock stocks[]) {
 	}
 }
 
-void Algorithms::Algo_BearBull(Portfolio_p portfolio_p, 
-							   Stock_p omxS30, 
+void Algorithms::Algo_BearBull(Portfolio *portfolio_p, 
+							   Stock *omxS30, 
 							   Portfolio::portfolionode *tmpPortfolioDay,
 							   Stock::dayInfo *index) {
 	//Hur ska algen fungera?
@@ -129,13 +146,15 @@ int Algorithms::MaxNumberOfStocks(const float money, const float priceOfStock)
 */
 
 
-void Algorithms::RecalibratePortfolio(Portfolio_p portfolio_p, Stock stocks[])
-{
+void Algorithms::RecalibratePortfolio(	Portfolio *portfolio_p, 
+										Stock stocks[]) {
+
 	float moneyToBuyWith = portfolio_p->cash; //+ money in stocks;
 	int nrOfStocks = NROFSTOCKS; //NROFSTOCKS - "alla aktier som inte är aktiverade"
 
 	float moneyForEachStock = moneyToBuyWith/nrOfStocks;
 
+	cout << portfolio_p->curPortfolio->date << endl;
 
 	cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
 	//int nrOfActiveStocks = 0;
@@ -166,7 +185,7 @@ void Algorithms::RecalibratePortfolio(Portfolio_p portfolio_p, Stock stocks[])
 }
 
 
-void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock stocks[]) 
+void Algorithms::CreateIndex(Portfolio *portfolio_p, Stock stocks[]) 
 {
 	//Kommer behöva skapa en recalibratePortfolio() som ändrar index
 	//om en ny aktie tillkommer.
@@ -203,7 +222,7 @@ void Algorithms::CreateIndex(Portfolio_p portfolio_p, Stock stocks[])
 
 
 
-void Algorithms::SlayIndex(Portfolio_p portfolio_p, Stock_p omxS30_p) {
+void Algorithms::SlayIndex(Portfolio *portfolio_p, Stock* omxS30_p) {
 
 	//DEL2 Se om det går att slå mitt egenskapta index.
 	//3 Loopa igenom alla aktier, välj ut de 4-8 bästa genom att välja bort de sämsta?

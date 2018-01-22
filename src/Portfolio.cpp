@@ -30,7 +30,7 @@ Portfolio::Portfolio(string date) {
 
 void Portfolio::add_date(string date)
 {
-	portfolionode_p tmp = new portfolionode;
+	portfolionode *tmp = new portfolionode;
 	tmp->date = date;
 	tmp->portfolioValue = 0;
 	
@@ -79,7 +79,7 @@ void Portfolio::buy(float stockValue,
 		if (stockInPortfolio(stockname,portnode->curStock) == false)
 		{	
 
-			while (money >= stockValue)
+			while ((money >= stockValue) && (stockValue > 0))
 				{
 					//dra av värdet i portföljen för varje aktie jag köper
 					money = money - stockValue;
@@ -190,22 +190,28 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF,
 			//The total value of all stocks of a specific type
 			int value = 0;
 
-			Portfolio::portfolionode::stockinfo *tmpnode = 
-				new Portfolio::portfolionode::stockinfo;
+			portfolionode::stockinfo *tmpnode = new portfolionode::stockinfo;
 
 			tmpnode->name = pPortF->curStock->name;
 			tmpnode->nrOfStocks = pPortF->curStock->nrOfStocks;
-
-
 
 			//Value of one type of stocks in portfolio
 			value = stockValue(pPortF, stocks);
 			cPortF->portfolioValue = cPortF->portfolioValue + value;
 
-		    
-		    tmpnode->next=cPortF->curStock;
-		    cPortF->curStock=tmpnode;
-		    pPortF->curStock = pPortF->curStock->next;
+			tmpnode->next = NULL;
+
+			if(cPortF->curStock == NULL)
+			{	
+				cPortF->curStock = tmpnode;
+				cPortF->tail = tmpnode;
+			}
+			else
+			{
+				cPortF->tail->next = tmpnode;
+				cPortF->tail = cPortF->tail->next;
+			}
+			pPortF->curStock = pPortF->curStock->next;
 		}
 	}
 	
@@ -218,7 +224,7 @@ void Portfolio::updateBeginningOfDay(Portfolio::portfolionode *pPortF,
 void Portfolio::Print()
 {
 	/*cout << "PRINT: " << endl;
-	portfolionode_p tmp = curPortfolio;
+	portfolionode tmp = curPortfolio;
 	portfolionode::stockinfo *infotmp = tmp->curStock;
    	 
 

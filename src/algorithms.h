@@ -23,9 +23,9 @@ public:
 		               Portfolio::portfolionode*, 
 		               Stock::dayInfo*);
 
-	void CreateIndex(Portfolio_p, Stock[]);
+	void CreateIndex(Portfolio*, Stock[]);
 	int MaxNumberOfStocks(const int, const int);
-	void RecalibratePortfolio(Portfolio_p, Stock[]);
+	void RecalibratePortfolio(Portfolio*, Stock[]);
 
 	void SlayIndex(Portfolio*,Stock*);
 	virtual ~Algorithms();

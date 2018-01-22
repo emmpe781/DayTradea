@@ -39,6 +39,5 @@ class Stock{
 	  void add_node_to_end(string,float,string);
 	  void Print();
 };
-typedef Stock* Stock_p;
 
 #endif /* STOCK_H */
