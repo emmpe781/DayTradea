@@ -146,14 +146,33 @@ void Algorithms::Sell_All(	Portfolio *portfolio_p,
 		}
 }
 
-void Algorithms::RecalibratePortfolio(	Portfolio *portfolio_p, 
-										Portfolio::portfolionode *curPortfolioDay,
-										Stock stocks[]) {
+int Algorithms::NrOfStocks(Stock stocks[])
+{
+	int nrOfStocks = 0;
+	for (int i = 0; i < NROFSTOCKS; ++i)
+	{
+		if (stocks[i].head->exist == true)
+		{
+			++nrOfStocks;
+		}
+	}
+
+	cout << "The number of existing stocks are: " << nrOfStocks << endl;
+	return nrOfStocks;
+}
+
+void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p, 
+									  Portfolio::portfolionode *curPortfolioDay,
+									  Stock stocks[]) {
+
+	
+	int nrOfStocks = NrOfStocks(stocks);
+
+
+
+	Sell_All(portfolio_p, curPortfolioDay, stocks);
 
 	float moneyToBuyWith = portfolio_p->cash; //+ money in stocks;
-	int nrOfStocks = NROFSTOCKS; //NROFSTOCKS - "alla aktier som inte är aktiverade"
-
-	Sell_All(portfolio_p,curPortfolioDay,stocks);
 
 	float moneyForEachStock = moneyToBuyWith/nrOfStocks;
 
@@ -166,7 +185,7 @@ void Algorithms::RecalibratePortfolio(	Portfolio *portfolio_p,
 		float stockValue = curStock->close;
 
 
-		if (!(curStock->exist))
+		if (!(curStock->exist)) 
 		{
 			continue;
 		}
@@ -174,13 +193,13 @@ void Algorithms::RecalibratePortfolio(	Portfolio *portfolio_p,
 		Portfolio::portfolionode *tmp = curPortfolioDay;
 
 		//Printing the amount of each stock
-		cout << "                                " << stockName 
-			 << " = " << floor(moneyForEachStock/stockValue) << endl;
+		/*cout << "                                " << stockName 
+			 << " = " << floor(moneyForEachStock/stockValue) << endl;*/
 		portfolio_p->buy(stockValue, stockName, 
 						 moneyForEachStock, tmp);
 	}
 						
-	cout << endl << endl << endl; 
+	//cout << endl << endl << endl; 
 	TimeToRecalibrate = false;
 }
 

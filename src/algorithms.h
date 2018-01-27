@@ -27,7 +27,7 @@ public:
 	int MaxNumberOfStocks(const int, const int);
 	void RecalibratePortfolio(Portfolio*,Portfolio::portfolionode*, Stock[]);
 	void Sell_All(Portfolio*,Portfolio::portfolionode*, Stock[]);
-
+	int NrOfStocks(Stock[]);
 	void SlayIndex(Portfolio*,Stock*);
 	virtual ~Algorithms();
 
