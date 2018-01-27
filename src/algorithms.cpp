@@ -127,7 +127,6 @@ void Algorithms::Sell_All(	Portfolio *portfolio_p,
  							Portfolio::portfolionode *curPortfolioDay,
 						  	Stock stocks[])
 {
-	int nrOfStocks = NROFSTOCKS;
 	for(int i = 0; i < NROFSTOCKS; ++i)
 		{
 
@@ -157,7 +156,7 @@ int Algorithms::NrOfStocks(Stock stocks[])
 		}
 	}
 
-	cout << "The number of existing stocks are: " << nrOfStocks << endl;
+	//cout << "The number of existing stocks are: " << nrOfStocks << endl;
 	return nrOfStocks;
 }
 
@@ -166,15 +165,16 @@ void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p,
 									  Stock stocks[]) {
 
 	
-	int nrOfStocks = NrOfStocks(stocks);
+	int nrOfActiveStocks = NrOfStocks(stocks);
 
 
-
+	cout << "Money to buy with BEFORE SELL: " << portfolio_p->cash << endl;
 	Sell_All(portfolio_p, curPortfolioDay, stocks);
+	cout << "Money to buy with AFTER:  SELL" << portfolio_p->cash << endl;
 
-	float moneyToBuyWith = portfolio_p->cash; //+ money in stocks;
+	float moneyToBuyWith = portfolio_p->cash;
 
-	float moneyForEachStock = moneyToBuyWith/nrOfStocks;
+	float moneyForEachStock = moneyToBuyWith/nrOfActiveStocks;
 
 	//cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
 	//int nrOfActiveStocks = 0;
@@ -195,26 +195,32 @@ void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p,
 		//Printing the amount of each stock
 		/*cout << "                                " << stockName 
 			 << " = " << floor(moneyForEachStock/stockValue) << endl;*/
+
+		cout << "Money to buy with BEFORE BUY: " << portfolio_p->cash << endl;
 		portfolio_p->buy(stockValue, stockName, 
 						 moneyForEachStock, tmp);
+		cout << "Money to buy with AFTER BUY: " << portfolio_p->cash << endl;
 	}
-						
-	//cout << endl << endl << endl; 
 	TimeToRecalibrate = false;
 }
 
 
 void Algorithms::CreateIndex(Portfolio *portfolio_p, Portfolio::portfolionode *curPortfolioDay, Stock stocks[]) 
 {
+	if(count % RECALIBRATE == 0)
+	{
+		TimeToRecalibrate = true;
+	}
+
 	//Kommer behöva skapa en recalibratePortfolio() som ändrar index
 	//om en ny aktie tillkommer.
 	if(TimeToRecalibrate)
 	{
 		cout << "handla aktier " << endl;
-
+		RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
 	}
-
-	RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
+	//cout << count << endl;
+	++count;
 
 }
 

@@ -79,13 +79,12 @@ void Portfolio::buy(float stockValue,
 		if (stockInPortfolio(stockname,portnode->curStock) == false)
 		{	
 
-			while ((money >= stockValue) && (stockValue > 0))
-				{
-					//dra av värdet i portföljen för varje aktie jag köper
-					money = money - stockValue;
-					cash = cash - stockValue;
-					++nrOfStocks;
-				}
+			//Antalet aktier jag har råd med
+			nrOfStocks = floor(money/stockValue);
+
+			//Pengar efter jag handlat
+			cash = cash - stockValue*nrOfStocks;
+
 			//Skapa en ny aktie i portföljen
 			Portfolio::portfolionode::stockinfo *tmpnode = 
 				new Portfolio::portfolionode::stockinfo;
@@ -99,13 +98,12 @@ void Portfolio::buy(float stockValue,
 		
 		else {
 			
-			while ((money >= stockValue) && (stockValue > 0))
-			{
-				//dra av värdet i portföljen för varje aktie jag köper
-				money = money - stockValue;
-				cash = cash - stockValue;
-				++nrOfStocks;
-			}
+			//Antalet aktier jag har råd med
+			nrOfStocks = floor(money/stockValue);
+
+			//Pengar efter jag handlat
+			cash = cash - stockValue*nrOfStocks;
+
 			portnode->curStock->nrOfStocks =
 				portnode->curStock->nrOfStocks + nrOfStocks;
 		} /*else*/
@@ -122,13 +120,17 @@ void Portfolio::sell(Stock::dayInfo *stocknode,
 		Portfolio::portfolionode::stockinfo *tmp = portnode->curStock;
 		while (tmp != NULL)
 		{	
+
 			if (stockname == tmp->name)
 			{
-				while (tmp->nrOfStocks > 0)
+
+				cash = cash + tmp->nrOfStocks*stocknode->close;
+				tmp->nrOfStocks = 0;
+				/*while (tmp->nrOfStocks > 0)
 				{
 					cash = cash + stocknode->close;
 					tmp->nrOfStocks = tmp->nrOfStocks - 1;
-				}
+				}*/
 			}
 			tmp = tmp->next;
 		}
