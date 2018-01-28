@@ -209,6 +209,47 @@ void Algorithms::CreateIndex(Portfolio *portfolio_p, Portfolio::portfolionode *c
     ++count;
 }
 
+int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
+{
+    int nrOfRemovedStocks = 0;
+    int nrOfWorseStocks = 0;
+
+    for(int i = 0; i < NROFSTOCKS; ++i)
+    {
+        
+
+        if(rankStock[i].buyStock == false)
+        {
+            continue;
+        }
+
+        for(int j = 0; j < NROFSTOCKS; ++j)
+        {
+            //Kolla om det finns sämre aktier
+            if (rankStock[i].rankPoints > rankStock[j].rankPoints)
+            {
+                ++nrOfWorseStocks;
+            }
+        }
+        cout << "Nr of worse stocks = " << nrOfWorseStocks << "aktie = " 
+             << rankStock[i].stockName << "Rank = " << rankStock[i].rankPoints << endl; 
+
+        //Om "vi" är en av de två sämsta aktierna
+        if(removeStocks > nrOfWorseStocks)
+        {
+            /*cout << "Remove Stock, " << rankStock[i].stockName
+                 << "rankPoints = " << rankStock[i].rankPoints << endl << endl;*/
+            rankStock[i].buyStock = false;
+            
+            ++nrOfRemovedStocks;
+        }
+        nrOfWorseStocks = 0;
+
+    }
+    cout << " nrOfRemovedStocks OTUR = " << nrOfRemovedStocks << endl;
+    return nrOfRemovedStocks;
+}
+
 void Algorithms::BeatIndex(Portfolio *portfolio_p, 
                            Portfolio::portfolionode *curPortfolioDay, 
                            Stock stocks[]) 
@@ -238,6 +279,11 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
         if (curStock->delta200 != 0)
         {
             rankStock[i].rankPoints    = (curStock->delta200)*3 + curStock->delta50;
+
+            /*cout << stocks[i].name << endl;
+            cout << " curStock->delta200 = " << curStock->delta200;
+            cout << ",    curStock->delta50 = " << curStock->delta50 << endl << endl;*/
+
         }
         
         rankStock[i].rank          = 0;
@@ -255,15 +301,30 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
             continue;
         }
 
-        if (rankStock[i].rankPoints >= 20 || rankStock[i].rankPoints == 0)
+        //Fixa vilka de två sämsta aktierna är! Styr på lägst rank?
+
+
+
+        /*if (rankStock[i].rankPoints >= 0)
         {
             rankStock[i].buyStock = true;
             ++nrOfStocksToBuy;
-        }
+  
+        }*/
+        rankStock[i].buyStock = true;
+        ++nrOfStocksToBuy;
 
     }
 
+    if(nrOfStocksToBuy > 5)
+    {
+        
+        int removeStocks = RemoveWorstStocks(rankStock, 2);
+        nrOfStocksToBuy = nrOfStocksToBuy - removeStocks;
+    }
 
+
+    cout << " nrOfStocksToBuy = " << nrOfStocksToBuy << endl;
     //Buy Stocks
     float moneyToBuyWith = portfolio_p->cash;
     float moneyForEachStock = moneyToBuyWith/nrOfStocksToBuy;

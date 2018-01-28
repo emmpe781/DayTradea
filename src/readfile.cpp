@@ -201,19 +201,26 @@ void ReadFile::BearBull(Stock* stock)
 void ReadFile::CalculateDelta(Stock *stock)
 {
 	Stock::dayInfo *stockHead = stock->head;
-	float oldMa200 = 0;
-	float oldMa50 = 0;
+	static float oldMa200 = 1;
+	static float oldMa50 = 1;
 
 	while(stockHead!= NULL)
 	{
 		if(stockHead->ma200 != 0)
 		{
-			stockHead->delta200 = stockHead->ma200 - oldMa200;
+			stockHead->delta200 = (stockHead->ma200 - oldMa200)/oldMa200;
+			
+			//cout << "oldMa200 = " << oldMa200 << "New Value =  "  << stockHead->ma200 << endl;
+			oldMa200 = stockHead->ma200;
 		}
 
 		if(stockHead->ma50 != 0)
 		{
-			stockHead->delta50 = stockHead->ma50 - oldMa50;
+			stockHead->delta50 = (stockHead->ma50 - oldMa50)/oldMa50;
+			//cout << "oldMa50 = " << oldMa200 << "New Value =  "  << stockHead->ma50 << endl;
+
+			oldMa50 = stockHead->ma50;
+
 		}
 
 	stockHead=stockHead->next;

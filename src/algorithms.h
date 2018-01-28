@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int RECALIBRATE = 1; //Omkalibrera portföljen
+const int RECALIBRATE = 30; //Omkalibrera portföljen
 
 class Algorithms {
 public:
@@ -40,6 +40,7 @@ public:
         bool buyStock;
         bool exist;
     };
+    int RemoveWorstStocks(RankStock rankStock[], int const removeStocks);
 
     virtual ~Algorithms();
 
