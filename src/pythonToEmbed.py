@@ -16,6 +16,7 @@ def appendList(*arg):
     time=arg[1] 
     value=arg[2]
     attr=arg[3]
+    visiblearg=arg[4]
  
     data = np.fromiter(value, dtype = np.float)
     
@@ -23,13 +24,17 @@ def appendList(*arg):
         date = datetime.strptime(time[i],'%Y-%m-%d')
         dateList.append(date)
     
+    if (visiblearg != 'legendonly'):
+        visiblearg = True;
+
     trace = go.Scatter(
         #legendgroup = name, # this can be any string, not just "group"
         x = dateList,
         y = data,
-        name= name +" - " + attr  
+        name= name +" - " + attr,
+        visible= visiblearg 
     )
-
+ 
     plotdata.append(trace)
 
 
