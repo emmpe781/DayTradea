@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int RECALIBRATE = 320; //Omkalibrera portföljen
+const int RECALIBRATE = 30; //Omkalibrera portföljen
 
 class Algorithms {
 public:

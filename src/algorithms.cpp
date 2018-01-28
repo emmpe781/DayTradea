@@ -140,7 +140,7 @@ void Algorithms::Sell_All(	Portfolio *portfolio_p,
 			Portfolio::portfolionode *tmp = curPortfolioDay;
 
 			portfolio_p->sell(curStock, stockName, 
-							 1, tmp);	
+							  1, tmp);	
 
 		}
 }
@@ -168,9 +168,8 @@ void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p,
 	int nrOfActiveStocks = NrOfStocks(stocks);
 
 
-	cout << "Money to buy with BEFORE SELL: " << portfolio_p->cash << endl;
+	
 	Sell_All(portfolio_p, curPortfolioDay, stocks);
-	cout << "Money to buy with AFTER:  SELL" << portfolio_p->cash << endl;
 
 	float moneyToBuyWith = portfolio_p->cash;
 
@@ -178,6 +177,8 @@ void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p,
 
 	//cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
 	//int nrOfActiveStocks = 0;
+
+	
 	for(int i = 0; i < NROFSTOCKS; ++i)
 	{
 		Stock::dayInfo *curStock = stocks[i].head;
@@ -193,14 +194,12 @@ void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p,
 		Portfolio::portfolionode *tmp = curPortfolioDay;
 
 		//Printing the amount of each stock
-		/*cout << "                                " << stockName 
-			 << " = " << floor(moneyForEachStock/stockValue) << endl;*/
-
-		cout << "Money to buy with BEFORE BUY: " << portfolio_p->cash << endl;
 		portfolio_p->buy(stockValue, stockName, 
 						 moneyForEachStock, tmp);
-		cout << "Money to buy with AFTER BUY: " << portfolio_p->cash << endl;
+		
 	}
+						
+	//cout << endl << endl << endl; 
 	TimeToRecalibrate = false;
 }
 
@@ -216,8 +215,8 @@ void Algorithms::CreateIndex(Portfolio *portfolio_p, Portfolio::portfolionode *c
 	//om en ny aktie tillkommer.
 	if(TimeToRecalibrate)
 	{
-		cout << "handla aktier " << endl;
 		RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
+
 	}
 	//cout << count << endl;
 	++count;
