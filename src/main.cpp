@@ -11,7 +11,7 @@ using namespace std;
 int main() {
 	float startValue = 250000;
 	//string startdate = "1986-10-05";
-	string startdate = "1988-10-05";
+	string startdate = "1992-10-05";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);
@@ -69,23 +69,34 @@ int main() {
 
 	//Min portfölj börjar:
 	Portfolio ImbaPortfolio(startdate);
-	ImbaPortfolio.portfolioname = "ImbaPortfolio";
+	ImbaPortfolio.portfolioname = "ImbaPortfolio Index";
 	ImbaPortfolio.setStartValue(startValue);
+
+	Portfolio ImbaPortfolio2(startdate);
+	ImbaPortfolio2.portfolioname = "ImbaPortfolio Beat Index";
+	ImbaPortfolio2.setStartValue(startValue);
 
 	
 	Algorithms Algo;
+	Algorithms Algo2;
+
 	//NROFSTOCKS definierad i stock.h
 	Stock stockArray[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
 									lato_b, lund_b, ores, rato_b, svol_b};
 
+    Stock stockArray2[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
+									lato_b, lund_b, ores, rato_b, svol_b};							
+
 
 	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray);
+	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray2);
+
+	rf.NormalizedPort(&ImbaPortfolio2);
 	rf.NormalizedPort(&ImbaPortfolio);
 	Plot plt1;
-	plt1.Plot_all(ImbaPortfolio,Reference,omx30);
+	plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,omx30);
 	
-	//Plot plt2;
-	//plt2.Plot_all(ImbaPortfolio,Reference, rato_b);
+
 
 	return 0;
 }

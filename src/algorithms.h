@@ -11,26 +11,37 @@
 
 using namespace std;
 
-const int RECALIBRATE = 30; //Omkalibrera portföljen
+const int RECALIBRATE = 1; //Omkalibrera portföljen
 
 class Algorithms {
 public:
-	Algorithms();
-	bool TimeToRecalibrate;
-	void updateStockDate(Stock[]);
-	void Algo(string, Portfolio*, Stock[]);
-	void Algo_BearBull(Portfolio*, 
-					   Stock*, 
-		               Portfolio::portfolionode*, 
-		               Stock::dayInfo*);
+    Algorithms();
+    bool TimeToRecalibrate;
+    void updateStockDate(Stock[]);
+    void Algo(string, Portfolio*, Stock[]);
+    void Algo_BearBull(Portfolio*, 
+                       Stock*, 
+                       Portfolio::portfolionode*, 
+                       Stock::dayInfo*);
 
-	void CreateIndex(Portfolio*,Portfolio::portfolionode*, Stock[]);
-	int MaxNumberOfStocks(const int, const int);
-	void RecalibratePortfolio(Portfolio*,Portfolio::portfolionode*, Stock[]);
-	void Sell_All(Portfolio*,Portfolio::portfolionode*, Stock[]);
-	int NrOfStocks(Stock[]);
-	void SlayIndex(Portfolio*,Stock*);
-	virtual ~Algorithms();
+    void CreateIndex(Portfolio*,Portfolio::portfolionode*, Stock[]);
+    void BeatIndex(Portfolio*,Portfolio::portfolionode*, Stock[]);
+    int MaxNumberOfStocks(const int, const int);
+    void RecalibratePortfolio(Portfolio*,Portfolio::portfolionode*, Stock[]);
+    void Sell_All(Portfolio*,Portfolio::portfolionode*, Stock[]);
+    int NrOfStocks(Stock[]);
+
+    struct RankStock{
+        string stockName;
+        float stockDelta200;
+        float stockDelta50;
+        float rankPoints;
+        int rank;
+        bool buyStock;
+        bool exist;
+    };
+
+    virtual ~Algorithms();
 
 };
 

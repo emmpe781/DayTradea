@@ -41,6 +41,7 @@ void ReadFile::PopulateStock(Stock *stock_p)
 	Mean(stock_p, 50);
 	BearBull(stock_p);
 	Normalized(stock_p);
+	CalculateDelta(stock_p);
 }
 
 void ReadFile::ExtractDayData(string rawData,Stock *stock_p,string startdate)
@@ -194,6 +195,28 @@ void ReadFile::BearBull(Stock* stock)
 		lastMa200 = stockHead->ma200;
 		lastMa50 = stockHead->ma50;
 		stockHead=stockHead->next;
+	}
+}
+
+void ReadFile::CalculateDelta(Stock *stock)
+{
+	Stock::dayInfo *stockHead = stock->head;
+	float oldMa200 = 0;
+	float oldMa50 = 0;
+
+	while(stockHead!= NULL)
+	{
+		if(stockHead->ma200 != 0)
+		{
+			stockHead->delta200 = stockHead->ma200 - oldMa200;
+		}
+
+		if(stockHead->ma50 != 0)
+		{
+			stockHead->delta50 = stockHead->ma50 - oldMa50;
+		}
+
+	stockHead=stockHead->next;
 	}
 }
 

@@ -24,6 +24,8 @@ public:
 	void BearBull(Stock*);
 	void ExpectedValue2(Stock*,float);
 	void Mean(Stock*,int);
+	void CalculateDelta(Stock*);
+
 	void Normalized(Stock*);
 	void NormalizedPort(Portfolio*);
 	virtual ~ReadFile();

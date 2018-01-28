@@ -30,6 +30,9 @@ class Stock{
 		  float ma200;
 		  float ma100;
 		  float ma50;
+		  float delta200; //Derivatan
+		  float delta100;
+		  float delta50;
 		  dayInfo *next;
 	  };
 	  dayInfo *head;

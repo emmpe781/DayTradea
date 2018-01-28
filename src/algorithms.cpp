@@ -12,274 +12,308 @@
 #include "math.h"
 using namespace std;
 const Stock::dayInfo * lastStockDate = NULL;
-int count=0;
+int count = 0;
+
 
 
 Algorithms::Algorithms() {
-	// TODO Auto-generated constructor stub
-	TimeToRecalibrate = true;
+    // TODO Auto-generated constructor stub
+    TimeToRecalibrate = true;
 }
 
 void Algorithms::updateStockDate(Stock stocks[])
 {
-	for (int i = 0; i < NROFSTOCKS; ++i)
-	{
-		Stock::dayInfo *curStocks = stocks[i].head;
-		curStocks = curStocks->next;
-		stocks[i].head = curStocks;
-	}
+    for (int i = 0; i < NROFSTOCKS; ++i)
+    {
+        Stock::dayInfo *curStocks = stocks[i].head;
+        curStocks = curStocks->next;
+        stocks[i].head = curStocks;
+    }
 }
 
-void Algorithms::Algo(	string algo, 
-						Portfolio *portfolio_p, 
-						Stock stocks[]) {
+void Algorithms::Algo(string algo, 
+                      Portfolio *portfolio_p, 
+                      Stock stocks[]) 
+{
+    Portfolio::portfolionode *curPortfolioDay = 
+        portfolio_p->curPortfolio;
 
-    
-	Portfolio::portfolionode *curPortfolioDay = 
-		portfolio_p->curPortfolio;
-
-	Portfolio::portfolionode *previousPortfolioDay = 
-		portfolio_p->curPortfolio; 
+    Portfolio::portfolionode *previousPortfolioDay = 
+        portfolio_p->curPortfolio; 
 
 
-	//Borde vilja flytta in allt stockrelaterat till algoritmerna?!
-	//Endast ha kvar hur portföljen uppdateras här ute?!
-	Stock::dayInfo *curStocks = stocks[0].head;
-	Stock::dayInfo *previousStocks = stocks[0].head;
+    //Borde vilja flytta in allt stockrelaterat till algoritmerna?!
+    //Endast ha kvar hur portföljen uppdateras här ute?!
+    Stock::dayInfo *curStocks = stocks[0].head;
+    Stock::dayInfo *previousStocks = stocks[0].head;
 
-	curPortfolioDay->portfolioValue = portfolio_p->cash;
+    curPortfolioDay->portfolioValue = portfolio_p->cash;
 
-	while(curPortfolioDay != NULL){
+    while(curPortfolioDay != NULL){
+        
+        portfolio_p->updateBeginningOfDay(previousPortfolioDay,
+                                          curPortfolioDay, 
+                                          stocks);
+            
+        if (algo == "BEARBULL")
+        {
+            //Kommer behöva anpassas till den mer generiska designen
+            //Algo_BearBull(portfolio_p, &stocks[0], curPortfolioDay, index);
+        }
+        if (algo == "CREATEINDEX")
+        {
+            CreateIndex(portfolio_p, curPortfolioDay,stocks);
+        }
 
-		//Borde inte vilja skicka med previous och curPortfolioDay 
-		//utan endast curDay, eftersom portfolioklassen själv 
-		//borde ha kolla på gårdagens data.
+        if (algo == "BEATINDEX")
+        {
+            BeatIndex(portfolio_p, curPortfolioDay,stocks);
+        }
 
-		//Även cur och Previous stocks borde ägas portfolioklassen
-		//Dvs, vi har en setfunktion i respektive algoritm som sätter 
-		//antal aktier direkt i portföljen som den sedan kan styra över.
-		
-		portfolio_p->updateBeginningOfDay(previousPortfolioDay,
-			 							  curPortfolioDay, 
-			 							  stocks);
-			
-		//START - ALGO
-		if (algo == "BEARBULL")
-		{
-			//Kommer behöva anpassas till den mer generiska designen
-			//Algo_BearBull(portfolio_p, &stocks[0], curPortfolioDay, index);
-		}
-		if (algo == "CREATEINDEX")
-		{
-			//Skicka med aktier, portfölj, curPortfolioDay, 
-			// curStocks kan jag ta fram i funktionen istället utifrån stocks.
-			CreateIndex(portfolio_p, curPortfolioDay,stocks);
-		}
-		//END - ALGO
+        //counter that controls how often
+        //the portfolio shall recalib.
+        ++count;
+        updateStockDate(stocks);
 
-		//Borde ha en updatePortfolio här med!
-		//portfolio_p->updateBeginningOfDay2(curPortfolioDay, stocks);
-
-		updateStockDate(stocks);
-
-		//Kommer ge att vi endast uppdaterar till nästa portföljdag
-		//härifrån.
-
-		previousPortfolioDay=curPortfolioDay;
-		curPortfolioDay=curPortfolioDay->next;
-	}
+        previousPortfolioDay=curPortfolioDay;
+        curPortfolioDay=curPortfolioDay->next;
+    }
 }
 
 void Algorithms::Algo_BearBull(Portfolio *portfolio_p, 
-							   Stock *omxS30, 
-							   Portfolio::portfolionode *tmpPortfolioDay,
-							   Stock::dayInfo *index) {
-	//Hur ska algen fungera?
-	//1 loopa igenom alla datum i index
-	//2 när index ligger i bull -> var 100 % investerad
-	//3 när index ligger i bear -> var 0 & investerad
-	float indexValue = index->close;
+                               Stock *omxS30, 
+                               Portfolio::portfolionode *tmpPortfolioDay,
+                               Stock::dayInfo *index) {
+    //Hur ska algen fungera?
+    //1 loopa igenom alla datum i index
+    //2 när index ligger i bull -> var 100 % investerad
+    //3 när index ligger i bear -> var 0 & investerad
+    float indexValue = index->close;
 
-	if (index->bearBull == 1800){
-		//cout << "BULL Handla!" << endl;
-		float moneyToBuyWith = portfolio_p->cash;
-		portfolio_p->buy(indexValue,omxS30->name,moneyToBuyWith, tmpPortfolioDay);
-		//handla så många aktier du har råd att handla den dagen
-	} 
-	else { 
-		//cout << "BEAR Handla inte!" << endl;
-		if(tmpPortfolioDay->curStock != NULL)
-		{
-			portfolio_p->sell(index,omxS30->name,1, tmpPortfolioDay);
-		}
-	}
+    if (index->bearBull == 1800){
+        //cout << "BULL Handla!" << endl;
+        float moneyToBuyWith = portfolio_p->cash;
+        portfolio_p->buy(indexValue,omxS30->name,moneyToBuyWith, tmpPortfolioDay);
+        //handla så många aktier du har råd att handla den dagen
+    } 
+    else { 
+        //cout << "BEAR Handla inte!" << endl;
+        if(tmpPortfolioDay->curStock != NULL)
+        {
+            portfolio_p->sell(index,omxS30->name,1, tmpPortfolioDay);
+        }
+    }
 }
 /*
 int Algorithms::MaxNumberOfStocks(const float money, const float priceOfStock)
 {
-	float nrOfStocks = 0;
-	nrOfStocks = money/priceOfStock; 
-	return (int)floor(nrOfStocks);
+    float nrOfStocks = 0;
+    nrOfStocks = money/priceOfStock; 
+    return (int)floor(nrOfStocks);
 }
 */
 
-void Algorithms::Sell_All(	Portfolio *portfolio_p, 
- 							Portfolio::portfolionode *curPortfolioDay,
-						  	Stock stocks[])
+void Algorithms::Sell_All(  Portfolio *portfolio_p, 
+                            Portfolio::portfolionode *curPortfolioDay,
+                            Stock stocks[])
 {
-	for(int i = 0; i < NROFSTOCKS; ++i)
-		{
+    for(int i = 0; i < NROFSTOCKS; ++i)
+        {
 
-			Stock::dayInfo *curStock = stocks[i].head;
-			string stockName = stocks[i].name;
+            Stock::dayInfo *curStock = stocks[i].head;
+            string stockName = stocks[i].name;
 
-			if (!(curStock->exist))
-			{
-				continue;
-			}
-			Portfolio::portfolionode *tmp = curPortfolioDay;
+            if (!(curStock->exist))
+            {
+                continue;
+            }
+            Portfolio::portfolionode *tmp = curPortfolioDay;
 
-			portfolio_p->sell(curStock, stockName, 
-							  1, tmp);	
+            portfolio_p->sell(curStock, stockName, 
+                              1, tmp);  
 
-		}
+        }
 }
 
 int Algorithms::NrOfStocks(Stock stocks[])
 {
-	int nrOfStocks = 0;
-	for (int i = 0; i < NROFSTOCKS; ++i)
-	{
-		if (stocks[i].head->exist == true)
-		{
-			++nrOfStocks;
-		}
-	}
+    int nrOfStocks = 0;
+    for (int i = 0; i < NROFSTOCKS; ++i)
+    {
+        if (stocks[i].head->exist == true)
+        {
+            ++nrOfStocks;
+        }
+    }
 
-	//cout << "The number of existing stocks are: " << nrOfStocks << endl;
-	return nrOfStocks;
+    //cout << "The number of existing stocks are: " << nrOfStocks << endl;
+    return nrOfStocks;
 }
 
 void Algorithms::RecalibratePortfolio(Portfolio *portfolio_p, 
-									  Portfolio::portfolionode *curPortfolioDay,
-									  Stock stocks[]) {
+                                      Portfolio::portfolionode *curPortfolioDay,
+                                      Stock stocks[]) {
 
-	
-	int nrOfActiveStocks = NrOfStocks(stocks);
-
-
-	
-	Sell_All(portfolio_p, curPortfolioDay, stocks);
-
-	float moneyToBuyWith = portfolio_p->cash;
-
-	float moneyForEachStock = moneyToBuyWith/nrOfActiveStocks;
-
-	//cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
-	//int nrOfActiveStocks = 0;
-
-	
-	for(int i = 0; i < NROFSTOCKS; ++i)
-	{
-		Stock::dayInfo *curStock = stocks[i].head;
-		string stockName = stocks[i].name;
-		float stockValue = curStock->close;
+    
+    int nrOfActiveStocks = NrOfStocks(stocks);
 
 
-		if (!(curStock->exist)) 
-		{
-			continue;
-		}
+    
+    Sell_All(portfolio_p, curPortfolioDay, stocks);
 
-		Portfolio::portfolionode *tmp = curPortfolioDay;
+    float moneyToBuyWith = portfolio_p->cash;
 
-		//Printing the amount of each stock
-		portfolio_p->buy(stockValue, stockName, 
-						 moneyForEachStock, tmp);
-		
-	}
-						
-	//cout << endl << endl << endl; 
-	TimeToRecalibrate = false;
+    float moneyForEachStock = moneyToBuyWith/nrOfActiveStocks;
+
+    //cout << "Buy the following stocks after RecalibratePortfolio: " << endl << endl;
+    //int nrOfActiveStocks = 0;
+
+    
+    for(int i = 0; i < NROFSTOCKS; ++i)
+    {
+        Stock::dayInfo *curStock = stocks[i].head;
+        string stockName = stocks[i].name;
+        float stockValue = curStock->close;
+
+
+        if (!(curStock->exist)) 
+        {
+            continue;
+        }
+
+        Portfolio::portfolionode *tmp = curPortfolioDay;
+
+        //Printing the amount of each stock
+        portfolio_p->buy(stockValue, stockName, 
+                         moneyForEachStock, tmp);
+        
+    }
+                        
+    //cout << endl << endl << endl; 
+    TimeToRecalibrate = false;
 }
 
 
 void Algorithms::CreateIndex(Portfolio *portfolio_p, Portfolio::portfolionode *curPortfolioDay, Stock stocks[]) 
 {
-	if(count % RECALIBRATE == 0)
-	{
-		TimeToRecalibrate = true;
-	}
+    if(count % RECALIBRATE == 0)
+    {
+        TimeToRecalibrate = true;
+    }
 
-	//Kommer behöva skapa en recalibratePortfolio() som ändrar index
-	//om en ny aktie tillkommer.
-	if(TimeToRecalibrate)
-	{
-		RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
+    if(TimeToRecalibrate)
+    {
+        RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
 
-	}
-	//cout << count << endl;
-	++count;
+    }
+    ++count;
+}
+
+void Algorithms::BeatIndex(Portfolio *portfolio_p, 
+                           Portfolio::portfolionode *curPortfolioDay, 
+                           Stock stocks[]) 
+{
+    
+    //RECALIBRATE is defined in algorithms.h
+    if(count % RECALIBRATE != 0)
+    {
+        return;
+    }
+
+    Sell_All(portfolio_p, curPortfolioDay, stocks);
+
+    RankStock rankStock[NROFSTOCKS];
+
+
+    //Populate Stocks With DeltaValues
+    for(int i = 0; i < NROFSTOCKS; ++i)
+    {
+        Stock::dayInfo *curStock   = stocks[i].head;
+        rankStock[i].exist         = curStock->exist;
+        rankStock[i].stockName     = stocks[i].name;
+        rankStock[i].stockDelta200 = curStock->delta200;
+        rankStock[i].stockDelta50  = curStock->delta50;
+
+        //Rör inte rankpoints förens delta200 får värden.
+        if (curStock->delta200 != 0)
+        {
+            rankStock[i].rankPoints    = (curStock->delta200)*3 + curStock->delta50;
+        }
+        
+        rankStock[i].rank          = 0;
+        rankStock[i].buyStock      = false;
+
+    }
+
+    int nrOfStocksToBuy = 0;
+    
+    //Chose which stocks to buy
+    for(int i = 0; i < NROFSTOCKS; ++i)
+    {
+        if (rankStock[i].exist == false)
+        {
+            continue;
+        }
+
+        if (rankStock[i].rankPoints >= 20 || rankStock[i].rankPoints == 0)
+        {
+            rankStock[i].buyStock = true;
+            ++nrOfStocksToBuy;
+        }
+
+    }
+
+
+    //Buy Stocks
+    float moneyToBuyWith = portfolio_p->cash;
+    float moneyForEachStock = moneyToBuyWith/nrOfStocksToBuy;
+
+    for(int i = 0; i < NROFSTOCKS; ++i)
+    {
+        Stock::dayInfo *curStock = stocks[i].head;
+        string stockName = stocks[i].name;
+        float stockValue = curStock->close;
+
+
+        if (!(curStock->exist)) 
+        {
+            continue;
+        }
+
+        if (rankStock[i].buyStock == true)
+        {
+                Portfolio::portfolionode *tmp = curPortfolioDay;
+                portfolio_p->buy(stockValue, rankStock[i].stockName, 
+                                 moneyForEachStock, tmp);
+        }
+
+        
+        
+    }
+
+
 
 }
 
-	
-
-
-
-
-	//DEL1 Skapa eget index
-	//Ta in de 10 största investmentbolagen och äg lika stor del av varje
-	//Bolagen:
-	//Investor, Industrivärden, Svolder, Creades, Ratos, Östersund, Bure, Latour, Lundberg
-	//Plotta ut resultatet
-
-
-	//if (omx30 bulltrend)
-		//while (stockInList != 0)
-			//portfolio_p->buy(curStock, portfolioMoney/10)
-
-	//else (omx30 beartrend)
-		//while (stockInList != 0)
-			//portfolio_p->sell(curStock)		
-
-	
-
-
-
-
-void Algorithms::SlayIndex(Portfolio *portfolio_p, Stock* omxS30_p) {
-
-	//DEL2 Se om det går att slå mitt egenskapta index.
-	//3 Loopa igenom alla aktier, välj ut de 4-8 bästa genom att välja bort de sämsta?
-	//4 Hur ska de värderas? P.s.s som Bear/Bull? Behöver de få en värderingssiffra?
-	// T.ex. positivt ma200 och ma50, ma50 > ma200
-	// lutning på ma200 och ma50?
-
-	//På sikt kanske det går att ta in nyckelvärden för respektive aktie och ta med i värdering.
-	//Dvs. hur förändras pe-tal över tid i jämförelse med aktiekursen?
-
-	
-}
 
 
 Algorithms::~Algorithms() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 
-/*		cout << "--------------- PRINTING START --------------------" << endl;
-		tmpStock = tmpPortfolioDay->curStock;
+/*      cout << "--------------- PRINTING START --------------------" << endl;
+        tmpStock = tmpPortfolioDay->curStock;
 
-		cout << "Cash: " <<  portfolio_p->cash << endl;
-		cout << "Date: " <<  tmpPortfolioDay->date << endl;
-		cout << "PortfolioValue: " <<  tmpPortfolioDay->portfolioValue << endl;
-		while(tmpStock != NULL){
-			cout << "  StockName: " <<  tmpStock->name << endl;
-			cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
-			cout << "  --  " << endl;
+        cout << "Cash: " <<  portfolio_p->cash << endl;
+        cout << "Date: " <<  tmpPortfolioDay->date << endl;
+        cout << "PortfolioValue: " <<  tmpPortfolioDay->portfolioValue << endl;
+        while(tmpStock != NULL){
+            cout << "  StockName: " <<  tmpStock->name << endl;
+            cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
+            cout << "  --  " << endl;
 
-			tmpStock = tmpStock->next;
-		}
-		cout << "--------------- PRINTING END --------------------" << endl;
+            tmpStock = tmpStock->next;
+        }
+        cout << "--------------- PRINTING END --------------------" << endl;
 */

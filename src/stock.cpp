@@ -31,6 +31,9 @@ void Stock::add_node_to_end(string date, float close, string exist)
 	day_info->ma200 = 0;
 	day_info->ma100 = 0;
 	day_info->ma50 = 0;
+	day_info->delta200 = 0;
+	day_info->delta100 = 0;
+	day_info->delta50 = 0;
 	day_info->next = NULL;
 
 	if(head == NULL)
