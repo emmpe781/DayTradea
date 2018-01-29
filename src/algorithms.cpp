@@ -13,6 +13,7 @@
 using namespace std;
 const Stock::dayInfo * lastStockDate = NULL;
 int count = 0;
+int countIndex = 0;
 
 
 
@@ -206,7 +207,7 @@ void Algorithms::CreateIndex(Portfolio *portfolio_p, Portfolio::portfolionode *c
         RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
 
     }
-    ++count;
+    ++countIndex;
 }
 
 int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
@@ -231,8 +232,8 @@ int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
                 ++nrOfWorseStocks;
             }
         }
-        cout << "Nr of worse stocks = " << nrOfWorseStocks << "aktie = " 
-             << rankStock[i].stockName << "Rank = " << rankStock[i].rankPoints << endl; 
+        //cout << "Nr of worse stocks = " << nrOfWorseStocks << "aktie = " 
+        //     << rankStock[i].stockName << "Rank = " << rankStock[i].rankPoints << endl; 
 
         //Om "vi" är en av de två sämsta aktierna
         if(removeStocks > nrOfWorseStocks)
@@ -246,8 +247,43 @@ int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
         nrOfWorseStocks = 0;
 
     }
-    cout << " nrOfRemovedStocks OTUR = " << nrOfRemovedStocks << endl;
+    //cout << " nrOfRemovedStocks OTUR = " << nrOfRemovedStocks << endl;
     return nrOfRemovedStocks;
+}
+
+bool Algorithms::SellStock(Stock *stock)
+{
+    float ma200   = stock->head->ma200;
+    float delta200   = stock->head->delta200;
+    float closeValue = stock->head->close;
+    static int sellCounter[NROFSTOCKS] = {0};
+    static int i = 0;
+    bool returnValue = true;
+
+
+    if (ma200 < closeValue)
+    {
+
+        ++sellCounter[i];
+        cout << " sellCounter[i] = " << sellCounter[i] << " i = " << i << endl;
+    }
+    else
+    {
+        sellCounter[i] = 0;
+    }
+
+    //Villkor om aktien är värd att handla!
+    if (sellCounter[i] >= 2)
+    {
+        returnValue = false;
+    }
+
+
+    //Sätt om i till 0 istället för 9
+    ++i;
+    i = i % NROFSTOCKS;
+
+    return returnValue;
 }
 
 void Algorithms::BeatIndex(Portfolio *portfolio_p, 
@@ -260,6 +296,7 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
     {
         return;
     }
+
 
     Sell_All(portfolio_p, curPortfolioDay, stocks);
 
@@ -301,30 +338,41 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
             continue;
         }
 
-        //Fixa vilka de två sämsta aktierna är! Styr på lägst rank?
 
-
-
-        /*if (rankStock[i].rankPoints >= 0)
+        if(SellStock(&stocks[i]))
+        {
+            rankStock[i].buyStock = false;
+        }
+        else
         {
             rankStock[i].buyStock = true;
             ++nrOfStocksToBuy;
-  
-        }*/
-        rankStock[i].buyStock = true;
-        ++nrOfStocksToBuy;
-
+        }
     }
 
-    if(nrOfStocksToBuy > 5)
+
+
+/*    if(nrOfStocksToBuy > 5)
     {
         
         int removeStocks = RemoveWorstStocks(rankStock, 2);
         nrOfStocksToBuy = nrOfStocksToBuy - removeStocks;
+    }*/
+
+/*
+    for(int i = 0; i < NROFSTOCKS; ++i)
+    {
+        if(rankStock[i].stockName == "RATO-B")
+        {
+            //Stäng av ratos för att se att resten fungerar
+            --nrOfStocksToBuy;
+            rankStock[i].buyStock = false;
+        }
     }
+*/
 
 
-    cout << " nrOfStocksToBuy = " << nrOfStocksToBuy << endl;
+    //cout << " nrOfStocksToBuy = " << nrOfStocksToBuy << endl;
     //Buy Stocks
     float moneyToBuyWith = portfolio_p->cash;
     float moneyForEachStock = moneyToBuyWith/nrOfStocksToBuy;

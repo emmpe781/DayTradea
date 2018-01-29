@@ -11,7 +11,7 @@ using namespace std;
 int main() {
 	float startValue = 250000;
 	//string startdate = "1986-10-05";
-	string startdate = "1992-10-05";
+	string startdate = "1988-10-05";
 
 	Portfolio Reference(startdate);
 	Reference.setStartValue(startValue);
@@ -69,11 +69,11 @@ int main() {
 
 	//Min portfölj börjar:
 	Portfolio ImbaPortfolio(startdate);
-	ImbaPortfolio.portfolioname = "ImbaPortfolio Index";
+	ImbaPortfolio.portfolioname = "Index 60";
 	ImbaPortfolio.setStartValue(startValue);
 
 	Portfolio ImbaPortfolio2(startdate);
-	ImbaPortfolio2.portfolioname = "ImbaPortfolio Beat Index";
+	ImbaPortfolio2.portfolioname = "Beat Index";
 	ImbaPortfolio2.setStartValue(startValue);
 
 	
@@ -94,7 +94,8 @@ int main() {
 	rf.NormalizedPort(&ImbaPortfolio2);
 	rf.NormalizedPort(&ImbaPortfolio);
 	Plot plt1;
-	plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,omx30);
+	//plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,omx30);
+	plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,lund_b);
 	
 
 

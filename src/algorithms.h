@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int RECALIBRATE = 30; //Omkalibrera portföljen
+const int RECALIBRATE = 1; //Omkalibrera portföljen
 
 class Algorithms {
 public:
@@ -30,6 +30,7 @@ public:
     void RecalibratePortfolio(Portfolio*,Portfolio::portfolionode*, Stock[]);
     void Sell_All(Portfolio*,Portfolio::portfolionode*, Stock[]);
     int NrOfStocks(Stock[]);
+    bool SellStock(Stock[]);
 
     struct RankStock{
         string stockName;
@@ -39,6 +40,7 @@ public:
         int rank;
         bool buyStock;
         bool exist;
+        int counter;
     };
     int RemoveWorstStocks(RankStock rankStock[], int const removeStocks);
 
