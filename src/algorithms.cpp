@@ -254,11 +254,13 @@ int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
 bool Algorithms::SellStock(Stock *stock)
 {
     float ma200   = stock->head->ma200;
+    float ma50   = stock->head->ma50;
     float delta200   = stock->head->delta200;
     float closeValue = stock->head->close;
     static int sellCounter[NROFSTOCKS] = {0};
+    static bool bull[NROFSTOCKS] = {true};
     static int i = 0;
-    bool returnValue = true;
+    bool returnValue = false;
 
 
     if (ma200 < closeValue)
@@ -272,11 +274,27 @@ bool Algorithms::SellStock(Stock *stock)
         sellCounter[i] = 0;
     }
 
-    //Villkor om aktien är värd att handla!
-    if (sellCounter[i] >= 2)
+    //State pos->negative, Kanske borde göra en statemaskin?
+    if (ma50 < ma200 && closeValue < ma50)
     {
+        //negativ trend för aktie i.
+        bull[i] = false;
         returnValue = false;
     }
+
+    //Neg->Pos
+    if (delta200 > 0 && closeValue > ma50)
+    {
+        bull[i] == true;
+        returnValue = true;
+    }
+
+
+    //Villkor om aktien är värd att handla!
+    /*if (sellCounter[i] >= 2)
+    {
+        returnValue = false;
+    }*/
 
 
     //Sätt om i till 0 istället för 9
