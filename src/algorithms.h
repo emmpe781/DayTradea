@@ -30,7 +30,7 @@ public:
     void RecalibratePortfolio(Portfolio*,Portfolio::portfolionode*, Stock[]);
     void Sell_All(Portfolio*,Portfolio::portfolionode*, Stock[]);
     int NrOfStocks(Stock[]);
-    bool SellStock(Stock[]);
+    bool SellStock(Stock[], const bool);
 
     struct RankStock{
         string stockName;

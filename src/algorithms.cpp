@@ -251,64 +251,114 @@ int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
     return nrOfRemovedStocks;
 }
 
-bool Algorithms::SellStock(Stock *stock)
+bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 {
-    float ma200   = stock->head->ma200;
-    float ma50   = stock->head->ma50;
+    //float ma200   = stock->head->ma200;
+    //float ma50   = stock->head->ma50;
     float delta200   = stock->head->delta200;
     float closeValue = stock->head->close;
-    static int sellCounter[NROFSTOCKS] = {0};
-    static bool bull[NROFSTOCKS] = {true};
+
+    static int counter = 0;
+    float sumDiffCloseMa50 = 0;
+    float sumDiffMa50Ma200 = 0;
+    static bool own_Stock = true;
+    
+
+    const int days = 15;
+    static float deltaCloseMa50[days] = {0};
+    static float deltaMa50Ma200[days] = {0};
+    static float maDays[days] = {0};
+
+    const int _200 = 200;
+    static float MA200[_200] = {closeValue};
+
+    const int _50 = 50;
+    static float MA50[_50] = {closeValue};
+
+
+    float sumMaDays = 0;
+    float ma200 = 0;
+    float ma50 = 0;
+
+    
+
+
+    MA200[counter % _200] = closeValue;
+    MA50[counter % _50] = closeValue;
+
+    //Calculate ma50
+    for (int i = 0; i < _50; ++i)
+    {
+        ma50 = ma50 + (float) MA50[i]/_50;
+    }
+
+    //Calculate ma200
+    for (int i = 0; i < _200; ++i)
+    {
+        ma200 = ma200 + MA200[i]/_200;
+    }
+
+
+    deltaCloseMa50[counter % days] = closeValue - ma50;
+    deltaMa50Ma200[counter % days] = ma50 - ma200;
+    maDays[counter % days] = closeValue;
+
+    for (int i = 0; i < days; ++i)
+    {
+        sumDiffCloseMa50 = sumDiffCloseMa50 + deltaCloseMa50[i];
+        sumDiffMa50Ma200 = sumDiffMa50Ma200 + deltaMa50Ma200[i];
+        sumMaDays = sumMaDays + maDays[i]/days;
+
+    }
+    ++counter;
+
+    //cout << " sumDiff = " << sumDiff << endl;
+    
+    //Gör en casesats så bull-attributet kan hanteras som en statemaskin!
+    //static bool bull[NROFSTOCKS] = {true};
     static int i = 0;
-    bool returnValue = false;
+    bool sellStock = false;
 
 
-    if (ma200 < closeValue)
+    sellStock = false;
+
+    //SELL
+    if (sumDiffCloseMa50 < 10 && 
+        own_Stock == true &&
+        sumDiffMa50Ma200 < 10 && 
+        closeValue < sumMaDays)
     {
-
-        ++sellCounter[i];
-        cout << " sellCounter[i] = " << sellCounter[i] << " i = " << i << endl;
-    }
-    else
-    {
-        sellCounter[i] = 0;
-    }
-
-    //State pos->negative, Kanske borde göra en statemaskin?
-    if (ma50 < ma200 && closeValue < ma50)
-    {
-        //negativ trend för aktie i.
-        bull[i] = false;
-        returnValue = false;
-    }
-
-    //Neg->Pos
-    if (delta200 > 0 && closeValue > ma50)
-    {
-        bull[i] == true;
-        returnValue = true;
+        //if(ma200 > ma50 && closeValue > ma50) {
+            
+            //Köp
+            cout << "--------------- Sälj: " << stock->name << "date : "
+                << stock->head->date<< " ---------- "<< endl << endl 
+                << "Close = " << closeValue << ", "<< endl << "ma50 = " 
+                << ma50  << ", " << endl << "ma200 = " << ma200 << endl 
+                <<  ", " << "sumDiffCloseMa50 =  "  << sumDiffCloseMa50 << endl;
+        own_Stock = false;
+        sellStock = true;
     }
 
-
-    //Villkor om aktien är värd att handla!
-    /*if (sellCounter[i] >= 2)
+    //BUY
+    if (sumDiffCloseMa50 > 0 && 
+        own_Stock == false && 
+        sumDiffMa50Ma200 > 0 && 
+        closeValue > sumMaDays)
     {
-        returnValue = false;
-    }*/
+        own_Stock = true;
+        sellStock = false;
+    }
+    return !own_Stock;
 
-
-    //Sätt om i till 0 istället för 9
-    ++i;
-    i = i % NROFSTOCKS;
-
-    return returnValue;
 }
 
 void Algorithms::BeatIndex(Portfolio *portfolio_p, 
                            Portfolio::portfolionode *curPortfolioDay, 
                            Stock stocks[]) 
 {
-    
+    static int initValues = 0;
+
     //RECALIBRATE is defined in algorithms.h
     if(count % RECALIBRATE != 0)
     {
@@ -341,10 +391,15 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
 
         }
         
-        rankStock[i].rank          = 0;
-        rankStock[i].buyStock      = false;
-
+        if (initValues == 0)
+        {
+            cout << "INIT rankStock[].buystock" << endl;
+            rankStock[i].rank     = 0;
+            rankStock[i].buyStock = false;
+        }
+        
     }
+    ++initValues;
 
     int nrOfStocksToBuy = 0;
     
@@ -356,42 +411,22 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
             continue;
         }
 
-
-        if(SellStock(&stocks[i]))
+        if(SellStock(&stocks[i], rankStock[i].buyStock))
         {
+            //Do not buy this Stock            
             rankStock[i].buyStock = false;
         }
+        
         else
         {
+            //Buy This Stock
             rankStock[i].buyStock = true;
             ++nrOfStocksToBuy;
+            //cout << "nrOfStocksToBuy " << nrOfStocksToBuy << endl;
         }
     }
 
 
-
-/*    if(nrOfStocksToBuy > 5)
-    {
-        
-        int removeStocks = RemoveWorstStocks(rankStock, 2);
-        nrOfStocksToBuy = nrOfStocksToBuy - removeStocks;
-    }*/
-
-/*
-    for(int i = 0; i < NROFSTOCKS; ++i)
-    {
-        if(rankStock[i].stockName == "RATO-B")
-        {
-            //Stäng av ratos för att se att resten fungerar
-            --nrOfStocksToBuy;
-            rankStock[i].buyStock = false;
-        }
-    }
-*/
-
-
-    //cout << " nrOfStocksToBuy = " << nrOfStocksToBuy << endl;
-    //Buy Stocks
     float moneyToBuyWith = portfolio_p->cash;
     float moneyForEachStock = moneyToBuyWith/nrOfStocksToBuy;
 
@@ -409,9 +444,9 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
 
         if (rankStock[i].buyStock == true)
         {
-                Portfolio::portfolionode *tmp = curPortfolioDay;
-                portfolio_p->buy(stockValue, rankStock[i].stockName, 
-                                 moneyForEachStock, tmp);
+            Portfolio::portfolionode *tmp = curPortfolioDay;
+            portfolio_p->buy(stockValue, rankStock[i].stockName, 
+                             moneyForEachStock, tmp);
         }
 
         
