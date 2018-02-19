@@ -275,32 +275,56 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     const int _50 = 50;
     static float MA50[_50] = {closeValue};
 
+    const int _25 = 25;
+    static float MA25[_25] = {closeValue};
 
     float sumMaDays = 0;
-    float ma200 = 0;
-    float ma50 = 0;
+    static float ma200[_200] = {0};
+    static float ma50[_50] = {0};
+    static float ma25[_25] = {0};
 
+    static float oldMa200 = 0;
+    static float oldMa50 = 0;
+    static float oldMa25 = 0;
+    float oldMaDays = 0;
+    
+    MA200[counter % _200] = closeValue;
+    ma200[counter % _200] = 0;
+
+    MA50[counter % _50] = closeValue;
+    ma50[counter % _50] = 0;
+
+    MA25[counter % _25] = closeValue;
+    ma25[counter % _25] = 0;
     
 
+    oldMaDays = maDays[counter % days];
 
-    MA200[counter % _200] = closeValue;
-    MA50[counter % _50] = closeValue;
+    
+    //Calculate ma25
+    for (int i = 0; i < _25; ++i)
+    {
+        ma25[counter % _25] = ma25[counter % _25] + (float) MA25[i]/_25;
+    }
+
 
     //Calculate ma50
     for (int i = 0; i < _50; ++i)
     {
-        ma50 = ma50 + (float) MA50[i]/_50;
+        ma50[counter % _50] = ma50[counter % _50] + (float) MA50[i]/_50;
     }
+
+
 
     //Calculate ma200
     for (int i = 0; i < _200; ++i)
     {
-        ma200 = ma200 + MA200[i]/_200;
+        ma200[counter % _200] = ma200[counter % _200] + (float) MA200[i]/_200;
     }
 
 
-    deltaCloseMa50[counter % days] = closeValue - ma50;
-    deltaMa50Ma200[counter % days] = ma50 - ma200;
+    deltaCloseMa50[counter % days] = closeValue - ma50[counter % _50];
+    deltaMa50Ma200[counter % days] = ma50[counter % _50] - ma200[counter % _200];
     maDays[counter % days] = closeValue;
 
     for (int i = 0; i < days; ++i)
@@ -312,43 +336,52 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     }
     ++counter;
 
-    //cout << " sumDiff = " << sumDiff << endl;
-    
-    //Gör en casesats så bull-attributet kan hanteras som en statemaskin!
-    //static bool bull[NROFSTOCKS] = {true};
     static int i = 0;
     bool sellStock = false;
 
 
     sellStock = false;
 
+    
+
     //SELL
-    if (sumDiffCloseMa50 < 10 && 
+    if (//sumDiffCloseMa50 < 10 && 
         own_Stock == true &&
-        sumDiffMa50Ma200 < 10 && 
-        closeValue < sumMaDays)
+        //sumDiffMa50Ma200 < 10 && 
+        //closeValue < sumMaDays && 
+        oldMa200 > ma200[counter % _200] && 
+        oldMa50 > ma50[counter % _50] &&
+        oldMa25 > ma25[counter % _25] )
     {
         //if(ma200 > ma50 && closeValue > ma50) {
             
             //Köp
-            cout << "--------------- Sälj: " << stock->name << "date : "
+            /*cout << "--------------- Sälj: " << stock->name << "date : "
                 << stock->head->date<< " ---------- "<< endl << endl 
                 << "Close = " << closeValue << ", "<< endl << "ma50 = " 
                 << ma50  << ", " << endl << "ma200 = " << ma200 << endl 
-                <<  ", " << "sumDiffCloseMa50 =  "  << sumDiffCloseMa50 << endl;
+                <<  ", " << "sumDiffCloseMa50 =  "  << sumDiffCloseMa50 << endl; */
         own_Stock = false;
         sellStock = true;
     }
 
     //BUY
-    if (sumDiffCloseMa50 > 0 && 
+    if (//sumDiffCloseMa50 > 0 && 
         own_Stock == false && 
-        sumDiffMa50Ma200 > 0 && 
-        closeValue > sumMaDays)
+        //sumDiffMa50Ma200 > 0 && 
+        //closeValue > sumMaDays
+        oldMa200 < ma200[counter % _200] && 
+        oldMa50 < ma50[counter % _50] &&
+        oldMa25 < ma25[counter % _25] )
     {
         own_Stock = true;
         sellStock = false;
     }
+
+    oldMa200 = ma200[counter % _200];
+    oldMa50  = ma50[counter % _50];
+    oldMa25  = ma25[counter % _25];
+
     return !own_Stock;
 
 }
