@@ -37,7 +37,7 @@ using namespace std;
 PyObject *pFileName,*pModule;
 PyObject *pFuncAppendList,*pFuncPlot;
 PyObject *pArgTuple, *pArgTuple3, *pValue, *pValue1,*pArgEmpty, *pXVec, 
-*pYVec, *pYVec2,*pYVecEst,*pVecNorm,*pYVecMa200,*pYVecMa50,*pYVecBearBull, *pArgTuplebearbull,*pArgTupleNorm,*pArgTuplema200,*pArgTuplema50,*pArgTupleest;
+*pYVec, *pYVec2,*pYVecEst,*pVecNorm,*pYVecMa300,*pYVecMa200,*pYVecMa50,*pYVecBearBull, *pArgTuplebearbull,*pArgTupleNorm,*pArgTuplema300 , *pArgTuplema200,*pArgTuplema50,*pArgTupleest;
 	
 Plot::Plot(void)
 {
@@ -137,7 +137,8 @@ void Plot::Append_One_Stock(Stock stock)
 	pArgTuple = PyTuple_New(5);	
 	pArgTuplebearbull = PyTuple_New(5);
 	pArgTuplema50 = PyTuple_New(5);	
-	pArgTuplema200 = PyTuple_New(5);	
+	pArgTuplema200 = PyTuple_New(5);
+	pArgTuplema300 = PyTuple_New(5);
 	pArgTupleest = PyTuple_New(5);	
 	pArgTupleNorm = PyTuple_New(5);	
 
@@ -150,6 +151,7 @@ void Plot::Append_One_Stock(Stock stock)
    	vector<double> est_stock(n,stock.tail->est);
    	vector<double> ma50_stock(n,stock.tail->ma50);
    	vector<double> ma200_stock(n,stock.tail->ma200);
+   	vector<double> ma300_stock(n,stock.tail->ma300);
    	vector<double> bearbull(n,stock.tail->bearBull);
    	vector<string> t(n);
 
@@ -159,6 +161,7 @@ void Plot::Append_One_Stock(Stock stock)
 	    close_value_stock.at(i) = stocktmp->close;
 	    norm_value_stock.at(i) = stocktmp->norm;
 	    est_stock.at(i) = stocktmp->est;
+	    ma300_stock.at(i) = stocktmp->ma300;
 	    ma200_stock.at(i) = stocktmp->ma200;
 	    ma50_stock.at(i) = stocktmp->ma50;
 	    bearbull.at(i) = stocktmp->bearBull;
@@ -221,6 +224,27 @@ void Plot::Append_One_Stock(Stock stock)
 	PyTuple_SetItem(pArgTupleNorm, 3, PyString_FromString("norm"));
 	PyTuple_SetItem(pArgTupleNorm, 4, PyString_FromString("show"));
 	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTupleNorm);
+
+
+	//Transfer the other C++ vector to a python tuple
+	pYVecMa300 = PyTuple_New(ma300_stock.size());	
+	for (i = 0; i < ma300_stock.size(); ++i) {
+		pValue = PyFloat_FromDouble(ma300_stock[i]);
+		if (!pValue) {
+			Py_DECREF(pYVecMa300);
+			Py_DECREF(pModule);
+			fprintf(stderr, "Cannot convert array value");
+			//return 1;
+		}
+		PyTuple_SetItem(pYVecMa300, i, pValue); //
+	}
+	
+	PyTuple_SetItem(pArgTuplema300, 0, PyString_FromString(name.c_str()));
+	PyTuple_SetItem(pArgTuplema300, 1, pXVec);
+	PyTuple_SetItem(pArgTuplema300, 2, pYVecMa300);
+	PyTuple_SetItem(pArgTuplema300, 3, PyString_FromString("Ma300"));
+	PyTuple_SetItem(pArgTuplema300, 4, PyString_FromString("legendonly"));
+	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTuplema300);
 
 
 	//Transfer the other C++ vector to a python tuple
@@ -304,6 +328,7 @@ void Plot::Append_One_Stock(Stock stock)
 	PyTuple_SetItem(pArgTupleest, 4, PyString_FromString("legendonly"));
 	pValue1 = PyObject_CallObject(pFuncAppendList,pArgTupleest);
 
+	Py_DECREF(pArgTuplema300);
 	Py_DECREF(pArgTuplema200);
 	Py_DECREF(pArgTuplema50);
 	Py_DECREF(pArgTuplebearbull);

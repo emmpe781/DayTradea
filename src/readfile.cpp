@@ -37,8 +37,10 @@ void ReadFile::Read(string fname,Stock *stock_p,string startdate)
 void ReadFile::PopulateStock(Stock *stock_p)
 {
 	ExpectedValue(stock_p, 7.5);
-	Mean(stock_p, 200);
+	
 	Mean(stock_p, 50);
+	Mean(stock_p, 200);
+	Mean(stock_p, 1250);
 	BearBull(stock_p);
 	Normalized(stock_p);
 	CalculateDelta(stock_p);
@@ -233,6 +235,7 @@ void ReadFile::Mean(Stock *stock,int days)
 	float sumStockClose=0;
 	float mean;
 	int i = 0;
+	float estValue = 0;
 	Stock::dayInfo *stockTail = stock->head;
 	Stock::dayInfo *stockHead = stock->head;
 
@@ -243,8 +246,11 @@ void ReadFile::Mean(Stock *stock,int days)
 			if (i < days){
 				sumStockClose = sumStockClose + (stockHead->close);
 				//stockHead->ma200=stockHead->close;
+				if(days==1250){
+					stockHead->ma300 = stockHead->ma200;
+				}
 				if(days==200){
-					stockHead->ma200 = 0;
+					stockHead->ma200 = stockHead->ma50;
 				}
 				if(days==50){
 					stockHead->ma50 = 0;
@@ -253,6 +259,11 @@ void ReadFile::Mean(Stock *stock,int days)
 			}
 			else {
 				mean=sumStockClose/days;
+				if(days==1250){
+					estValue = (mean + stockHead->ma200)/2;
+
+					stockHead->ma300=estValue*1.05;
+				}
 				if(days==200){
 					stockHead->ma200=mean;
 				}

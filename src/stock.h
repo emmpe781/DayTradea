@@ -27,6 +27,7 @@ class Stock{
 		  float est;
 		  //0=unknown, 1800 = bull, 2 = bear
 		  int bearBull;
+		  float ma300;
 		  float ma200;
 		  float ma100;
 		  float ma50;

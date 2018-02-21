@@ -28,6 +28,7 @@ void Stock::add_node_to_end(string date, float close, string exist)
 	day_info->exist = eval;
 	day_info->est = 0;
 	day_info->bearBull = 0;
+	day_info->ma300 = 0;
 	day_info->ma200 = 0;
 	day_info->ma100 = 0;
 	day_info->ma50 = 0;
