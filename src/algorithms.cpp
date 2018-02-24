@@ -390,11 +390,32 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     }
 
 
+    bool SELL1 = (own_Stock == true &&
+                  oldMa200 > ma200[counter % _200] && 
+                  //oldMa50 > ma50[counter % _50] &&
+                  //oldMa25 > ma25[counter % _25] &&
+                  closeValue > estStock);
+
+    bool SELL2 = (own_Stock == true && 
+                  crash == true &&
+                  oldMa25 > ma25[counter % _25]);
+
+
+
+    bool BUY1 = (own_Stock == false &&
+                 oldMa200 < ma200[counter % _200] && 
+                 oldMa50 < ma50[counter % _50] &&
+                 oldMa25 < ma25[counter % _25] &&
+                 crash == false);
+
+    bool BUY2 = (own_Stock == false &&
+                 estStock > closeValue && 
+                 oldMa50 < ma50[counter % _50] &&
+                 oldMa25 < ma25[counter % _25]);
+
+
     //SELL
-    if (own_Stock == true &&
-        oldMa200 > ma200[counter % _200] && 
-        oldMa50 > ma50[counter % _50] &&
-        oldMa25 > ma25[counter % _25] )
+    if (SELL1 || SELL2)
     {
         //if(ma200 > ma50 && closeValue > ma50) {
             
@@ -409,11 +430,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     }
 
     //BUY
-    if (own_Stock == false &&
-        oldMa200 < ma200[counter % _200] && 
-        oldMa50 < ma50[counter % _50] &&
-        oldMa25 < ma25[counter % _25] &&
-        crash == false)
+    if (BUY1 || BUY2)
     {
         own_Stock = true;
         sellStock = false;
