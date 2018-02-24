@@ -257,6 +257,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     //float ma50   = stock->head->ma50;
     float delta200   = stock->head->delta200;
     float closeValue = stock->head->close;
+    float estStock   = stock->head->ma300;
 
     static int counter = 0;
     float sumDiffCloseMa50 = 0;
@@ -341,14 +342,56 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 
 
     sellStock = false;
-
     
+    
+    static float lokMax = ma200[counter % _200];
+    //static float oldLokMax = ma200[counter % _200];
+    static bool posDirection = true; //initial value
+
+    //MAX Value,
+    if ((oldMa200 > ma200[counter % _200]) && posDirection)
+        
+    {
+        lokMax = ma200[counter % _200];
+        posDirection = false;
+    }
+
+    //Local Min Value for ma200
+    static float lokMin = ma200[counter % _200];
+    //static float oldLokMin = ma200[counter % _200];
+
+    //MIN Value
+    if ((oldMa200 < ma200[counter % _200]) && (!posDirection))
+    {
+        lokMin = ma200[counter % _200];
+        posDirection = true;
+    }
+/*
+    if (lokMin*1.1 > lokMax)
+    {
+        cout << "test lokmin= "  << lokMin << endl; 
+        cout << "test lokmAX= "  << lokMax << endl; 
+    }*/
+
+
+
+    //estStock
+
+    static bool crash = false;
+
+    if ((1.2*ma200[counter % _200] < lokMax) && (posDirection == false))
+    {
+        crash = true;
+    }
+
+    if ((lokMin*1.05 < ma200[counter % _200]) && (posDirection == true))
+    {
+        crash = false;
+    }
+
 
     //SELL
-    if (//sumDiffCloseMa50 < 10 && 
-        own_Stock == true &&
-        //sumDiffMa50Ma200 < 10 && 
-        //closeValue < sumMaDays && 
+    if (own_Stock == true &&
         oldMa200 > ma200[counter % _200] && 
         oldMa50 > ma50[counter % _50] &&
         oldMa25 > ma25[counter % _25] )
@@ -366,13 +409,11 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     }
 
     //BUY
-    if (//sumDiffCloseMa50 > 0 && 
-        own_Stock == false && 
-        //sumDiffMa50Ma200 > 0 && 
-        //closeValue > sumMaDays
+    if (own_Stock == false &&
         oldMa200 < ma200[counter % _200] && 
         oldMa50 < ma50[counter % _50] &&
-        oldMa25 < ma25[counter % _25] )
+        oldMa25 < ma25[counter % _25] &&
+        crash == false)
     {
         own_Stock = true;
         sellStock = false;
