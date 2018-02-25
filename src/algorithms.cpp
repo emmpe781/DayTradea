@@ -465,64 +465,99 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
         crash = true;
     }
 
-    if ((lokMin*1.05 < ma200[counter % _200]) && (posDirection == true))
+    /*if ((lokMin*1.05 < ma200[counter % _200]) && (posDirection == true))
     {
         crash = false;
-    }
+    }*/
 
-
-    bool SELL1 = (own_Stock == true &&
-                  //oldMa200 > ma200[counter % _200] && 
-                  //oldMa50 > ma50[counter % _50] &&
-                  //oldMa25 > ma25[counter % _25] &&
-                  closeValue < estStock*0.95);
-
-    bool SELL2 = (own_Stock == true && 
-                  crash == true &&
-                  oldMa50 > ma50[counter % _50] &&
-                  oldMa200 > ma200[counter % _200]);
-
-
-
-    bool BUY3 = (own_Stock == false &&
-                  //oldMa200 > ma200[counter % _200] && 
-                  //oldMa50 > ma50[counter % _50] &&
-                  //oldMa25 > ma25[counter % _25] &&
-                  closeValue > estStock);
-
-    bool BUY1 = (own_Stock == false &&
-                 oldMa200 < ma200[counter % _200] && 
-                 oldMa50 < ma50[counter % _50] &&
-                 oldMa25 < ma25[counter % _25] &&
-                 crash == false);
-
-    bool BUY2 = (own_Stock == false &&
-                 estStock > closeValue && 
-                 oldMa50 < ma50[counter % _50] &&
-                 oldMa25 < ma25[counter % _25]);
-
-
-    //SELL
-    if (SELL1 || false)
+    if (crash == false)
     {
-        //if(ma200 > ma50 && closeValue > ma50) {
-            
-            //Köp
-            /*cout << "--------------- Sälj: " << stock->name << "date : "
-                << stock->head->date<< " ---------- "<< endl << endl 
-                << "Close = " << closeValue << ", "<< endl << "ma50 = " 
-                << ma50  << ", " << endl << "ma200 = " << ma200 << endl 
-                <<  ", " << "sumDiffCloseMa50 =  "  << sumDiffCloseMa50 << endl; */
-        own_Stock = false;
-        sellStock = true;
+
+
+        bool SELL1 = (own_Stock == true &&
+                      //oldMa200 > ma200[counter % _200] && 
+                      //oldMa50 > ma50[counter % _50] &&
+                      //oldMa25 > ma25[counter % _25] &&
+                      closeValue < estStock*0.95);
+
+        bool SELL2 = (own_Stock == true && 
+                      crash == true &&
+                      oldMa50 > ma50[counter % _50] &&
+                      oldMa200 > ma200[counter % _200]);
+
+
+
+        bool BUY3 = (own_Stock == false &&
+                      //oldMa200 > ma200[counter % _200] && 
+                      //oldMa50 > ma50[counter % _50] &&
+                      //oldMa25 > ma25[counter % _25] &&
+                      closeValue > estStock);
+
+        bool BUY1 = (own_Stock == false &&
+                     oldMa200 < ma200[counter % _200] && 
+                     oldMa50 < ma50[counter % _50] &&
+                     oldMa25 < ma25[counter % _25] &&
+                     crash == false);
+
+        bool BUY2 = (own_Stock == false &&
+                     estStock > closeValue && 
+                     oldMa50 < ma50[counter % _50] &&
+                     oldMa25 < ma25[counter % _25]);
+
+
+        //SELL
+        if (SELL1)
+        {
+            //if(ma200 > ma50 && closeValue > ma50) {
+                
+                //Köp
+                /*cout << "--------------- Sälj: " << stock->name << "date : "
+                    << stock->head->date<< " ---------- "<< endl << endl 
+                    << "Close = " << closeValue << ", "<< endl << "ma50 = " 
+                    << ma50  << ", " << endl << "ma200 = " << ma200 << endl 
+                    <<  ", " << "sumDiffCloseMa50 =  "  << sumDiffCloseMa50 << endl; */
+            own_Stock = false;
+            sellStock = true;
+        }
+
+        //BUY
+        if (BUY3)
+        {
+            own_Stock = true;
+            sellStock = false;
+        }
+    }
+    
+    //crash = true
+    else
+    {
+        if(ma200[counter % _200] > estStock)
+        {
+            crash = false;
+        }
+        
+
+       //BUY
+       if (own_Stock == false &&
+           oldMa50 < ma50[counter % _50] &&
+           oldMa25 < ma25[counter % _25])
+       {
+            own_Stock = true;
+            sellStock = false;
+       }
+
+       //SELL
+       if (own_Stock == true &&
+           oldMa50 > ma50[counter % _50] &&
+           oldMa25 > ma25[counter % _25])
+       {
+            own_Stock = false;
+            sellStock = true;
+       }
+
+
     }
 
-    //BUY
-    if (BUY3)
-    {
-        own_Stock = true;
-        sellStock = false;
-    }
 
     oldMa200 = ma200[counter % _200];
     oldMa50  = ma50[counter % _50];
