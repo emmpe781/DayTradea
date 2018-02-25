@@ -87,8 +87,8 @@ int main() {
     Stock stockArray2[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
 									lato_b, lund_b, ores, rato_b, svol_b};*/
 
-	Stock stockArray3[NROFSTOCKS] = {lund_b};
-	Stock stockArray4[NROFSTOCKS] = {lund_b};
+	Stock stockArray3[NROFSTOCKS] = {rato_b};
+	Stock stockArray4[NROFSTOCKS] = {rato_b};
 
 
 	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray4);
@@ -98,7 +98,7 @@ int main() {
 	rf.NormalizedPort(&ImbaPortfolio);
 	Plot plt1;
 	//plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,omx30);
-	plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,lund_b);
+	plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,rato_b);
 	
 
 

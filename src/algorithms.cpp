@@ -15,6 +15,14 @@ const Stock::dayInfo * lastStockDate = NULL;
 int count = 0;
 int countIndex = 0;
 
+static int noOwnCounter = 1;
+static int ownCounter = 1;
+static float firstStockValue = 0;
+static float lastStockValue = 0;
+static float totalIncrease = 0;
+static float nrOfYears = 0;
+
+
 
 
 Algorithms::Algorithms() {
@@ -32,6 +40,38 @@ void Algorithms::updateStockDate(Stock stocks[])
     }
 }
 
+float Algorithms::getNrOfYears()
+{
+    static int totalDays = 0;
+    static float years = 0;
+    totalDays = noOwnCounter + ownCounter;
+    years = (float) totalDays/365;
+    
+    return years;
+
+}
+
+float Algorithms::getPercentageOfOwnTime()
+{
+    static int totalDays = 0;
+    static float percOwnStock;
+    
+    totalDays = noOwnCounter + ownCounter;
+    percOwnStock = (float) ownCounter/totalDays;
+
+    return percOwnStock;
+}
+
+float Algorithms::getIncreasePerYear(float increaseFactor, float years)
+{
+    static float increasePerYear = 0;
+
+    increasePerYear = pow(increaseFactor, (1/years));
+    return increasePerYear;
+}
+
+
+
 void Algorithms::Algo(string algo, 
                       Portfolio *portfolio_p, 
                       Stock stocks[]) 
@@ -42,6 +82,16 @@ void Algorithms::Algo(string algo,
     Portfolio::portfolionode *previousPortfolioDay = 
         portfolio_p->curPortfolio; 
 
+    static float totalIncreaseStock = 0;
+    static float percentageOfOwnStockTime = 0;
+    static float portfValue = 0;
+    static float startPortfValue = 0;
+    static float portfIncrease = 0;
+    static float stockIncreasePerYear = 0;
+    static float portfIncreasePerYear = 0;
+
+
+    startPortfValue = portfolio_p->cash;
 
     //Borde vilja flytta in allt stockrelaterat till algoritmerna?!
     //Endast ha kvar hur portföljen uppdateras här ute?!
@@ -76,9 +126,28 @@ void Algorithms::Algo(string algo,
         ++count;
         updateStockDate(stocks);
 
+        portfValue = curPortfolioDay->portfolioValue;
+
         previousPortfolioDay=curPortfolioDay;
         curPortfolioDay=curPortfolioDay->next;
     }
+
+    nrOfYears = getNrOfYears();
+
+    //För vanliga aktien
+    totalIncreaseStock = lastStockValue/firstStockValue;
+    //getIncreasePerYear(totalIncreaseFactor, nrOfYears);
+    stockIncreasePerYear = getIncreasePerYear(totalIncreaseStock, nrOfYears);
+
+
+    //För aktien i samband med algoritm:
+    portfIncrease = portfValue/startPortfValue;
+    percentageOfOwnStockTime = getPercentageOfOwnTime();
+    portfIncreasePerYear = getIncreasePerYear(portfIncrease, percentageOfOwnStockTime*nrOfYears);
+
+    cout << " stockIncreasePerYear = " << stockIncreasePerYear << endl;
+    cout << " portfIncreasePerYear = " << portfIncreasePerYear << endl;
+    
 }
 
 void Algorithms::Algo_BearBull(Portfolio *portfolio_p, 
@@ -259,6 +328,18 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     float closeValue = stock->head->close;
     float estStock   = stock->head->ma300;
 
+    static bool initialStockValue = true;
+
+    if (initialStockValue == true)
+    {
+        firstStockValue = closeValue;
+        initialStockValue = false;
+    }
+    lastStockValue = closeValue;
+
+
+
+
     static int counter = 0;
     float sumDiffCloseMa50 = 0;
     float sumDiffMa50Ma200 = 0;
@@ -391,16 +472,23 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 
 
     bool SELL1 = (own_Stock == true &&
-                  oldMa200 > ma200[counter % _200] && 
+                  //oldMa200 > ma200[counter % _200] && 
                   //oldMa50 > ma50[counter % _50] &&
                   //oldMa25 > ma25[counter % _25] &&
-                  closeValue > estStock);
+                  closeValue < estStock*0.95);
 
     bool SELL2 = (own_Stock == true && 
                   crash == true &&
-                  oldMa25 > ma25[counter % _25]);
+                  oldMa50 > ma50[counter % _50] &&
+                  oldMa200 > ma200[counter % _200]);
 
 
+
+    bool BUY3 = (own_Stock == false &&
+                  //oldMa200 > ma200[counter % _200] && 
+                  //oldMa50 > ma50[counter % _50] &&
+                  //oldMa25 > ma25[counter % _25] &&
+                  closeValue > estStock);
 
     bool BUY1 = (own_Stock == false &&
                  oldMa200 < ma200[counter % _200] && 
@@ -415,7 +503,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 
 
     //SELL
-    if (SELL1 || SELL2)
+    if (SELL1 || false)
     {
         //if(ma200 > ma50 && closeValue > ma50) {
             
@@ -430,7 +518,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     }
 
     //BUY
-    if (BUY1 || BUY2)
+    if (BUY3)
     {
         own_Stock = true;
         sellStock = false;
@@ -439,6 +527,17 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     oldMa200 = ma200[counter % _200];
     oldMa50  = ma50[counter % _50];
     oldMa25  = ma25[counter % _25];
+
+    if (own_Stock)
+    {   
+        ++ownCounter;
+
+    }
+    else 
+    {
+        ++noOwnCounter;
+    }
+
 
     return !own_Stock;
 
@@ -553,20 +652,3 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
 Algorithms::~Algorithms() {
     // TODO Auto-generated destructor stub
 }
-
-
-/*      cout << "--------------- PRINTING START --------------------" << endl;
-        tmpStock = tmpPortfolioDay->curStock;
-
-        cout << "Cash: " <<  portfolio_p->cash << endl;
-        cout << "Date: " <<  tmpPortfolioDay->date << endl;
-        cout << "PortfolioValue: " <<  tmpPortfolioDay->portfolioValue << endl;
-        while(tmpStock != NULL){
-            cout << "  StockName: " <<  tmpStock->name << endl;
-            cout << "  NrOfStocks: " <<  tmpStock->nrOfStocks << endl;
-            cout << "  --  " << endl;
-
-            tmpStock = tmpStock->next;
-        }
-        cout << "--------------- PRINTING END --------------------" << endl;
-*/
