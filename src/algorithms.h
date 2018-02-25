@@ -16,6 +16,9 @@ const int RECALIBRATE = 1; //Omkalibrera portföljen
 class Algorithms {
 public:
     Algorithms();
+    float getPercentageOfOwnTime();
+    float getIncreasePerYear(float, float);
+    float getNrOfYears();
     bool TimeToRecalibrate;
     void updateStockDate(Stock[]);
     void Algo(string, Portfolio*, Stock[]);
