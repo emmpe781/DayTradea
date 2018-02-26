@@ -491,6 +491,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
                       //oldMa200 > ma200[counter % _200] && 
                       //oldMa50 > ma50[counter % _50] &&
                       //oldMa25 > ma25[counter % _25] &&
+                      ma200[counter % _200] > 1.04*lokMin && 
                       closeValue > estStock);
 
         bool BUY1 = (own_Stock == false &&
@@ -548,6 +549,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 
        //SELL
        if (own_Stock == true &&
+           oldMa200 > ma200[counter % _200] &&
            oldMa50 > ma50[counter % _50] &&
            oldMa25 > ma25[counter % _25])
        {
