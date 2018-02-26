@@ -81,24 +81,22 @@ int main() {
 	Algorithms Algo2;
 
 	//NROFSTOCKS definierad i stock.h
-	/*Stock stockArray[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
-									lato_b, lund_b, ores, rato_b, svol_b};
+	Stock stockArray[NROFSTOCKS] = {bure, svol_b, indu_c, inve_b,  
+									lato_b, lund_b, ores, rato_b, cred_a};
 
-    Stock stockArray2[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
-									lato_b, lund_b, ores, rato_b, svol_b};*/
-
-	Stock stockArray3[NROFSTOCKS] = {svol_b, rato_b, inve_b};
-	Stock stockArray4[NROFSTOCKS] = {svol_b, rato_b, inve_b};
+    Stock stockArray2[NROFSTOCKS] = {bure, svol_b, indu_c, inve_b,  
+									lato_b, lund_b, ores, rato_b, cred_a};
 
 
-	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray3);
-	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray4);
+
+	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray);
+	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray2);
 
 	rf.NormalizedPort(&ImbaPortfolio);
 	rf.NormalizedPort(&ImbaPortfolio2);
 	Plot plt1;
 
-	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,svol_b);
+	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,lund_b);
 	
 
 
