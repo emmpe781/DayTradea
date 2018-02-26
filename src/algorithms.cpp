@@ -311,15 +311,48 @@ int Algorithms::RemoveWorstStocks(RankStock rankStock[], int const removeStocks)
     return nrOfRemovedStocks;
 }
 
-bool Algorithms::SellStock(Stock *stock, const bool ownStock)
+bool Algorithms::SellStock(Stock *stock)
 {
     //float ma200   = stock->head->ma200;
     //float ma50   = stock->head->ma50;
+
     float delta200   = stock->head->delta200;
     float closeValue = stock->head->close;
     float estStock   = stock->head->ma300;
 
     static bool initialStockValue = true;
+    static int stockCounter = 0;
+
+    static int counter = 0;
+    static bool own_Stock = true;
+    
+    const int days = 15;
+
+    const int _200 = 200;
+    const int _50  = 50;
+    const int _25  = 25;
+    
+    static float LAST200DAYS[ NROFSTOCKS ][ _200 ] = {closeValue};
+    static float LAST50DAYS[  NROFSTOCKS ][ _50 ]  = {closeValue};
+    static float LAST25DAYS[  NROFSTOCKS ][ _25 ]  = {closeValue};
+
+    static float ma200[_200] = {0};
+    static float ma50[_50]   = {0};
+    static float ma25[_25]   = {0};
+
+    static float oldMa200[NROFSTOCKS] = {0};
+    static float oldMa50[NROFSTOCKS]  = {0};
+    static float oldMa25[NROFSTOCKS]  = {0};
+    
+    LAST200DAYS[stockCounter][counter % _200] = closeValue;
+    ma200[counter % _200] = 0;
+
+    LAST50DAYS[stockCounter][counter % _50] = closeValue;
+    ma50[counter % _50] = 0;
+
+    LAST25DAYS[stockCounter][counter % _25] = closeValue;
+    ma25[counter % _25] = 0;
+    
 
     if (initialStockValue == true)
     {
@@ -329,85 +362,26 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     lastStockValue = closeValue;
 
 
-
-
-    static int counter = 0;
-    float sumDiffCloseMa50 = 0;
-    float sumDiffMa50Ma200 = 0;
-    static bool own_Stock = true;
-    
-
-    const int days = 15;
-    static float deltaCloseMa50[days] = {0};
-    static float deltaMa50Ma200[days] = {0};
-    static float maDays[days] = {0};
-
-    const int _200 = 200;
-    static float MA200[_200] = {closeValue};
-
-    const int _50 = 50;
-    static float MA50[_50] = {closeValue};
-
-    const int _25 = 25;
-    static float MA25[_25] = {closeValue};
-
-    float sumMaDays = 0;
-    static float ma200[_200] = {0};
-    static float ma50[_50] = {0};
-    static float ma25[_25] = {0};
-
-    static float oldMa200 = 0;
-    static float oldMa50 = 0;
-    static float oldMa25 = 0;
-    float oldMaDays = 0;
-    
-    MA200[counter % _200] = closeValue;
-    ma200[counter % _200] = 0;
-
-    MA50[counter % _50] = closeValue;
-    ma50[counter % _50] = 0;
-
-    MA25[counter % _25] = closeValue;
-    ma25[counter % _25] = 0;
-    
-
-    oldMaDays = maDays[counter % days];
-
-    
     //Calculate ma25
     for (int i = 0; i < _25; ++i)
     {
-        ma25[counter % _25] = ma25[counter % _25] + (float) MA25[i]/_25;
+        ma25[counter % _25] = ma25[counter % _25] + (float) LAST25DAYS[stockCounter][i]/_25;
     }
 
 
     //Calculate ma50
     for (int i = 0; i < _50; ++i)
     {
-        ma50[counter % _50] = ma50[counter % _50] + (float) MA50[i]/_50;
+        ma50[counter % _50] = ma50[counter % _50] + (float) LAST50DAYS[stockCounter][i]/_50;
     }
-
 
 
     //Calculate ma200
     for (int i = 0; i < _200; ++i)
     {
-        ma200[counter % _200] = ma200[counter % _200] + (float) MA200[i]/_200;
+        ma200[counter % _200] = ma200[counter % _200] + (float) LAST200DAYS[stockCounter][i]/_200;
     }
-
-
-    deltaCloseMa50[counter % days] = closeValue - ma50[counter % _50];
-    deltaMa50Ma200[counter % days] = ma50[counter % _50] - ma200[counter % _200];
-    maDays[counter % days] = closeValue;
-
-    for (int i = 0; i < days; ++i)
-    {
-        sumDiffCloseMa50 = sumDiffCloseMa50 + deltaCloseMa50[i];
-        sumDiffMa50Ma200 = sumDiffMa50Ma200 + deltaMa50Ma200[i];
-        sumMaDays = sumMaDays + maDays[i]/days;
-
-    }
-    ++counter;
+    
 
     static int i = 0;
     bool sellStock = false;
@@ -420,7 +394,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     static bool posDirection = true;
 
     //MAX Value,
-    if ((oldMa200 > ma200[counter % _200]) && posDirection)
+    if ((oldMa200[stockCounter] > ma200[counter % _200]) && posDirection)
         
     {
         lokMax = ma200[counter % _200];
@@ -431,7 +405,7 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     static float lokMin = ma200[counter % _200];
 
     //MIN Value
-    if ((oldMa200 < ma200[counter % _200]) && (!posDirection))
+    if ((oldMa200[stockCounter] < ma200[counter % _200]) && (!posDirection))
     {
         lokMin = ma200[counter % _200];
         posDirection = true;
@@ -486,8 +460,8 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 
        //BUY
        if (own_Stock == false &&
-           oldMa50 < ma50[counter % _50] &&
-           oldMa25 < ma25[counter % _25])
+           oldMa50[stockCounter] < ma50[counter % _50] &&
+           oldMa25[stockCounter] < ma25[counter % _25])
        {
             own_Stock = true;
             sellStock = false;
@@ -495,9 +469,9 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
 
        //SELL
        if (own_Stock == true &&
-           oldMa200 > ma200[counter % _200] &&
-           oldMa50 > ma50[counter % _50] &&
-           oldMa25 > ma25[counter % _25])
+           oldMa200[stockCounter] > ma200[counter % _200] &&
+           oldMa50[stockCounter] > ma50[counter % _50] &&
+           oldMa25[stockCounter] > ma25[counter % _25])
        {
             own_Stock = false;
             sellStock = true;
@@ -507,9 +481,9 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
     }
 
 
-    oldMa200 = ma200[counter % _200];
-    oldMa50  = ma50[counter % _50];
-    oldMa25  = ma25[counter % _25];
+    oldMa200[stockCounter] = ma200[counter % _200];
+    oldMa50[stockCounter]  = ma50[counter % _50];
+    oldMa25[stockCounter]  = ma25[counter % _25];
 
     if (own_Stock)
     {   
@@ -521,8 +495,15 @@ bool Algorithms::SellStock(Stock *stock, const bool ownStock)
         ++noOwnCounter;
     }
 
-    //TEMP för att fixa köpa hela tiden -> index!!
-    own_Stock = true;
+
+    //last stock
+    if(stockCounter == NROFSTOCKS-1)
+    {
+        ++counter;    
+    }
+
+    ++stockCounter;
+    stockCounter = stockCounter % NROFSTOCKS;
 
     return !own_Stock;
 
@@ -583,7 +564,7 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
             continue;
         }
 
-        if(SellStock(&stocks[i], rankStock[i].buyStock))
+        if(SellStock(&stocks[i]))
         {
             //Do not buy this Stock
             rankStock[i].buyStock = false;
@@ -595,15 +576,6 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
             rankStock[i].buyStock = true;
             ++nrOfStocksToBuy;
         }
-/*
-        if (rankStock[i].buyStock == true)
-        {
-            cout << "buy stock " << endl;    
-        }
-        else 
-        {
-            cout << "DO not buy stock " << endl;       
-        }*/
         
     }
 
@@ -616,9 +588,6 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
     }
 
     float moneyForEachStock = moneyToBuyWith/nrOfStocksToBuy;
-
-    cout << "moneyForEachStock = " << moneyForEachStock << endl;
-    cout << "nrOfStocksToBuy = " << nrOfStocksToBuy << endl;
 
     for(int i = 0; i < NROFSTOCKS; ++i)
     {
@@ -634,17 +603,11 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
 
         if (rankStock[i].buyStock == true)
         {
-            cout << "Buy ncurrent stock = " << rankStock[i].stockName << endl;
             Portfolio::portfolionode *tmp = curPortfolioDay;
             portfolio_p->buy(stockValue, rankStock[i].stockName, 
                              moneyForEachStock, tmp);
         }
-
-        
-        
     }
-
-
 
 }
 
