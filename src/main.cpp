@@ -82,10 +82,15 @@ int main() {
 
 	//NROFSTOCKS definierad i stock.h
 	Stock stockArray[NROFSTOCKS] = {bure, svol_b, indu_c, inve_b,  
-									lato_b, lund_b, ores, rato_b, cred_a};
+									lato_b, ores, lund_b, rato_b, cred_a};
 
     Stock stockArray2[NROFSTOCKS] = {bure, svol_b, indu_c, inve_b,  
-									lato_b, lund_b, ores, rato_b, cred_a};
+									lato_b, ores, lund_b, rato_b, cred_a};
+
+	//Stock stockArray[NROFSTOCKS] = {svol_b, lund_b};
+
+    //Stock stockArray2[NROFSTOCKS] = {svol_b, lund_b};
+
 
 
 
@@ -96,7 +101,7 @@ int main() {
 	rf.NormalizedPort(&ImbaPortfolio2);
 	Plot plt1;
 
-	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,lund_b);
+	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,omx30);
 	
 
 

@@ -81,7 +81,6 @@ void Portfolio::buy(float stockValue,
 		//Kolla att stocken inte finns i portföljen -> lägg till en ny!
 		if (stockInPortfolio(stockname,portnode->curStock) == false)
 		{	
-
 			//Antalet aktier jag har råd med
 			nrOfStocks = floor(money/stockValue);
 
@@ -100,7 +99,6 @@ void Portfolio::buy(float stockValue,
 
 
 		else {
-
 			//Antalet aktier jag har råd med
 			nrOfStocks = floor(money/stockValue);
 			Portfolio::portfolionode::stockinfo *tmp = portnode->curStock;
@@ -108,7 +106,6 @@ void Portfolio::buy(float stockValue,
 			{	
 				if (stockname == tmp->name)
 				{
-
 					//Pengar efter jag handlat
 					cash = cash - stockValue*nrOfStocks;
 					tmp->nrOfStocks =tmp->nrOfStocks + nrOfStocks;
