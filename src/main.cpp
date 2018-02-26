@@ -69,11 +69,11 @@ int main() {
 
 	//Min portfölj börjar:
 	Portfolio ImbaPortfolio(startdate);
-	ImbaPortfolio.portfolioname = "Index 60";
+	ImbaPortfolio.portfolioname = "Index";
 	ImbaPortfolio.setStartValue(startValue);
 
 	Portfolio ImbaPortfolio2(startdate);
-	ImbaPortfolio2.portfolioname = "Beat Index";
+	ImbaPortfolio2.portfolioname = "Algorithm Beat Index";
 	ImbaPortfolio2.setStartValue(startValue);
 
 	
@@ -87,18 +87,18 @@ int main() {
     Stock stockArray2[NROFSTOCKS] = {bure, cred_a, indu_c, inve_b,  
 									lato_b, lund_b, ores, rato_b, svol_b};*/
 
-	Stock stockArray3[NROFSTOCKS] = {rato_b};
-	Stock stockArray4[NROFSTOCKS] = {rato_b};
+	Stock stockArray3[NROFSTOCKS] = {svol_b, rato_b, inve_b};
+	Stock stockArray4[NROFSTOCKS] = {svol_b, rato_b, inve_b};
 
 
-	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray4);
-	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray3);
+	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray3);
+	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray4);
 
-	rf.NormalizedPort(&ImbaPortfolio2);
 	rf.NormalizedPort(&ImbaPortfolio);
+	rf.NormalizedPort(&ImbaPortfolio2);
 	Plot plt1;
-	//plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,omx30);
-	plt1.Plot_all(ImbaPortfolio2,ImbaPortfolio,rato_b);
+
+	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,svol_b);
 	
 
 
