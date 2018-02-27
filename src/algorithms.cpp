@@ -46,6 +46,7 @@ float Algorithms::getNrOfYears()
     static int totalDays = 0;
     static float years = 0;
     totalDays = noOwnCounter + ownCounter;
+    totalDays = count;
     years = (float) totalDays/365;
     
     return years;
@@ -66,6 +67,8 @@ float Algorithms::getPercentageOfOwnTime()
 float Algorithms::getIncreasePerYear(float increaseFactor, float years)
 {
     static float increasePerYear = 0;
+    cout << "increaseFactor = " << increaseFactor << endl;
+    cout << "Years = " << years << endl;
 
     increasePerYear = pow(increaseFactor, (1/years));
     return increasePerYear;
@@ -90,6 +93,8 @@ void Algorithms::Algo(string algo,
     static float portfIncrease = 0;
     static float stockIncreasePerYear = 0;
     static float portfIncreasePerYear = 0;
+
+    count = 0;
 
 
     startPortfValue = portfolio_p->cash;
@@ -136,17 +141,20 @@ void Algorithms::Algo(string algo,
     nrOfYears = getNrOfYears();
 
     //För vanliga aktien
-    totalIncreaseStock = lastStockValue/firstStockValue;
+    //totalIncreaseStock = lastStockValue/firstStockValue;
     //getIncreasePerYear(totalIncreaseFactor, nrOfYears);
-    stockIncreasePerYear = getIncreasePerYear(totalIncreaseStock, nrOfYears);
+    //stockIncreasePerYear = getIncreasePerYear(totalIncreaseStock, nrOfYears);
 
 
     //För aktien i samband med algoritm:
     portfIncrease = portfValue/startPortfValue;
     percentageOfOwnStockTime = getPercentageOfOwnTime();
-    portfIncreasePerYear = getIncreasePerYear(portfIncrease, percentageOfOwnStockTime*nrOfYears);
+    
+    //Används i samband med att det  bara finns en aktie i portföljen
+    //portfIncreasePerYear = getIncreasePerYear(portfIncrease, percentageOfOwnStockTime*nrOfYears);
+    portfIncreasePerYear = getIncreasePerYear(portfIncrease, nrOfYears);
 
-    cout << " stockIncreasePerYear = " << stockIncreasePerYear << endl;
+    //cout << " stockIncreasePerYear = " << stockIncreasePerYear << endl;
     cout << " portfIncreasePerYear = " << portfIncreasePerYear << endl;
     
 }
@@ -418,8 +426,7 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
 
        //BUY
        if (own_Stock[ nStock ] == false &&
-           oldMa50[nStock] < ma50[ nStock ][sellStockCounter % _50] &&
-           oldMa25[nStock] < ma25[ nStock ][sellStockCounter % _25])
+           oldMa50[nStock] < ma50[ nStock ][sellStockCounter % _50])
        {
             own_Stock[ nStock ] = true;
        }
