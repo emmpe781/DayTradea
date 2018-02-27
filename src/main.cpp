@@ -81,28 +81,46 @@ int main() {
 	Algorithms Algo2;
 
 	//NROFSTOCKS definierad i stock.h
-	Stock stockArray[NROFSTOCKS] = {bure, svol_b, indu_c, inve_b,  
+	Stock stockArray[NROFSTOCKS] = {inve_b, bure, svol_b, indu_c,
 									lato_b, ores, lund_b, rato_b, cred_a};
 
-    Stock stockArray2[NROFSTOCKS] = {bure, svol_b, indu_c, inve_b,  
-									lato_b, ores, lund_b, rato_b, cred_a};
+    Stock stockArray2[NROFSTOCKS] = {cred_a, inve_b, bure, ores, indu_c,  
+									lato_b, svol_b, lund_b, rato_b};
+
+	Stock stockArray3[NROFSTOCKS] = {indu_c, indu_c, indu_c, indu_c,  
+									indu_c, indu_c, indu_c, indu_c, indu_c};
 
 	//Stock stockArray[NROFSTOCKS] = {svol_b, lund_b};
 
     //Stock stockArray2[NROFSTOCKS] = {svol_b, lund_b};
 
 
+for (int i = 0; i < 10; ++i)
+{
+	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray);
+	
+	//Reset Portfolio
+	ImbaPortfolio2 = ImbaPortfolio;
+	
+	//reset StockArray to initial Values
+	for (int i = 0; i < NROFSTOCKS; ++i)
+	{
+		stockArray[i] = stockArray2[i];	
+	}
+	
+	
+}
 
+	//Algo.Algo("BEATINDEX",&ImbaPortfolio ,stockArray);
+	
 
-	Algo.Algo("CREATEINDEX",&ImbaPortfolio ,stockArray);
-	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray2);
-
+/*
 	rf.NormalizedPort(&ImbaPortfolio);
 	rf.NormalizedPort(&ImbaPortfolio2);
-	Plot plt1;
-
-	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,omx30);
 	
+	Plot plt1;
+	plt1.Plot_all(ImbaPortfolio, ImbaPortfolio2 ,indu_c);
+*/	
 
 
 	return 0;

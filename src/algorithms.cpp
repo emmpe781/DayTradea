@@ -12,8 +12,7 @@
 #include "math.h"
 using namespace std;
 const Stock::dayInfo * lastStockDate = NULL;
-int count = 0;
-int countIndex = 0;
+int days = 0;
 
 static int noOwnCounter = 1;
 static int ownCounter = 1;
@@ -22,7 +21,29 @@ static float lastStockValue = 0;
 static float totalIncrease = 0;
 static float nrOfYears = 0;
 static int sellStockCounter = 0;
+static bool own_Stock[NROFSTOCKS];
 
+static const int _200 = 200;
+static const int _50  = 50;
+static const int _25  = 25;
+
+static float LAST200DAYS[ NROFSTOCKS ][ _200 ] = {0};
+static float LAST50DAYS[  NROFSTOCKS ][ _50 ]  = {0};
+static float LAST25DAYS[  NROFSTOCKS ][ _25 ]  = {0};
+
+static float ma200[ NROFSTOCKS ][ _200]  = {0};
+static float ma50 [ NROFSTOCKS ][ _50]   = {0};
+static float ma25 [ NROFSTOCKS ][ _25]   = {0};
+
+static float oldMa200[NROFSTOCKS] = {0};
+static float oldMa50[NROFSTOCKS]  = {0};
+static float oldMa25[NROFSTOCKS]  = {0};
+
+static bool crash[NROFSTOCKS] = {false};
+
+static float lokMax[NROFSTOCKS] = {0};
+static float lokMin[NROFSTOCKS] = {0};
+static bool posDirection[NROFSTOCKS] = {true};
 
 
 
@@ -41,12 +62,40 @@ void Algorithms::updateStockDate(Stock stocks[])
     }
 }
 
+void Algorithms::CleanAlgorithms()
+{  
+    for (int i = 0; i < NROFSTOCKS; ++i)
+    {
+        own_Stock[i]    = true;
+        posDirection[i] = true;
+        crash[i]        = false;
+
+        oldMa200[i] = 0;
+        oldMa50[i]  = 0;
+        oldMa25[i]  = 0;
+
+        lokMax[i]   = 0;
+        lokMin[i]   = 0;
+
+        for (int j = 0; j < 200; ++j)
+        {
+            ma200[ i ][ j ]     = 0;
+            ma50[ i ][ j % 50 ] = 0;
+            ma25[ i ][ j % 25 ] = 0;
+
+            LAST200DAYS[ i ][ j ]     = 0;
+            LAST50DAYS[ i ][ j % 50 ] = 0;
+            LAST25DAYS[ i ][ j % 25 ] = 0;
+        }
+    }
+}
+
 float Algorithms::getNrOfYears()
 {
     static int totalDays = 0;
     static float years = 0;
-    totalDays = noOwnCounter + ownCounter;
-    totalDays = count;
+    //totalDays = noOwnCounter + ownCounter;
+    totalDays = days;
     years = (float) totalDays/365;
     
     return years;
@@ -80,6 +129,7 @@ void Algorithms::Algo(string algo,
                       Portfolio *portfolio_p, 
                       Stock stocks[]) 
 {
+
     Portfolio::portfolionode *curPortfolioDay = 
         portfolio_p->curPortfolio;
 
@@ -88,16 +138,18 @@ void Algorithms::Algo(string algo,
 
     static float totalIncreaseStock = 0;
     static float percentageOfOwnStockTime = 0;
-    static float portfValue = 0;
+    float portfValue = 0;
     static float startPortfValue = 0;
-    static float portfIncrease = 0;
+    float portfIncrease = 0;
     static float stockIncreasePerYear = 0;
     static float portfIncreasePerYear = 0;
+    CleanAlgorithms();
 
-    count = 0;
+    days = 0;
 
 
     startPortfValue = portfolio_p->cash;
+    cout << "startPortfValue = " << startPortfValue << endl;
 
     //Borde vilja flytta in allt stockrelaterat till algoritmerna?!
     //Endast ha kvar hur portföljen uppdateras här ute?!
@@ -129,7 +181,7 @@ void Algorithms::Algo(string algo,
 
         //counter that controls how often
         //the portfolio shall recalib.
-        ++count;
+        ++days;
         updateStockDate(stocks);
 
         portfValue = curPortfolioDay->portfolioValue;
@@ -271,7 +323,7 @@ void Algorithms::CreateIndex(Portfolio *portfolio_p,
                              Portfolio::portfolionode *curPortfolioDay, 
                              Stock stocks[]) 
 {
-    if(count % RECALIBRATE == 0)
+    if(days % RECALIBRATE == 0)
     {
         TimeToRecalibrate = true;
     }
@@ -281,7 +333,6 @@ void Algorithms::CreateIndex(Portfolio *portfolio_p,
         RecalibratePortfolio(portfolio_p,curPortfolioDay,stocks);
 
     }
-    ++countIndex;
 }
 
 bool Algorithms::SellStock(Stock *stock, int nStock)
@@ -292,32 +343,7 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
     float closeValue = stock->head->close;
     float estStock   = stock->head->ma300;
 
-    static bool initialStockValue = true;
 
-    
-    static bool own_Stock[NROFSTOCKS] = {true};
-
-    const int _200 = 200;
-    const int _50  = 50;
-    const int _25  = 25;
-    
-    static float LAST200DAYS[ NROFSTOCKS ][ _200 ] = {closeValue};
-    static float LAST50DAYS[  NROFSTOCKS ][ _50 ]  = {closeValue};
-    static float LAST25DAYS[  NROFSTOCKS ][ _25 ]  = {closeValue};
-
-    static float ma200[ NROFSTOCKS ][ _200]  = {0};
-    static float ma50 [ NROFSTOCKS ][ _50]   = {0};
-    static float ma25 [ NROFSTOCKS ][ _25]   = {0};
-
-    static float oldMa200[NROFSTOCKS] = {0};
-    static float oldMa50[NROFSTOCKS]  = {0};
-    static float oldMa25[NROFSTOCKS]  = {0};
-
-    static bool crash[NROFSTOCKS] = {false};
-
-    static float lokMax[NROFSTOCKS] = {0};
-    static float lokMin[NROFSTOCKS] = {0};
-    static bool posDirection[NROFSTOCKS] = {true};
 
     
     LAST200DAYS[nStock][sellStockCounter % _200] = closeValue;
@@ -329,6 +355,8 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
     LAST25DAYS[nStock][sellStockCounter % _25] = closeValue;
     ma25[ nStock ][sellStockCounter % _25] = 0;
     
+/*
+    static bool initialStockValue = true;
 
     if (initialStockValue == true)
     {
@@ -336,7 +364,7 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
         initialStockValue = false;
     }
     lastStockValue = closeValue;
-
+*/
 
     //Calculate ma25[ nStock ]
     for (int i = 0; i < _25; ++i)
@@ -371,8 +399,6 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
         posDirection[ nStock ] = false;
     }
 
-
-    
 
     //MIN Value
     if ((oldMa200[nStock] < ma200[ nStock ][sellStockCounter % _200]) && 
@@ -458,6 +484,7 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
         ++noOwnCounter;
     }
 
+    
     return !own_Stock[ nStock ];
 
 
@@ -476,7 +503,7 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
 
 
     //RECALIBRATE is defined in algorithms.h
-    if (count % RECALIBRATE != 0)
+    if (days % RECALIBRATE != 0)
     {
         return;
     }
@@ -487,7 +514,7 @@ void Algorithms::BeatIndex(Portfolio *portfolio_p,
 
     //Chose which stocks to buy
     for (int i = 0; i < NROFSTOCKS; ++i)
-    {
+    {        
 
         if (stocks[i].head->exist == false)
         {

@@ -16,6 +16,7 @@ const int RECALIBRATE = 1; //Omkalibrera portföljen
 class Algorithms {
 public:
     Algorithms();
+    void CleanAlgorithms();
     float getPercentageOfOwnTime();
     float getIncreasePerYear(float, float);
     float getNrOfYears();
