@@ -10,6 +10,9 @@
 #include "Portfolio.h"
 
 using namespace std;
+extern float constantA;
+extern float constantB;                                    
+extern float constantC;
 
 const int RECALIBRATE = 1; //Omkalibrera portföljen
 

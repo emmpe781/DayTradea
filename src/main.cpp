@@ -8,6 +8,7 @@
 #include "ReadFile.h"
 using namespace std;
 
+
 int main() {
 	float startValue = 250000;
 	//string startdate = "1986-10-05";
@@ -94,9 +95,18 @@ int main() {
 
     //Stock stockArray2[NROFSTOCKS] = {svol_b, lund_b};
 
+//constantA = 0.95
+//constantB = 1.04									
+//constantC = 1.2
 
-for (int i = 0; i < 10; ++i)
+
+for (int i = 0; i < 100; ++i)
 {
+	constantA = 0.1;
+	constantB = 1.04;// + (float) i/10;									
+	constantC = 1.15 + (float) i/100;
+	cout << " constantC = "  << constantC << endl;
+
 	Algo2.Algo("BEATINDEX",&ImbaPortfolio2 ,stockArray);
 	
 	//Reset Portfolio

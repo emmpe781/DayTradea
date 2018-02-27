@@ -14,6 +14,10 @@ using namespace std;
 const Stock::dayInfo * lastStockDate = NULL;
 int days = 0;
 
+float constantA = 0;
+float constantB = 0;                                    
+float constantC = 0;
+
 static int noOwnCounter = 1;
 static int ownCounter = 1;
 static float firstStockValue = 0;
@@ -44,6 +48,7 @@ static bool crash[NROFSTOCKS] = {false};
 static float lokMax[NROFSTOCKS] = {0};
 static float lokMin[NROFSTOCKS] = {0};
 static bool posDirection[NROFSTOCKS] = {true};
+
 
 
 
@@ -146,7 +151,7 @@ void Algorithms::Algo(string algo,
     CleanAlgorithms();
 
     days = 0;
-
+    //cout << " constantC = "  << constantC << endl;
 
     startPortfValue = portfolio_p->cash;
     cout << "startPortfValue = " << startPortfValue << endl;
@@ -408,7 +413,9 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
         posDirection[ nStock ] = true;
     }
 
-    if ((1.2*ma200[ nStock ][sellStockCounter % _200] < lokMax[ nStock ]) && 
+    //constantC = 1.2
+    //cout << "constantC = " << constantC << endl;
+    if ((constantC*ma200[ nStock ][sellStockCounter % _200] < lokMax[ nStock ]) && 
         (posDirection[ nStock ] == false))
     {
         crash[ nStock ] = true;
@@ -419,12 +426,12 @@ bool Algorithms::SellStock(Stock *stock, int nStock)
 
 
         bool SELL = (own_Stock[ nStock ] == true &&
-                     closeValue < estStock*0.95);
+                     closeValue < estStock*constantA); //constantA = 0.95
 
 
 
-        bool BUY = (own_Stock[ nStock ] == false &&
-                    ma200[ nStock ][sellStockCounter % _200] > 1.04*lokMin[ nStock ] && 
+        bool BUY = (own_Stock[ nStock ] == false && //constantB = 1.04
+                    ma200[ nStock ][sellStockCounter % _200] > constantB*lokMin[ nStock ] && 
                     closeValue > estStock);
 
 
